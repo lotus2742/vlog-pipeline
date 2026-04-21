@@ -15,28 +15,43 @@ SAFE_H = 650
 def _find_font():
     candidates = [
         # Homebrew 安装的 Noto CJK
-        "/opt/homebrew/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
-        "/usr/local/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc",
+        ("/opt/homebrew/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc", 0),
+        ("/usr/local/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc", 0),
         # Homebrew cask font-noto-sans-cjk-sc
-        "/opt/homebrew/Caskroom/font-noto-sans-cjk-sc/20190416/NotoSansCJKsc-Regular.otf",
+        ("/opt/homebrew/Caskroom/font-noto-sans-cjk-sc/20190416/NotoSansCJKsc-Regular.otf", 0),
         # 脚本同目录下手动放置的字体
-        os.path.join(os.path.dirname(__file__), "NotoSansCJK.otf"),
-        os.path.join(os.path.dirname(__file__), "NotoSansCJK.ttc"),
+        (os.path.join(os.path.dirname(__file__), "NotoSansCJK.otf"), 0),
+        (os.path.join(os.path.dirname(__file__), "NotoSansCJK.ttc"), 0),
         # macOS 系统自带中文字体
-        "/System/Library/Fonts/PingFang.ttc",
-        "/Library/Fonts/Arial Unicode MS.ttf",
+        # PingFang.ttc 是字库集合，索引不同可能出现简体缺字，优先探测 SC 索引
+        ("/System/Library/Fonts/PingFang.ttc", 2),
+        ("/System/Library/Fonts/PingFang.ttc", 0),
+        ("/Library/Fonts/Arial Unicode MS.ttf", 0),
     ]
-    for p in candidates:
+    # 关键探测字：覆盖常见简体和本项目高频词，避免“能加载但缺字”
+    probe_text = "稳定关键信息复杂路线记忆策略检索"
+    for p, idx in candidates:
         if os.path.exists(p):
-            return p
+            try:
+                f = ImageFont.truetype(p, 24, index=idx)
+                ok = True
+                for ch in probe_text:
+                    # 缺字时 getbbox 常为 None，直接淘汰该候选字体
+                    if not f.getmask(ch).getbbox():
+                        ok = False
+                        break
+                if ok:
+                    return p, idx
+            except Exception:
+                continue
     raise FileNotFoundError(
         "找不到中文字体！请执行：\n"
         "  brew install font-noto-sans-cjk-sc\n"
         "或手动下载 NotoSansCJK.otf 放到脚本同目录。"
     )
 
-FONT_PATH = _find_font()
-print(f"[render] 使用字体: {FONT_PATH}")
+FONT_PATH, FONT_INDEX = _find_font()
+print(f"[render] 使用字体: {FONT_PATH} (index={FONT_INDEX})")
 
 # ─── 颜色表 ──────────────────────────────────────────────────
 PALETTE = {
@@ -73,7 +88,7 @@ STANDARD_GLOW_POS = [
 
 # ─── 工具函数 ─────────────────────────────────────────────────
 def load_font(size):
-    return ImageFont.truetype(FONT_PATH, size)
+    return ImageFont.truetype(FONT_PATH, size, index=FONT_INDEX)
 
 def col(name):
     if isinstance(name, (tuple, list)):

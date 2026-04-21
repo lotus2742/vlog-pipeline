@@ -10,6 +10,7 @@ import edge_tts
 
 PROXY=None
 MAX_RETRY = 3
+FALLBACK_VOICE = "zh-CN-XiaoyiNeural"
 
 def fmt_srt_time(t):
     h = int(t // 3600); m = int((t % 3600)//60); s=int(t%60);ms=int((t%1)*1000)
@@ -137,7 +138,22 @@ async def main(json_path, audio_dir, force=False):
         if not script:
             print(f"{fid}: 无配音脚本,跳过")
             continue
-        await gen_audio(fid, script, voice, rate, audio_dir, force=force)
+        try:
+            await gen_audio(fid, script, voice, rate, audio_dir, force=force)
+        except Exception as primary_err:
+            # Edge TTS 偶发返回空音频时，使用备用中文音色再试一次，避免整条任务失败
+            if voice != FALLBACK_VOICE:
+                print(f"{fid}: 主音色失败，尝试备用音色 {FALLBACK_VOICE} ({primary_err})")
+                try:
+                    await gen_audio(fid, script, FALLBACK_VOICE, rate, audio_dir, force=force)
+                    await asyncio.sleep(0.3)
+                    continue
+                except Exception as fallback_err:
+                    raise RuntimeError(
+                        f"{fid}: 主音色({voice})与备用音色({FALLBACK_VOICE})均失败: "
+                        f"{primary_err} | {fallback_err}"
+                    )
+            raise
         await asyncio.sleep(0.3)
     print("\n配音完成")
 
