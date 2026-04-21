@@ -1,0 +1,44 @@
+---
+description: Generate and validate vlog frames JSON with project schema
+alwaysApply: true
+---
+
+# Vlog Frames JSON Workflow
+
+- 当用户要求生成用于 `vlog-pipeline` 的 `frames.json` 时，必须输出 `meta + frames` 根结构。
+- `meta.voice` 只能使用项目白名单语音；`meta.rate` 必须是百分比字符串；`meta.topic` 不能为空。
+- `frames` 必须 3~12 条，且首帧与尾帧 `type` 必须是 `hook`。
+- 每帧 `type` 仅允许 `hook/cards/comparison`，并满足各自必填字段约束。
+- `title` 与 `script` 不得包含禁止字符；`script` 长度必须符合项目最小和最大长度限制。
+
+## 信息密度硬约束（避免“空白展示”）
+
+- 生成的每一帧必须“有信息量”，禁止仅有标题/标签却无正文内容。
+- `cards` 帧：
+  - `cards` 数组至少 2 条；
+  - 每个 card 必须同时有可读 `title|label` 与非空 `desc`；
+  - `desc` 必须是具体信息，禁止“待补充/略/...”等占位文本。
+- `comparison` 帧：
+  - `left.points` 与 `right.points` 至少一侧非空（推荐两侧都给）；
+  - 若仅一侧有 `points`，另一侧应给出可比较的简要要点，避免视觉空块；
+  - `insight` 不能替代主体对比内容，仅作为结论补充。
+- 当主题是“方法/架构/流程”时，优先输出可执行信息：步骤、原则、对比结论、常见坑与建议动作。
+- 默认目标：用户看到每帧都能“直接学到一个结论或动作”，而不是只看见版式。
+
+## 受众表达风格（默认小白）
+
+- 默认受众为零基础用户，表达必须通俗、直白，优先用白话解释专业术语。
+- 每帧脚本应先给结论，再给原因或示例，避免抽象定义堆砌。
+- 优先给“可以照着做”的内容：步骤顺序、判断标准、常见错误和修正建议。
+- 术语首次出现时要附一句简短解释；避免连续出现多个未解释缩写。
+- 内容要“丰富但不啰嗦”：确保信息密度高，同时句子可听懂、可复述。
+
+## Mandatory Validation Step
+
+在交付 JSON 前，先运行：
+
+```bash
+python3 validate_frames.py <json_file_path>
+```
+
+若校验失败，必须根据错误修正后再次校验，直到通过或用户要求停止。
