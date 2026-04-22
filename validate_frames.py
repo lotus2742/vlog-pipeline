@@ -30,14 +30,18 @@ BANNED_CHARS = "✅✓❌✗⭐★☆→←↑↓①②③④⑤⚠⚡🎯🔥�
 
 # M1 版式：bullets / quote 文本长度边界
 MAX_BULLET_ITEM_LEN = 160
+MAX_BULLET_TITLE_LEN = 24
 MIN_QUOTE_BODY_LEN = 10
 MAX_QUOTE_BODY_LEN = 420
 MAX_KPI_VALUE_LEN = 40
 MAX_FOOTNOTE_LEN = 120
 MAX_KPI_ITEMS = 4
 
-MAX_SCRIPT_LEN = 300
+MAX_SCRIPT_LEN = 420
 MIN_SCRIPT_LEN = 20
+MAX_FIRST_HOOK_SCRIPT_LEN = 120
+MAX_CLOSING_LIST_ITEMS = 4
+MAX_CLOSING_LIST_ITEM_LEN = 24
 ACTION_WORD_HINTS = (
     "先",
     "再",
@@ -110,6 +114,20 @@ def is_actionable_sentence(text: str) -> bool:
     # 首帧 subtitle 期望是完整表达，至少有动作词，并且不是纯标签短语。
     has_sentence_shape = any(p in s for p in ("，", "。", "；", "！", "？")) or len(s) >= 14
     return has_action and has_sentence_shape
+
+
+def has_quote_alignment(script: str, quote: str) -> bool:
+    ns = normalize_text_for_compare(script)
+    nq = normalize_text_for_compare(quote)
+    if not ns or not nq:
+        return True
+    if len(nq) < 12:
+        return True
+    anchors = [nq[:10]]
+    mid = max(0, len(nq) // 2 - 5)
+    anchors.append(nq[mid : mid + 10])
+    anchors.append(nq[-10:])
+    return any(a and a in ns for a in anchors)
 
 
 async def main(args: dict) -> dict:
@@ -186,6 +204,38 @@ async def main(args: dict) -> dict:
                 )
                 continue
 
+            if ftype == "hook":
+                closing_list = frame.get("list", None)
+                if closing_list is not None:
+                    if not isinstance(closing_list, list):
+                        errors.append(f"{prefix}.list 必须是数组")
+                    elif len(closing_list) < 2:
+                        errors.append(f"{prefix}.list 至少需要 2 条")
+                    elif len(closing_list) > MAX_CLOSING_LIST_ITEMS:
+                        errors.append(f"{prefix}.list 超过上限 {MAX_CLOSING_LIST_ITEMS} 条")
+                    else:
+                        for j, it in enumerate(closing_list):
+                            ip = f"{prefix}.list[{j}]"
+                            txt = ""
+                            if isinstance(it, str):
+                                txt = it.strip()
+                            elif isinstance(it, dict):
+                                txt = str(it.get("text", "")).strip()
+                            else:
+                                errors.append(f"{ip} 必须是字符串或 {{\"text\":\"...\"}}")
+                                continue
+                            if not txt:
+                                errors.append(f"{ip} 不能为空")
+                                continue
+                            if len(txt) > MAX_CLOSING_LIST_ITEM_LEN:
+                                errors.append(
+                                    f"{ip} 过长({len(txt)}字 > {MAX_CLOSING_LIST_ITEM_LEN})，"
+                                    "收尾列表请写精炼短句"
+                                )
+                            for ch in BANNED_CHARS:
+                                if ch in txt:
+                                    errors.append(f"{ip} 含禁止字符 '{ch}'")
+
             # id
             if not str(frame.get("id", "")).strip():
                 errors.append(f"{prefix}.id 不能为空")
@@ -206,6 +256,11 @@ async def main(args: dict) -> dict:
                 if len(script) < MIN_SCRIPT_LEN:
                     errors.append(
                         f"{prefix}.script 过短({len(script)}字 < {MIN_SCRIPT_LEN})"
+                    )
+                if i == 0 and len(script) > MAX_FIRST_HOOK_SCRIPT_LEN:
+                    errors.append(
+                        f"frames[0].script 过长({len(script)}字 > {MAX_FIRST_HOOK_SCRIPT_LEN})，"
+                        "首帧建议只讲主题与主结论"
                     )
 
             # subtitle/script 防复读：若 subtitle 与 script 高度重复，要求重写 subtitle
@@ -285,19 +340,34 @@ async def main(args: dict) -> dict:
             # ── bullets 类型专项（M1）──
             if ftype == "bullets":
                 raw_items = frame.get("items", [])
-                texts = _normalize_bullet_items(raw_items)
-                if len(texts) < 2:
-                    errors.append(f"{prefix}.items 至少需要 2 条有效要点（字符串或 {{\"text\"}}）")
-                elif len(texts) > 8:
+                if not isinstance(raw_items, list):
+                    errors.append(f"{prefix}.items 必须是数组")
+                elif len(raw_items) < 2:
+                    errors.append(f"{prefix}.items 至少需要 2 条要点")
+                elif len(raw_items) > 8:
                     errors.append(f"{prefix}.items 超过上限 8 条")
                 else:
-                    for j, t in enumerate(texts):
+                    for j, it in enumerate(raw_items):
                         ip = f"{prefix}.items[{j}]"
-                        if len(t) > MAX_BULLET_ITEM_LEN:
-                            errors.append(f"{ip} 单条过长(>{MAX_BULLET_ITEM_LEN}字)")
-                        for ch in BANNED_CHARS:
-                            if ch in t:
-                                errors.append(f"{ip} 含禁止字符 '{ch}'")
+                        if not isinstance(it, dict):
+                            errors.append(f"{ip} 必须为对象，且包含 title 与 desc")
+                            continue
+                        title = str(it.get("title", "")).strip()
+                        desc = str(it.get("desc", "")).strip()
+                        if not title:
+                            errors.append(f"{ip}.title 不能为空（由 LLM 总结右列要点）")
+                        if not desc:
+                            errors.append(f"{ip}.desc 不能为空（正文解释内容）")
+                        if title and len(title) > MAX_BULLET_TITLE_LEN:
+                            errors.append(f"{ip}.title 过长(>{MAX_BULLET_TITLE_LEN}字)")
+                        if desc and len(desc) > MAX_BULLET_ITEM_LEN:
+                            errors.append(f"{ip}.desc 过长(>{MAX_BULLET_ITEM_LEN}字)")
+                        for field_name, blob in (("title", title), ("desc", desc)):
+                            if not blob:
+                                continue
+                            for ch in BANNED_CHARS:
+                                if ch in blob:
+                                    errors.append(f"{ip}.{field_name} 含禁止字符 '{ch}'")
 
             # ── kpi 类型专项（M1）──
             if ftype == "kpi":
@@ -372,6 +442,10 @@ async def main(args: dict) -> dict:
                         errors.append(f"{prefix}.quote 含禁止字符 '{ch}'")
                     if attr and ch in attr:
                         errors.append(f"{prefix}.attribution 含禁止字符 '{ch}'")
+                if qbody and script and not has_quote_alignment(script, qbody):
+                    errors.append(
+                        f"{prefix}.script 与 quote 主体不一致，请围绕引用内容讲解"
+                    )
 
         # 相邻帧防复读：尤其拦截自动拆页后前后页开头重复
         for i in range(1, len(frames)):

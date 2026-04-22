@@ -17,6 +17,7 @@ def apply_glass_panel(
     tint_alpha=0.28,
     tint_color=(20, 24, 48),
     outline_color=(150, 180, 255),
+    outline_width=1,
     pad=6,
 ):
     w, h = img.size
@@ -34,4 +35,10 @@ def apply_glass_panel(
     tint = Image.new("RGB", panel_crop.size, tint_color)
     panel_tinted = Image.blend(panel_crop, tint, tint_alpha)
     img.paste(panel_tinted, panel_box)
-    draw.rounded_rectangle([x1, y1, x2, y2], radius=radius, outline=outline_color, width=1)
+    if outline_width > 0:
+        draw.rounded_rectangle(
+            [x1, y1, x2, y2],
+            radius=radius,
+            outline=outline_color,
+            width=outline_width,
+        )

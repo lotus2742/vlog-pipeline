@@ -31,8 +31,8 @@ def render_quote(draw, img, frame, load_font):
 
     text_x = panel_x1 + 36
     text_w = panel_x2 - panel_x1 - 72
-    reserve_attr = 56 if attribution else 14
-    max_body_h = panel_y2 - panel_y1 - reserve_attr - 28
+    reserve_attr = 62 if attribution else 14
+    max_body_h = panel_y2 - panel_y1 - reserve_attr - 20
 
     apply_glass_panel(
         img,
@@ -48,9 +48,15 @@ def render_quote(draw, img, frame, load_font):
     )
 
     lines, font, lh, _ = fit_text_block(
-        draw, body, text_w, max_body_h, [64, 58, 52, 46, 40, 36, 32, 28], max_lines=3, line_gap=10
+        draw,
+        body,
+        text_w,
+        max_body_h,
+        [60, 56, 52, 48, 44, 40, 36, 32, 30, 28, 26, 24],
+        max_lines=5,
+        line_gap=8,
     )
-    total_h = len(lines) * lh + max(0, len(lines) - 1) * 10
+    total_h = len(lines) * lh + max(0, len(lines) - 1) * 8
     body_top = panel_y1 + 6
     body_bottom = panel_y2 - reserve_attr - 12
     body_y = body_top + max(0, (body_bottom - body_top - total_h) // 2)
@@ -64,7 +70,7 @@ def render_quote(draw, img, frame, load_font):
         body_y,
         color=PALETTE["WHITE"],
         line_h=lh,
-        line_gap=10,
+        line_gap=8,
         center=True,
         max_w=text_w,
     )

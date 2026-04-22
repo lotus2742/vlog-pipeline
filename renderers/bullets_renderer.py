@@ -12,29 +12,21 @@ def _normalize_items(raw):
         return out
     for x in raw:
         if isinstance(x, str) and x.strip():
-            out.append(x.strip())
+            s = x.strip()
+            out.append({"title": s, "desc": s})
         elif isinstance(x, dict):
             title = str(x.get("title", "")).strip()
             desc = str(x.get("desc", "")).strip()
             text = str(x.get("text", "")).strip()
             if title or desc:
+                if not title:
+                    title = desc
+                if not desc:
+                    desc = title
                 out.append({"title": title, "desc": desc})
             elif text:
-                out.append(text)
+                out.append({"title": text, "desc": text})
     return out
-
-
-def _split_title_desc(text: str):
-    s = str(text or "").strip()
-    if not s:
-        return "", ""
-    for sep in ("：", ":", "，", "。", "；"):
-        idx = s.find(sep)
-        if 2 <= idx <= 12:
-            return s[:idx].strip(), s[idx + 1 :].lstrip()
-    if len(s) > 18:
-        return s[:8].strip(), s[8:].strip()
-    return s, "待补充具体说明"
 
 
 def _as_row(item):
@@ -44,11 +36,11 @@ def _as_row(item):
         if title and desc:
             return title, desc
         if title:
-            return title, "待补充具体说明"
+            return title, title
         if desc:
-            t, d = _split_title_desc(desc)
-            return t or "要点", d or desc
-    return _split_title_desc(str(item))
+            return desc, desc
+    s = str(item or "").strip()
+    return s, s
 
 
 def render_bullets(draw, img, frame, load_font):

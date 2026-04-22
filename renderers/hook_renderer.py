@@ -13,24 +13,75 @@ from utils.render_text_utils import (
 from PIL import Image, ImageDraw
 
 
+def _normalize_closing_list(raw):
+    out = []
+    if not isinstance(raw, list):
+        return out
+    for x in raw:
+        if isinstance(x, str) and x.strip():
+            out.append(x.strip())
+        elif isinstance(x, dict):
+            txt = str(x.get("text", "")).strip()
+            if txt:
+                out.append(txt)
+    return out
+
+
+def _shorten_closing_point(text: str, max_len: int = 18):
+    s = str(text or "").strip()
+    if not s:
+        return ""
+    for sep in ("。", "；", "，", ":", "："):
+        idx = s.find(sep)
+        if 4 <= idx <= max_len + 6:
+            s = s[:idx].strip()
+            break
+    s = s.strip("。；，,:： ")
+    if len(s) > max_len:
+        s = s[:max_len].rstrip("。；，,:： ")
+    return s
+
+
 def _build_closing_points(frame):
+    custom = _normalize_closing_list(frame.get("list", []))
+    if custom:
+        pts = []
+        for c in custom:
+            p = _shorten_closing_point(c, max_len=18)
+            if p and p not in pts:
+                pts.append(p)
+            if len(pts) >= 3:
+                break
+        if pts:
+            return pts
+
     subtitle = str(frame.get("subtitle", "")).strip()
     script = str(frame.get("script", "")).strip()
-    points = script_key_lines(script, max_lines=4, max_len=18)
-    if len(points) < 3 and subtitle:
+    points = script_key_lines(script, max_lines=5, max_len=30)
+    points = [_shorten_closing_point(p, max_len=18) for p in points]
+    points = [p for p in points if p]
+    if len(points) < 2 and subtitle:
         parts = [p.strip(" ，。；;、") for p in subtitle.replace("；", "，").split("，") if p.strip(" ，。；;、")]
         for p in parts:
-            if p not in points:
-                points.append(p)
-            if len(points) >= 4:
+            sp = _shorten_closing_point(p, max_len=18)
+            if sp and sp not in points:
+                points.append(sp)
+            if len(points) >= 3:
                 break
     if not points:
-        points = ["目标达成情况", "关键成果展示", "问题与改进", "下一步计划"]
-    return points[:4]
+        points = ["目标达成情况", "关键成果展示", "问题与改进"]
+    return points[:3]
 
 
 def choose_hook_style_adaptive(frame):
     explicit = str(frame.get("style", "")).strip().lower()
+    # 开场封面固定走 split，保证首帧视觉统一。
+    if frame.get("_is_first"):
+        return "split"
+
+    # split 仅限开场使用；非开场即便显式指定，也回退为 spotlight。
+    if explicit == "split":
+        return "spotlight"
     if explicit:
         return explicit
 
@@ -359,7 +410,7 @@ def _render_hook_closing(draw, img, frame, load_font):
     title = str(frame.get("title", "")).strip() or "总结"
     points = _build_closing_points(frame)
     left_footer = str(frame.get("closing_left", "")).strip() or "感谢观看"
-    right_footer = str(frame.get("closing_right", "")).strip() or "下一步执行"
+    right_footer = str(frame.get("closing_right", "")).strip()
 
     title_lines, t_font, t_lh, _ = fit_text_block(
         draw, title, W - 260, 118, [64, 58, 52, 46, 40], max_lines=2, line_gap=8
@@ -379,7 +430,7 @@ def _render_hook_closing(draw, img, frame, load_font):
     bottom_reserved = fy1 - 24
     row_gap = 14
     row_count = max(1, len(points))
-    row_h = max(60, min(86, (bottom_reserved - top - row_gap * (row_count - 1)) // row_count))
+    row_h = max(72, min(94, (bottom_reserved - top - row_gap * (row_count - 1)) // row_count))
 
     def _draw_row_icon(cx, cy, idx):
         draw.ellipse([cx - 23, cy - 23, cx + 23, cy + 23], outline=(154, 190, 255), width=2, fill=(240, 246, 255))
@@ -429,41 +480,98 @@ def _render_hook_closing(draw, img, frame, load_font):
             draw,
             p,
             list_x2 - list_x1 - 116,
-            row_h - 16,
-            [40, 36, 32, 28, 24, 22],
-            max_lines=2,
+            row_h - 12,
+            [34, 30, 28, 26, 24, 22, 20, 18, 16],
+            max_lines=1,
             line_gap=4,
         )
-        text_total_h = len(lines) * p_lh + max(0, len(lines) - 1) * 4
+        text_total_h = len(lines) * p_lh
         py = y1 + (row_h - text_total_h) // 2
         for ln in lines:
             draw.text((list_x1 + 38, py), ln, font=p_font, fill=PALETTE["WHITE"])
-            py += p_lh + 4
+            py += p_lh
 
         icon_cx = list_x2 - 40
         icon_cy = by
         _draw_row_icon(icon_cx, icon_cy, i)
 
-    draw.rectangle([0, fy1, W, SAFE_H], fill=(16, 32, 78))
+    apply_glass_panel(
+        img,
+        draw,
+        0,
+        fy1,
+        W,
+        SAFE_H,
+        radius=0,
+        blur=10,
+        tint_alpha=0.24,
+        tint_color=(18, 36, 86),
+        outline_color=(88, 126, 188),
+        outline_width=0,
+        pad=0,
+    )
     tab_x2 = 248
-    lf_lines, lf_font, lf_lh, lf_total_h = fit_text_block(
-        draw, left_footer, tab_x2 - 26, footer_h - 12, [40, 34, 30, 26, 22], max_lines=2, line_gap=2
-    )
-    lfy = fy1 + (footer_h - lf_total_h) // 2
-    for ln in lf_lines:
-        draw.text((28, lfy), ln, font=lf_font, fill=PALETTE["WHITE"])
-        lfy += lf_lh + 2
 
-    draw.line([(286, fy1 + footer_h // 2), (W - 240, fy1 + footer_h // 2)], fill=PALETTE["CARD_B"], width=2)
-    rf_lines, rf_font, rf_lh, rf_total_h = fit_text_block(
-        draw, right_footer, 220, footer_h - 12, [40, 34, 30, 26, 22], max_lines=2, line_gap=2
-    )
-    rfy = fy1 + (footer_h - rf_total_h) // 2
-    for ln in rf_lines:
-        rb = draw.textbbox((0, 0), ln, font=rf_font)
-        rw = rb[2] - rb[0]
-        draw.text((W - 34 - rw, rfy), ln, font=rf_font, fill=TOKENS["color"]["title"])
-        rfy += rf_lh + 2
+    def _draw_heart(cx, cy, size, color):
+        r = max(2, size // 4)
+        draw.ellipse([cx - r - r, cy - r, cx - r, cy + r], fill=color)
+        draw.ellipse([cx, cy - r, cx + r, cy + r], fill=color)
+        draw.polygon(
+            [
+                (cx - 2 * r, cy),
+                (cx + 2 * r, cy),
+                (cx, cy + 3 * r),
+            ],
+            fill=color,
+        )
+
+    if not right_footer:
+        lf_lines, lf_font, lf_lh, _ = fit_text_block(
+            draw, left_footer, W - 260, footer_h - 12, [46, 40, 34, 30, 26], max_lines=1, line_gap=0
+        )
+        center_text = lf_lines[0] if lf_lines else left_footer
+        bb = draw.textbbox((0, 0), center_text, font=lf_font)
+        text_w = bb[2] - bb[0]
+        heart_size = 22
+        heart_w = heart_size
+        gap = 16
+        group_w = heart_w + gap + text_w + gap + heart_w
+        gx = (W - group_w) // 2
+        gy = fy1 + footer_h // 2 - 5
+        gold = PALETTE["GOLD"]
+        _draw_heart(gx + heart_w // 2, gy, heart_size, gold)
+        draw.text((gx + heart_w + gap, fy1 + (footer_h - lf_lh) // 2), center_text, font=lf_font, fill=PALETTE["WHITE"])
+        _draw_heart(gx + heart_w + gap + text_w + gap + heart_w // 2, gy, heart_size, gold)
+    else:
+        lf_lines, lf_font, lf_lh, lf_total_h = fit_text_block(
+            draw, left_footer, tab_x2 - 26, footer_h - 12, [40, 34, 30, 26, 22], max_lines=2, line_gap=2
+        )
+        lfy = fy1 + (footer_h - lf_total_h) // 2
+        first_line_w = 0
+        for ln in lf_lines:
+            if first_line_w == 0:
+                bb = draw.textbbox((0, 0), ln, font=lf_font)
+                first_line_w = bb[2] - bb[0]
+            draw.text((28, lfy), ln, font=lf_font, fill=PALETTE["WHITE"])
+            lfy += lf_lh + 2
+
+        if first_line_w > 0:
+            heart_y = fy1 + footer_h // 2 - 4
+            gold = PALETTE["GOLD"]
+            _draw_heart(14, heart_y, 20, gold)
+            _draw_heart(min(tab_x2 - 12, 28 + first_line_w + 22), heart_y, 20, gold)
+
+    if right_footer:
+        draw.line([(286, fy1 + footer_h // 2), (W - 240, fy1 + footer_h // 2)], fill=PALETTE["CARD_B"], width=2)
+        rf_lines, rf_font, rf_lh, rf_total_h = fit_text_block(
+            draw, right_footer, 220, footer_h - 12, [40, 34, 30, 26, 22], max_lines=2, line_gap=2
+        )
+        rfy = fy1 + (footer_h - rf_total_h) // 2
+        for ln in rf_lines:
+            rb = draw.textbbox((0, 0), ln, font=rf_font)
+            rw = rb[2] - rb[0]
+            draw.text((W - 34 - rw, rfy), ln, font=rf_font, fill=TOKENS["color"]["title"])
+            rfy += rf_lh + 2
 
 
 def render_hook(draw, img, frame, load_font):
@@ -484,9 +592,14 @@ def render_hook(draw, img, frame, load_font):
         _render_hook_closing(draw, img, frame, load_font)
         return
 
-    if style == "split":
+    # 开场封面固定使用 split（图文左右结构 + 插图区）。
+    if frame.get("_is_first"):
         _render_hook_split(draw, img, frame, load_font)
         return
+
+    if style == "split":
+        # split 仅限开场；其它位置强制回退，避免出现图2那种开场替代样式。
+        style = "spotlight"
     if style == "spotlight":
         _render_hook_spotlight(draw, frame)
         return

@@ -35,12 +35,22 @@ def _estimate_card_text_lines(draw, cards, load_font, text_w):
 
 
 def _choose_cards_style_adaptive(draw, frame, cards, load_font):
+    n = len(cards) or 1
+    # 3 条卡片全局固定 timeline（含显式 style），保证策略与渲染结果一致。
+    if n == 3:
+        return "timeline"
+
     explicit = str(frame.get("style", "")).strip().lower()
     if explicit:
         return explicit
 
-    n = len(cards) or 1
     text_lines = _estimate_card_text_lines(draw, cards, load_font, text_w=W - 220)
+    desc_total = sum(len(str(c.get("desc", "") or "")) for c in cards if isinstance(c, dict))
+
+    # 5 条按密度切换，优先保证信息承载与视觉平衡。
+    if n == 5:
+        return "grid" if (text_lines >= n * 4 or desc_total >= 180) else "timeline"
+
     score = {"stack": 0, "grid": 0, "timeline": 0}
 
     # 短文案优先 stack，避免 timeline/大网格出现大片留白。
@@ -56,6 +66,15 @@ def _choose_cards_style_adaptive(draw, frame, cards, load_font):
         score["grid"] += 4
     elif n == 3:
         score["grid"] += 1
+
+    # 其他奇数卡片优先 timeline，可减少 grid/stack 的底部留白感。
+    if n % 2 == 1:
+        score["timeline"] += 3
+        score["stack"] -= 1
+        if text_lines <= n * 3:
+            # 短文案奇数场景进一步压低 stack，避免整页重心偏上、下半区留白。
+            score["timeline"] += 2
+            score["stack"] -= 3
 
     if n <= 2:
         score["stack"] += 2
@@ -229,6 +248,9 @@ def render_cards(draw, img, frame, load_font, col):
     cards = frame.get("cards", [])
     explicit_style = str(frame.get("style", "")).strip().lower()
     style = _choose_cards_style_adaptive(draw, frame, cards, load_font)
+    # 3 卡片强制 timeline：避免显式 grid/stack 造成下半区留白。
+    if len(cards) == 3:
+        style = "timeline"
     draw_header_tag(
         draw,
         frame.get("title", ""),
