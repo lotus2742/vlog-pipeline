@@ -61,7 +61,8 @@ def render_bullets(draw, img, frame, load_font):
     panel_y1, panel_y2 = 148, SAFE_H - 18
     panel_h = panel_y2 - panel_y1
     row_h = panel_h // max(1, n)
-    left_col_w = 360
+    # 左列标题允许两行显示，避免较长标题被单行截断
+    left_col_w = 420
     icon_cx = panel_x1 + 52
     title_x = panel_x1 + 106
     divider_x = panel_x1 + left_col_w
@@ -84,17 +85,23 @@ def render_bullets(draw, img, frame, load_font):
         draw.text((icon_cx - 7, cy - 11), str(i + 1), font=load_font(22), fill=accent)
 
         title, desc = _as_row(item)
-        t_lines, tf, tlh, _ = fit_text_block(
-            draw, title, divider_x - title_x - 16, 52, [58, 52, 46, 40, 36], max_lines=1, line_gap=0
+        t_lines, tf, tlh, t_total_h = fit_text_block(
+            draw,
+            title,
+            divider_x - title_x - 18,
+            row_h - 24,
+            [56, 50, 44, 38, 34],
+            max_lines=2,
+            line_gap=4,
+            ellipsize=False,
         )
         d_lines, df, dlh, _ = fit_text_block(
             draw, desc, panel_x2 - right_x - 20, row_h - 26, [30, 28, 26, 24, 22], max_lines=2, line_gap=6
         )
 
         if t_lines:
-            t_box = draw.textbbox((0, 0), t_lines[0], font=tf)
-            ty = cy - (t_box[3] - t_box[1]) // 2 - t_box[1]
-            draw_text_block(draw, t_lines, tf, title_x, ty, accent, line_h=tlh, line_gap=0)
+            ty = row_y1 + max(0, (row_h - t_total_h) // 2)
+            draw_text_block(draw, t_lines, tf, title_x, ty, accent, line_h=tlh, line_gap=4)
 
         desc_h = len(d_lines) * dlh + max(0, len(d_lines) - 1) * 6
         dy = row_y1 + (row_h - desc_h) // 2
