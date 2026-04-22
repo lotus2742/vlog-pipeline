@@ -148,7 +148,7 @@ python3 vlog_merge.py ./tmp/day7_frames.json ./tmp/day7.mp4
 - `meta.rate` 必须是百分比字符串（如 `+5%`）
 - `frames` 数量：`3 ~ 12`
 - 首帧和尾帧 `type` 必须是 `hook`
-- 当前允许类型：`hook / cards / comparison`
+- 当前允许类型：`hook / cards / comparison / bullets / kpi / quote`（首尾仍为 `hook`）
 - `script` 长度限制：`20 ~ 300` 字
 - 禁止在 `title/script` 中使用部分特殊字符（见 `validate_frames.py`）
 

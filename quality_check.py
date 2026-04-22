@@ -88,6 +88,19 @@ def _score_info_density(frames: list[dict]) -> tuple[float, list[str]]:
                         non_empty += 1
                 if non_empty >= 2:
                     score += 1
+        elif ftype == "bullets":
+            items = frame.get("items", [])
+            if isinstance(items, list) and len(items) >= 2:
+                score += 1
+        elif ftype == "kpi":
+            kpis = frame.get("kpis", [])
+            if isinstance(kpis, list) and len(kpis) >= 2:
+                score += 1
+            elif str(frame.get("value", "")).strip() and str(frame.get("label", "")).strip():
+                score += 1
+        elif ftype == "quote":
+            if str(frame.get("quote", "")).strip():
+                score += 1
         elif ftype == "comparison":
             left = frame.get("left", {}) if isinstance(frame.get("left"), dict) else {}
             right = frame.get("right", {}) if isinstance(frame.get("right"), dict) else {}

@@ -8,7 +8,7 @@ alwaysApply: true
 - 当用户要求生成用于 `vlog-pipeline` 的 `frames.json` 时，必须输出 `meta + frames` 根结构。
 - `meta.voice` 只能使用项目白名单语音；`meta.rate` 必须是百分比字符串；`meta.topic` 不能为空。
 - `frames` 必须 3~12 条，且首帧与尾帧 `type` 必须是 `hook`。
-- 每帧 `type` 仅允许 `hook/cards/comparison`，并满足各自必填字段约束。
+- 每帧 `type` 允许：`hook` / `cards` / `comparison` / **`bullets`** / **`kpi`** / **`quote`**（首尾仍为 `hook`），并满足各自必填字段约束。
 - `title` 与 `script` 不得包含禁止字符；`script` 长度必须符合项目最小和最大长度限制。
 - 首帧（`frames[0]`）`subtitle` 必须优先写成“带动作的完整句子”，避免只写“核心要点/先说结论”这类短标签导致中间信息块过空；其他帧 `subtitle` 维持原有生成逻辑。
 
@@ -23,6 +23,17 @@ alwaysApply: true
   - `left.points` 与 `right.points` 至少一侧非空（推荐两侧都给）；
   - 若仅一侧有 `points`，另一侧应给出可比较的简要要点，避免视觉空块；
   - `insight` 不能替代主体对比内容，仅作为结论补充。
+- **`bullets` 帧**（要点清单）：
+  - `items` 至少 **2** 条、至多 **8** 条；每条为字符串，或 `{"text":"..."}`；
+  - 每条须为具体可执行/可判断的短句，禁止占位；单条建议可控在口播两三秒内。
+- **`kpi` 帧**（关键指标）：
+  - 支持两种输入：
+    - 单指标：**`value`**、**`label`** 必填；可选 **`unit`**、**`footnote`**；
+    - 分栏指标：`kpis[]`（2~4 项），每项至少含 `title` + `value`，可选 `label`、`unit`；
+  - 当 `kpis` ≥ 4 且提供 `trend_points[]`（或 `trend_title`）时，优先走 dashboard（左指标 + 右趋势）版式；
+  - 当 `kpis` 为 2~3 项时，优先走 strip（横向指标条）版式。
+- **`quote` 帧**（引用块）：
+  - **`quote`** 必填为完整引文；可选 **`attribution`**（出处/人名/章节）。
 - 当主题是“方法/架构/流程”时，优先输出可执行信息：步骤、原则、对比结论、常见坑与建议动作。
 - 默认目标：用户看到每帧都能“直接学到一个结论或动作”，而不是只看见版式。
 
@@ -34,6 +45,8 @@ alwaysApply: true
   - `hook`: `center`（默认）/`split`/`spotlight`
   - `cards`: `stack`（默认）/`grid`/`timeline`
   - `comparison`: `vs`（默认）/`table`
+  - `bullets` / `quote`：首版无子 `style` 分支；
+  - `kpi`：支持 `single` / `strip` / `dashboard`；未显式指定时按内容自动选型。
 - 同一条视频中，连续两帧尽量不使用相同 `type + style` 组合。
 - 当帧数 >= 6 时，至少使用 3 种不同的 `style`；当帧数 >= 9 时，至少使用 4 种。
 - 样式切换优先服务于信息表达：步骤型内容优先 `timeline`，并列信息优先 `grid` 或 `table`，强调结论优先 `spotlight`。

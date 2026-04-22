@@ -12,11 +12,14 @@ import sys
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
+from renderers.bullets_renderer import render_bullets as render_bullets_layout
 from renderers.cards_renderer import choose_cards_style_adaptive, render_cards as render_cards_layout
 from renderers.common_draw import text_center
 from renderers.comparison_renderer import render_comparison as render_comparison_layout
 from renderers.content_renderer import render_content as render_content_layout
 from renderers.hook_renderer import choose_hook_style_adaptive, render_hook as render_hook_layout
+from renderers.kpi_renderer import render_kpi as render_kpi_layout
+from renderers.quote_renderer import render_quote as render_quote_layout
 from utils.render_consts import FONT_CANDIDATES, FONT_PROBE_TEXT, PALETTE, SAFE_H, STANDARD_GLOW_POS, W, H
 from utils.render_style_utils import (
     choose_comparison_style,
@@ -140,12 +143,27 @@ def render_comparison(draw, img, frame):
     render_comparison_layout(draw, img, frame, load_font=load_font, col=col)
 
 
+def render_bullets(draw, img, frame):
+    render_bullets_layout(draw, img, frame, load_font=load_font)
+
+
+def render_kpi(draw, img, frame):
+    render_kpi_layout(draw, img, frame, load_font=load_font)
+
+
+def render_quote(draw, img, frame):
+    render_quote_layout(draw, img, frame, load_font=load_font)
+
+
 RENDERERS = {
     "hook": render_hook,
     "cards": render_cards,
     "content": render_content,
     "outro": render_outro,
     "comparison": render_comparison,
+    "bullets": render_bullets,
+    "kpi": render_kpi,
+    "quote": render_quote,
 }
 
 
@@ -154,7 +172,7 @@ def render_frame(frame, out_dir, idx=0, total=0):
     fid = frame.get("id", "00")
     out_path = os.path.join(out_dir, f"frame_{fid}.png")
 
-    low_noise = ftype in {"cards", "comparison", "content"}
+    low_noise = ftype in {"cards", "comparison", "content", "bullets", "kpi", "quote"}
     img = make_base_purple(low_noise=low_noise)
     draw = ImageDraw.Draw(img)
 
@@ -184,6 +202,8 @@ def render_frame(frame, out_dir, idx=0, total=0):
         if ftype == "cards"
         else choose_comparison_style(frame_ctx)
         if ftype == "comparison"
+        else str(frame_ctx.get("style", "")).strip().lower() or ftype
+        if ftype in ("bullets", "kpi", "quote")
         else str(frame_ctx.get("style", "")).strip().lower() or "default"
     )
     fallback_flag = "yes" if auto_fallback else "no"

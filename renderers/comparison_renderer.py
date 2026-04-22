@@ -1,16 +1,35 @@
 #!/usr/bin/env python3
 from renderers.common_draw import card, draw_header_tag, text_center
 from utils.render_consts import PALETTE, SAFE_H, W
+from utils.render_glass_utils import apply_glass_panel
 from utils.render_style_utils import choose_comparison_style
 from utils.render_text_utils import draw_text_block, fit_text_block, summarize_script, wrap_text_lines
 
 
-def _render_comparison_table(draw, frame, left, right, lc, rc, load_font):
+def _render_comparison_table(draw, img, frame, left, right, lc, rc, load_font):
     top = 110
     label_h = 54
     x1, x2 = 70, W - 70
     mid = (x1 + x2) // 2
-    draw.rounded_rectangle([x1, top, x2, SAFE_H - 20], radius=14, fill=(14, 12, 30), outline=PALETTE["CARD_B"], width=2)
+    insight = frame.get("insight", "")
+    insight_gap = 10
+    insight_h = 56 if insight else 0
+    table_y2 = SAFE_H - 20 - (insight_h + insight_gap if insight else 0)
+
+    apply_glass_panel(
+        img,
+        draw,
+        x1,
+        top,
+        x2,
+        table_y2,
+        radius=14,
+        blur=10,
+        tint_alpha=0.30,
+        tint_color=(18, 18, 44),
+        outline_color=PALETTE["CARD_B"],
+        pad=6,
+    )
     draw.rectangle([x1, top, mid, top + label_h], fill=(18, 40, 30))
     draw.rectangle([mid, top, x2, top + label_h], fill=(42, 22, 22))
     ll = summarize_script(left.get("label", ""), 20)
@@ -20,10 +39,10 @@ def _render_comparison_table(draw, frame, left, right, lc, rc, load_font):
     l_points = left.get("points", []) if isinstance(left.get("points", []), list) else []
     r_points = right.get("points", []) if isinstance(right.get("points", []), list) else []
     rows = max(len(l_points), len(r_points), 1)
-    row_h = max(52, (SAFE_H - 20 - (top + label_h)) // rows)
+    row_h = max(52, (table_y2 - (top + label_h)) // rows)
     for i in range(rows):
         ry1 = top + label_h + i * row_h
-        ry2 = min(SAFE_H - 20, ry1 + row_h)
+        ry2 = min(table_y2, ry1 + row_h)
         if i % 2 == 0:
             draw.rectangle([x1 + 1, ry1, x2 - 1, ry2], fill=(20, 16, 36))
         draw.line([(mid, ry1), (mid, ry2)], fill=PALETTE["CARD_B"], width=1)
@@ -35,19 +54,36 @@ def _render_comparison_table(draw, frame, left, right, lc, rc, load_font):
         r_lines, r_font, r_lh, _ = fit_text_block(
             draw, rtxt, x2 - mid - 32, row_h - 14, [21, 19, 17, 15], max_lines=2, line_gap=3
         )
+        l_total_h = len(l_lines) * l_lh + max(0, len(l_lines) - 1) * 3
+        r_total_h = len(r_lines) * r_lh + max(0, len(r_lines) - 1) * 3
+        l_text_y = ry1 + max(6, (ry2 - ry1 - l_total_h) // 2)
+        r_text_y = ry1 + max(6, (ry2 - ry1 - r_total_h) // 2)
         draw_text_block(
-            draw, l_lines, l_font, x1 + 16, ry1 + 8, color=PALETTE["TEXT_SOFT"], line_h=l_lh, line_gap=3
+            draw, l_lines, l_font, x1 + 16, l_text_y, color=PALETTE["TEXT_SOFT"], line_h=l_lh, line_gap=3
         )
         draw_text_block(
-            draw, r_lines, r_font, mid + 16, ry1 + 8, color=PALETTE["TEXT_SOFT"], line_h=r_lh, line_gap=3
+            draw, r_lines, r_font, mid + 16, r_text_y, color=PALETTE["TEXT_SOFT"], line_h=r_lh, line_gap=3
         )
-    insight = frame.get("insight", "")
     if insight:
+        draw.rounded_rectangle(
+            [x1, table_y2 + insight_gap - 2, x2, table_y2 + insight_gap + insight_h - 6],
+            radius=8,
+            fill=(30, 24, 52),
+            outline=(140, 120, 70),
+            width=1,
+        )
         ins_lines, ins_font, ins_lh, _ = fit_text_block(
-            draw, f"结论：{insight}", x2 - x1, 40, [18, 16, 14], max_lines=1, line_gap=0
+            draw, f"结论：{insight}", x2 - x1 - 24, insight_h - 12, [30, 28, 26, 24, 22], max_lines=2, line_gap=2
         )
         draw_text_block(
-            draw, ins_lines, ins_font, x1, SAFE_H - 28, color=PALETTE["GOLD"], line_h=ins_lh, line_gap=0
+            draw,
+            ins_lines,
+            ins_font,
+            x1 + 12,
+            table_y2 + insight_gap + 5,
+            color=PALETTE["GOLD"],
+            line_h=ins_lh,
+            line_gap=2,
         )
 
 
@@ -190,6 +226,6 @@ def render_comparison(draw, img, frame, load_font, col):
     lc = col(left.get("color", "GREEN"))
     rc = col(right.get("color", "RED"))
     if style == "table":
-        _render_comparison_table(draw, frame, left, right, lc, rc, load_font)
+        _render_comparison_table(draw, img, frame, left, right, lc, rc, load_font)
         return
     _render_comparison_vs(draw, frame, left, right, lc, rc, load_font)

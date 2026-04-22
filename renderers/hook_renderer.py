@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from renderers.common_draw import card, tag, text_center
 from utils.render_consts import PALETTE, SAFE_H, TOKENS, W
+from utils.render_glass_utils import apply_glass_panel
 from utils.render_text_utils import (
     draw_text_block,
     fit_text_block,
@@ -9,6 +10,23 @@ from utils.render_text_utils import (
     script_key_lines,
     summarize_script,
 )
+from PIL import Image, ImageDraw
+
+
+def _build_closing_points(frame):
+    subtitle = str(frame.get("subtitle", "")).strip()
+    script = str(frame.get("script", "")).strip()
+    points = script_key_lines(script, max_lines=4, max_len=18)
+    if len(points) < 3 and subtitle:
+        parts = [p.strip(" ，。；;、") for p in subtitle.replace("；", "，").split("，") if p.strip(" ，。；;、")]
+        for p in parts:
+            if p not in points:
+                points.append(p)
+            if len(points) >= 4:
+                break
+    if not points:
+        points = ["目标达成情况", "关键成果展示", "问题与改进", "下一步计划"]
+    return points[:4]
 
 
 def choose_hook_style_adaptive(frame):
@@ -47,10 +65,141 @@ def choose_hook_style_adaptive(frame):
     return max(score, key=score.get)
 
 
-def _render_hook_split(draw, frame, load_font):
+def _pick_cover_illustration(frame):
+    text = (
+        f"{frame.get('title', '')} {frame.get('subtitle', '')} {frame.get('script', '')}"
+    ).lower()
+    keyword_map = {
+        "trend": ("增长", "趋势", "数据", "指标", "转化", "留存"),
+        "flow": ("流程", "步骤", "执行", "协作", "推进", "上线"),
+        "stack": ("架构", "系统", "文档", "技术", "模块", "平台"),
+    }
+    for name, kws in keyword_map.items():
+        if any(k in text for k in kws):
+            return name
+
+    # 无明显关键词时做稳定轮换（同文案同模板，避免每次随机抖动）。
+    seed_text = str(frame.get("title", "")) + str(frame.get("script", ""))
+    idx = sum(ord(ch) for ch in seed_text) % 3
+    return ("trend", "flow", "stack")[idx]
+
+
+def _render_cover_illustration(img, frame, right_x1, right_x2, load_font):
+    style = _pick_cover_illustration(frame)
+    overlay = Image.new("RGBA", (W, SAFE_H), (0, 0, 0, 0))
+    od = ImageDraw.Draw(overlay)
+
+    # 透明度上调（更“背景化”）：低 alpha + 低对比边框。
+    fill_back = (38, 70, 130, 42)
+    fill_mid = (56, 98, 168, 48)
+    fill_front = (76, 124, 198, 54)
+    line_soft = (138, 182, 255, 60)
+    line_dim = (96, 128, 198, 50)
+    accent = (100, 220, 255, 96)
+    accent_dot = (255, 209, 0, 104)
+
+    cx1, cy1, cx2, cy2 = right_x1 + 36, 192, right_x2 - 36, SAFE_H - 70
+    od.rounded_rectangle([cx1 + 34, cy1 + 18, cx2 - 8, cy2 + 10], radius=12, fill=fill_back, outline=line_dim, width=1)
+    od.rounded_rectangle([cx1 + 14, cy1, cx2 - 28, cy2 - 8], radius=12, fill=fill_mid, outline=line_soft, width=1)
+    od.rounded_rectangle([cx1, cy1 + 24, cx2 - 44, cy2 + 18], radius=12, fill=fill_front, outline=line_dim, width=1)
+
+    if style == "trend":
+        chart_x1, chart_y1 = cx1 + 22, cy1 + 86
+        chart_x2, chart_y2 = cx2 - 88, cy2 - 26
+        od.rectangle([chart_x1, chart_y1, chart_x2, chart_y2], outline=line_soft, width=1)
+        for i in range(4):
+            gy = chart_y1 + (chart_y2 - chart_y1) * i // 3
+            od.line([(chart_x1 + 8, gy), (chart_x2 - 8, gy)], fill=line_dim, width=1)
+        pts = [
+            (chart_x1 + 12, chart_y2 - 18),
+            (chart_x1 + 56, chart_y2 - 36),
+            (chart_x1 + 94, chart_y2 - 32),
+            (chart_x1 + 142, chart_y2 - 72),
+            (chart_x1 + 186, chart_y2 - 112),
+        ]
+        od.line(pts, fill=accent, width=3)
+        ex, ey = pts[-1]
+        od.ellipse([ex - 4, ey - 4, ex + 4, ey + 4], fill=accent_dot)
+    elif style == "flow":
+        # 电脑外形
+        lx1, ly1, lx2, ly2 = cx1 + 24, cy1 + 76, cx2 - 72, cy2 - 24
+        od.rounded_rectangle([lx1, ly1, lx2, ly2], radius=12, fill=(68, 110, 184, 92), outline=line_soft, width=1)
+        sx1, sy1, sx2, sy2 = lx1 + 16, ly1 + 18, lx2 - 16, ly2 - 28
+        od.rectangle([sx1, sy1, sx2, sy2], outline=line_soft, width=1)
+        # 底座
+        bx1, by1, bx2, by2 = lx1 + 42, ly2 - 10, lx2 - 42, ly2 + 12
+        od.rounded_rectangle([bx1, by1, bx2, by2], radius=6, fill=(70, 106, 168, 86), outline=line_dim, width=1)
+        # 屏幕内流程节点
+        nx = [sx1 + 12, sx1 + 82, sx1 + 152, sx1 + 222]
+        ny = [sy1 + 24, sy1 + 56, sy1 + 36, sy1 + 70]
+        for i in range(4):
+            od.rounded_rectangle([nx[i], ny[i], nx[i] + 56, ny[i] + 30], radius=7, fill=(76, 122, 198, 106), outline=line_soft, width=1)
+            if i < 3:
+                od.line([(nx[i] + 56, ny[i] + 15), (nx[i + 1], ny[i + 1] + 15)], fill=accent, width=2)
+        od.ellipse([nx[-1] + 46, ny[-1] + 8, nx[-1] + 62, ny[-1] + 24], fill=accent_dot)
+    else:  # stack / 架构
+        # 电脑外形
+        lx1, ly1, lx2, ly2 = cx1 + 24, cy1 + 76, cx2 - 72, cy2 - 24
+        od.rounded_rectangle([lx1, ly1, lx2, ly2], radius=12, fill=(68, 110, 184, 92), outline=line_soft, width=1)
+        sx1, sy1, sx2, sy2 = lx1 + 16, ly1 + 18, lx2 - 16, ly2 - 28
+        od.rectangle([sx1, sy1, sx2, sy2], outline=line_soft, width=1)
+        bx1, by1, bx2, by2 = lx1 + 42, ly2 - 10, lx2 - 42, ly2 + 12
+        od.rounded_rectangle([bx1, by1, bx2, by2], radius=6, fill=(70, 106, 168, 86), outline=line_dim, width=1)
+        # 屏幕内模块架构图
+        a = (sx1 + 20, sy1 + 26, sx1 + 108, sy1 + 66)
+        b = (sx1 + 20, sy1 + 92, sx1 + 108, sy1 + 132)
+        c = (sx1 + 152, sy1 + 60, sx1 + 244, sy1 + 100)
+        for box in (a, b, c):
+            od.rounded_rectangle(box, radius=8, fill=(76, 122, 198, 106), outline=line_soft, width=1)
+        # 连线
+        od.line([(a[2], (a[1] + a[3]) // 2), (c[0], (c[1] + c[3]) // 2)], fill=accent, width=2)
+        od.line([(b[2], (b[1] + b[3]) // 2), (c[0], (c[1] + c[3]) // 2)], fill=accent, width=2)
+        od.ellipse([c[2] - 10, (c[1] + c[3]) // 2 - 4, c[2] - 2, (c[1] + c[3]) // 2 + 4], fill=accent_dot)
+
+    od.rounded_rectangle([right_x1 + 18, 164, right_x1 + 86, 230], radius=10, fill=(52, 94, 166, 48), outline=line_soft, width=1)
+    od.text((right_x1 + 44, 186), "*", font=load_font(22), fill=accent)
+
+    img_rgba = img.convert("RGBA")
+    img_rgba.alpha_composite(overlay)
+    img.paste(img_rgba.convert("RGB"))
+
+
+def _render_hook_split(draw, img, frame, load_font):
     title = frame.get("title", "")
     subtitle = frame.get("subtitle", "")
     script = frame.get("script", "")
+
+    # 首帧封面模式：左文案精简 + 右侧插画区，避免开场信息过载。
+    if frame.get("_is_first"):
+        left_x1, left_x2 = 70, 760
+        right_x1, right_x2 = 800, W - 70
+
+        title_lines, t_font, t_lh, _ = fit_text_block(
+            draw, title, left_x2 - left_x1 - 72, 220, [72, 66, 58, 52, 46], max_lines=3, line_gap=10
+        )
+        ty = 220
+        draw_text_block(
+            draw, title_lines, t_font, left_x1 + 36, ty, color=PALETTE["PURPLE_L"], line_h=t_lh, line_gap=10
+        )
+        if subtitle:
+            s_lines, s_font, s_lh, _ = fit_text_block(
+                draw, subtitle, left_x2 - left_x1 - 72, 96, [34, 30, 28, 24], max_lines=2, line_gap=8
+            )
+            draw_text_block(
+                draw,
+                s_lines,
+                s_font,
+                left_x1 + 36,
+                ty + 180,
+                color=PALETTE["WHITE"],
+                line_h=s_lh,
+                line_gap=8,
+            )
+
+        # 右侧“封面插画”占位：多层文档 + 图表图块，强调视觉记忆点。
+        _render_cover_illustration(img, frame, right_x1, right_x2, load_font)
+        return
+
     left_x1, left_x2 = 70, 810
     right_x1, right_x2 = 840, W - 70
     card(draw, left_x1, 110, left_x2, SAFE_H - 18, fill=(17, 12, 44), outline=PALETTE["PURPLE_L"])
@@ -205,6 +354,118 @@ def _render_hook_center(draw, frame, load_font):
             hy += hint_lh + 6
 
 
+def _render_hook_closing(draw, img, frame, load_font):
+    """收尾页专用排版：标题 + 中部总结条目 + 底部感谢区。"""
+    title = str(frame.get("title", "")).strip() or "总结"
+    points = _build_closing_points(frame)
+    left_footer = str(frame.get("closing_left", "")).strip() or "感谢观看"
+    right_footer = str(frame.get("closing_right", "")).strip() or "下一步执行"
+
+    title_lines, t_font, t_lh, _ = fit_text_block(
+        draw, title, W - 260, 118, [64, 58, 52, 46, 40], max_lines=2, line_gap=8
+    )
+    ty = 66
+    for ln in title_lines:
+        text_center(draw, ln, ty, t_font, TOKENS["color"]["title"])
+        ty += t_lh + 8
+
+    top_rule_y = ty + 8
+    draw.line([(120, top_rule_y), (W - 120, top_rule_y)], fill=PALETTE["CARD_B"], width=2)
+
+    list_x1, list_x2 = 340, W - 340
+    top = top_rule_y + 24
+    footer_h = 72
+    fy1 = SAFE_H - footer_h
+    bottom_reserved = fy1 - 24
+    row_gap = 14
+    row_count = max(1, len(points))
+    row_h = max(60, min(86, (bottom_reserved - top - row_gap * (row_count - 1)) // row_count))
+
+    def _draw_row_icon(cx, cy, idx):
+        draw.ellipse([cx - 23, cy - 23, cx + 23, cy + 23], outline=(154, 190, 255), width=2, fill=(240, 246, 255))
+        c = (20, 88, 194)
+        if idx == 0:  # 对勾
+            draw.line([(cx - 8, cy + 1), (cx - 2, cy + 8), (cx + 11, cy - 9)], fill=c, width=3)
+        elif idx == 1:  # 奖杯简笔
+            draw.arc([cx - 9, cy - 13, cx + 9, cy + 4], start=0, end=180, fill=c, width=2)
+            draw.line([(cx - 9, cy - 4), (cx - 12, cy - 1)], fill=c, width=2)
+            draw.line([(cx + 9, cy - 4), (cx + 12, cy - 1)], fill=c, width=2)
+            draw.line([(cx, cy + 4), (cx, cy + 10)], fill=c, width=2)
+            draw.line([(cx - 5, cy + 10), (cx + 5, cy + 10)], fill=c, width=2)
+        elif idx == 2:  # 齿轮简化
+            draw.ellipse([cx - 7, cy - 7, cx + 7, cy + 7], outline=c, width=2)
+            draw.ellipse([cx - 2, cy - 2, cx + 2, cy + 2], fill=c)
+            draw.line([(cx, cy - 11), (cx, cy - 8)], fill=c, width=2)
+            draw.line([(cx, cy + 8), (cx, cy + 11)], fill=c, width=2)
+            draw.line([(cx - 11, cy), (cx - 8, cy)], fill=c, width=2)
+            draw.line([(cx + 8, cy), (cx + 11, cy)], fill=c, width=2)
+        else:  # 握手简化
+            draw.line([(cx - 10, cy + 3), (cx - 2, cy - 4), (cx + 2, cy - 1), (cx + 10, cy - 8)], fill=c, width=2)
+            draw.line([(cx - 9, cy + 8), (cx - 1, cy + 1)], fill=c, width=2)
+
+    for i, p in enumerate(points):
+        y1 = top + i * (row_h + row_gap)
+        y2 = y1 + row_h
+        apply_glass_panel(
+            img,
+            draw,
+            list_x1,
+            y1,
+            list_x2,
+            y2,
+            radius=14,
+            blur=10,
+            tint_alpha=0.26,
+            tint_color=(20, 42, 92),
+            outline_color=(140, 186, 255),
+            pad=6,
+        )
+
+        bullet_r = 5
+        by = y1 + row_h // 2
+        draw.ellipse([list_x1 + 18 - bullet_r, by - bullet_r, list_x1 + 18 + bullet_r, by + bullet_r], fill=PALETTE["WHITE"])
+
+        lines, p_font, p_lh, _ = fit_text_block(
+            draw,
+            p,
+            list_x2 - list_x1 - 116,
+            row_h - 16,
+            [40, 36, 32, 28, 24, 22],
+            max_lines=2,
+            line_gap=4,
+        )
+        text_total_h = len(lines) * p_lh + max(0, len(lines) - 1) * 4
+        py = y1 + (row_h - text_total_h) // 2
+        for ln in lines:
+            draw.text((list_x1 + 38, py), ln, font=p_font, fill=PALETTE["WHITE"])
+            py += p_lh + 4
+
+        icon_cx = list_x2 - 40
+        icon_cy = by
+        _draw_row_icon(icon_cx, icon_cy, i)
+
+    draw.rectangle([0, fy1, W, SAFE_H], fill=(16, 32, 78))
+    tab_x2 = 248
+    lf_lines, lf_font, lf_lh, lf_total_h = fit_text_block(
+        draw, left_footer, tab_x2 - 26, footer_h - 12, [40, 34, 30, 26, 22], max_lines=2, line_gap=2
+    )
+    lfy = fy1 + (footer_h - lf_total_h) // 2
+    for ln in lf_lines:
+        draw.text((28, lfy), ln, font=lf_font, fill=PALETTE["WHITE"])
+        lfy += lf_lh + 2
+
+    draw.line([(286, fy1 + footer_h // 2), (W - 240, fy1 + footer_h // 2)], fill=PALETTE["CARD_B"], width=2)
+    rf_lines, rf_font, rf_lh, rf_total_h = fit_text_block(
+        draw, right_footer, 220, footer_h - 12, [40, 34, 30, 26, 22], max_lines=2, line_gap=2
+    )
+    rfy = fy1 + (footer_h - rf_total_h) // 2
+    for ln in rf_lines:
+        rb = draw.textbbox((0, 0), ln, font=rf_font)
+        rw = rb[2] - rb[0]
+        draw.text((W - 34 - rw, rfy), ln, font=rf_font, fill=TOKENS["color"]["title"])
+        rfy += rf_lh + 2
+
+
 def render_hook(draw, img, frame, load_font):
     # 优先使用内容驱动选型；若后续需要回滚，可切回 choose_hook_style。
     style = choose_hook_style_adaptive(frame)
@@ -219,8 +480,12 @@ def render_hook(draw, img, frame, load_font):
     for t in tags:
         tx += tag(draw, tx, 28, t, f14) + 12
 
+    if frame.get("_is_last"):
+        _render_hook_closing(draw, img, frame, load_font)
+        return
+
     if style == "split":
-        _render_hook_split(draw, frame, load_font)
+        _render_hook_split(draw, img, frame, load_font)
         return
     if style == "spotlight":
         _render_hook_spotlight(draw, frame)

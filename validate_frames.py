@@ -22,7 +22,19 @@ VALID_COLORS = {
     "DIM",
 }
 
+VALID_FRAME_TYPES = frozenset(
+    {"hook", "cards", "comparison", "bullets", "kpi", "quote"}
+)
+
 BANNED_CHARS = "✅✓❌✗⭐★☆→←↑↓①②③④⑤⚠⚡🎯🔥💡🚀😊"
+
+# M1 版式：bullets / quote 文本长度边界
+MAX_BULLET_ITEM_LEN = 160
+MIN_QUOTE_BODY_LEN = 10
+MAX_QUOTE_BODY_LEN = 420
+MAX_KPI_VALUE_LEN = 40
+MAX_FOOTNOTE_LEN = 120
+MAX_KPI_ITEMS = 4
 
 MAX_SCRIPT_LEN = 300
 MIN_SCRIPT_LEN = 20
@@ -69,6 +81,18 @@ def is_redundant_text(a: str, b: str) -> bool:
             break
         prefix += 1
     return (prefix / min_len) >= 0.8
+
+
+def _normalize_bullet_items(raw):
+    out = []
+    if not isinstance(raw, list):
+        return out
+    for x in raw:
+        if isinstance(x, str) and x.strip():
+            out.append(x.strip())
+        elif isinstance(x, dict) and str(x.get("text", "")).strip():
+            out.append(str(x.get("text")).strip())
+    return out
 
 
 def leading_script_chunk(text: str, max_len: int = 36) -> str:
@@ -156,9 +180,9 @@ async def main(args: dict) -> dict:
             prefix = f"frames[{i}]"
             ftype = frame.get("type", "")
 
-            if ftype not in ("hook", "cards", "comparison"):
+            if ftype not in VALID_FRAME_TYPES:
                 errors.append(
-                    f"{prefix}.type '{ftype}' 无效，只能是 hook/cards/comparison"
+                    f"{prefix}.type '{ftype}' 无效，可选: {sorted(VALID_FRAME_TYPES)}"
                 )
                 continue
 
@@ -208,6 +232,8 @@ async def main(args: dict) -> dict:
                     errors.append(f"{prefix}.title 含禁止字符 '{ch}'")
                 if ch in script:
                     errors.append(f"{prefix}.script 含禁止字符 '{ch}'")
+                if subtitle and ch in subtitle:
+                    errors.append(f"{prefix}.subtitle 含禁止字符 '{ch}'")
 
             # ── cards 类型专项 ──
             if ftype == "cards":
@@ -255,6 +281,97 @@ async def main(args: dict) -> dict:
                         f"{prefix} comparison 内容为空：请至少提供 left.points/right.points 其一，"
                         f"或提供 insight"
                     )
+
+            # ── bullets 类型专项（M1）──
+            if ftype == "bullets":
+                raw_items = frame.get("items", [])
+                texts = _normalize_bullet_items(raw_items)
+                if len(texts) < 2:
+                    errors.append(f"{prefix}.items 至少需要 2 条有效要点（字符串或 {{\"text\"}}）")
+                elif len(texts) > 8:
+                    errors.append(f"{prefix}.items 超过上限 8 条")
+                else:
+                    for j, t in enumerate(texts):
+                        ip = f"{prefix}.items[{j}]"
+                        if len(t) > MAX_BULLET_ITEM_LEN:
+                            errors.append(f"{ip} 单条过长(>{MAX_BULLET_ITEM_LEN}字)")
+                        for ch in BANNED_CHARS:
+                            if ch in t:
+                                errors.append(f"{ip} 含禁止字符 '{ch}'")
+
+            # ── kpi 类型专项（M1）──
+            if ftype == "kpi":
+                value = str(frame.get("value", "")).strip()
+                label = str(frame.get("label", "")).strip()
+                unit = str(frame.get("unit", "")).strip()
+                footnote = str(frame.get("footnote", "")).strip()
+                kpis = frame.get("kpis", [])
+                has_kpis = isinstance(kpis, list) and len(kpis) > 0
+
+                if has_kpis:
+                    if len(kpis) < 2:
+                        errors.append(f"{prefix}.kpis 至少需要 2 项")
+                    if len(kpis) > MAX_KPI_ITEMS:
+                        errors.append(f"{prefix}.kpis 超过上限 {MAX_KPI_ITEMS} 项")
+                    for j, it in enumerate(kpis[:MAX_KPI_ITEMS]):
+                        kp = f"{prefix}.kpis[{j}]"
+                        if not isinstance(it, dict):
+                            errors.append(f"{kp} 必须是对象")
+                            continue
+                        t = str(it.get("title", "")).strip()
+                        v = str(it.get("value", "")).strip()
+                        lb = str(it.get("label", "")).strip()
+                        ut = str(it.get("unit", "")).strip()
+                        if not t:
+                            errors.append(f"{kp}.title 不能为空")
+                        if not v:
+                            errors.append(f"{kp}.value 不能为空")
+                        elif len(v) > MAX_KPI_VALUE_LEN:
+                            errors.append(f"{kp}.value 过长(>{MAX_KPI_VALUE_LEN}字)")
+                        for field_name, blob in (("title", t), ("value", v), ("label", lb), ("unit", ut)):
+                            if not blob:
+                                continue
+                            for ch in BANNED_CHARS:
+                                if ch in blob:
+                                    errors.append(f"{kp}.{field_name} 含禁止字符 '{ch}'")
+                else:
+                    if not value:
+                        errors.append(f"{prefix}.value 不能为空（或提供 kpis[]）")
+                    elif len(value) > MAX_KPI_VALUE_LEN:
+                        errors.append(f"{prefix}.value 过长(>{MAX_KPI_VALUE_LEN}字)")
+                    if not label:
+                        errors.append(f"{prefix}.label 不能为空（用于解释指标含义）")
+                for field_name, blob in (
+                    ("value", value),
+                    ("label", label),
+                    ("unit", unit),
+                    ("footnote", footnote),
+                ):
+                    if not blob:
+                        continue
+                    for ch in BANNED_CHARS:
+                        if ch in blob:
+                            errors.append(f"{prefix}.{field_name} 含禁止字符 '{ch}'")
+                if footnote and len(footnote) > MAX_FOOTNOTE_LEN:
+                    errors.append(f"{prefix}.footnote 过长(>{MAX_FOOTNOTE_LEN}字)")
+
+            # ── quote 类型专项（M1）──
+            if ftype == "quote":
+                qbody = str(frame.get("quote", "")).strip()
+                attr = str(frame.get("attribution", "")).strip()
+                if not qbody:
+                    errors.append(f"{prefix}.quote 不能为空")
+                elif len(qbody) < MIN_QUOTE_BODY_LEN:
+                    errors.append(
+                        f"{prefix}.quote 过短({len(qbody)}字 < {MIN_QUOTE_BODY_LEN})，请写完整引用内容"
+                    )
+                elif len(qbody) > MAX_QUOTE_BODY_LEN:
+                    errors.append(f"{prefix}.quote 过长(>{MAX_QUOTE_BODY_LEN}字)")
+                for ch in BANNED_CHARS:
+                    if ch in qbody:
+                        errors.append(f"{prefix}.quote 含禁止字符 '{ch}'")
+                    if attr and ch in attr:
+                        errors.append(f"{prefix}.attribution 含禁止字符 '{ch}'")
 
         # 相邻帧防复读：尤其拦截自动拆页后前后页开头重复
         for i in range(1, len(frames)):

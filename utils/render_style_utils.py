@@ -95,6 +95,16 @@ def estimate_layout_score(frame):
             score -= 15
         if (ln + rn) >= LAYOUT_COMPARISON_TOTAL_MANY:
             score -= 10
+    if ftype == "bullets":
+        items = frame.get("items", []) if isinstance(frame.get("items"), list) else []
+        if len(items) >= 6:
+            score -= 10
+    if ftype == "kpi":
+        if len(str(frame.get("value", ""))) > 18:
+            score -= 8
+    if ftype == "quote":
+        if len(str(frame.get("quote", ""))) > 200:
+            score -= 10
     return max(0, score)
 
 

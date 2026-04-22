@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from renderers.common_draw import card, draw_header_tag
 from utils.render_consts import CARD_ACCENT_COLORS, PALETTE, SAFE_H, W
+from utils.render_glass_utils import apply_glass_panel
 from utils.render_text_utils import draw_text_block, fit_text_block, wrap_text_lines
 
 
@@ -71,7 +72,7 @@ def choose_cards_style_adaptive(draw, frame, load_font):
     return _choose_cards_style_adaptive(draw, frame, frame.get("cards", []), load_font)
 
 
-def _render_cards_grid(draw, cards, col, load_font, *, fixed_metrics=False):
+def _render_cards_grid(draw, img, cards, col, load_font, *, fixed_metrics=False):
     n = len(cards)
     row_counts = _cards_row_counts(n)
     rows = len(row_counts)
@@ -116,7 +117,18 @@ def _render_cards_grid(draw, cards, col, load_font, *, fixed_metrics=False):
             c_data = cards[i]
             cx = start_x + c * (cw + gap_x)
             c_color = col(c_data.get("color", colors[i % len(colors)]))
-            card(draw, cx, cy, cx + cw, cy + ch, fill=PALETTE["CARD"], outline=c_color)
+            apply_glass_panel(
+                img,
+                draw,
+                cx,
+                cy,
+                cx + cw,
+                cy + ch,
+                radius=12,
+                blur=9,
+                tint_alpha=0.24,
+                outline_color=c_color,
+            )
             draw.rectangle([cx, cy, cx + cw, cy + 8], fill=c_color)
             card_title = c_data.get("title") or c_data.get("label", "")
             desc = c_data.get("desc", "")
@@ -229,7 +241,7 @@ def render_cards(draw, img, frame, load_font, col):
         return
     if style == "grid":
         fixed_grid = explicit_style == "grid"
-        _render_cards_grid(draw, cards, col, load_font, fixed_metrics=fixed_grid)
+        _render_cards_grid(draw, img, cards, col, load_font, fixed_metrics=fixed_grid)
         return
     if style == "timeline":
         _render_cards_timeline(draw, cards, col, load_font)
