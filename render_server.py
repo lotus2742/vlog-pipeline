@@ -15,6 +15,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel, model_validator
 import subprocess, json, os, time, threading, uuid, html
 from validate_frames import run_validation
+from frame_expander import expand_long_frames
 
 app = FastAPI(title="Video Render Server", version="0.1.0")
 
@@ -85,10 +86,12 @@ def index():
 @app.post("/render")
 def submit_render(req: RenderRequest):
     """提交渲染任务,立即返回,后台异步执行"""
-    payload = {
+    payload_raw = {
         "meta": {"topic": req.topic, "voice": req.voice, "rate": req.rate},
         "frames": req.frames
     }
+    # 小白讲清楚优先：放宽自动拆页阈值，减少仅因时长被硬拆。
+    payload, split_stats = expand_long_frames(payload_raw, target_script_len=170, max_frames=12)
     validation = run_validation(payload)
     if not validation.get("is_valid"):
         raise HTTPException(
@@ -139,7 +142,9 @@ def submit_render(req: RenderRequest):
         "status": "pending",
         "job_dir": job_dir,
         "watch_url": f"/watch/{req.job_id}",
-        "hint": f"浏览器打开 http://0:0:0:0:8765/watch/{req.job_id} 可查看制作进度",
+        "split_applied": split_stats.get("expanded_count", 0) > 0,
+        "split_stats": split_stats,
+        "hint": f"浏览器打开 http://localhost:8765/watch/{req.job_id} 可查看制作进度",
     }
 
 @app.get("/status/{job_id}")

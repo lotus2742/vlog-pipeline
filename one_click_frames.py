@@ -6,10 +6,15 @@ one_click_frames.py
 """
 
 import argparse
+from datetime import datetime
+import json
 import shlex
 import subprocess
 import sys
 from pathlib import Path
+from frame_expander import expand_long_frames
+from frame_style_policy import optimize_frame_styles
+from json_sanitize import sanitize_json_file
 
 
 def parse_args() -> argparse.Namespace:
@@ -42,6 +47,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="打印完整校验 JSON 输出",
     )
+    parser.add_argument(
+        "--no-timestamp-suffix",
+        action="store_true",
+        help="关闭时间戳后缀（默认开启，避免覆盖旧文件）",
+    )
     return parser.parse_args()
 
 
@@ -54,9 +64,16 @@ def run_cmd(cmd: str) -> subprocess.CompletedProcess:
     )
 
 
+def with_timestamp_suffix(path: Path) -> Path:
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return path.with_name(f"{path.stem}_{ts}{path.suffix}")
+
+
 def main() -> int:
     args = parse_args()
     output_path = Path(args.output).expanduser().resolve()
+    if not args.no_timestamp_suffix:
+        output_path = with_timestamp_suffix(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     validator_path = Path(args.validator).expanduser().resolve()
@@ -78,6 +95,41 @@ def main() -> int:
             if attempt > args.max_retries:
                 return 1
             continue
+
+        # 先清洗潜在的“多段 JSON 拼接”，只保留首个对象
+        try:
+            sanitize_stats = sanitize_json_file(str(output_path))
+            if sanitize_stats.get("had_extra_text"):
+                print("🧹 检测到附加 JSON/文本，已自动清洗为首个合法 JSON 对象")
+        except Exception as e:
+            print(f"⚠️ JSON 清洗失败: {e}")
+            if attempt > args.max_retries:
+                return 1
+            continue
+
+        # 生成后先自动拆页，减少“单页停留过久”
+        try:
+            raw = json.loads(output_path.read_text(encoding="utf-8"))
+            # 小白讲清楚优先：放宽自动拆页阈值，减少仅因时长被硬拆。
+            expanded, stats = expand_long_frames(raw, target_script_len=170, max_frames=12)
+            optimized = optimize_frame_styles(expanded)
+            if stats["expanded_count"] > 0:
+                output_path.write_text(
+                    json.dumps(optimized, ensure_ascii=False, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+                print(
+                    f"🪄 已自动拆页: {stats['expanded_count']} 帧被拆分 "
+                    f"({stats['before_count']} -> {stats['after_count']})"
+                )
+            elif optimized != raw:
+                output_path.write_text(
+                    json.dumps(optimized, ensure_ascii=False, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+                print("🎨 已自动优化样式策略（收尾 hook 优先 spotlight）")
+        except Exception as e:
+            print(f"⚠️ 自动拆页跳过: {e}")
 
         validate_cmd = (
             f"python3 {shlex.quote(str(validator_path))} "

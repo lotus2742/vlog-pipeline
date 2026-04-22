@@ -26,6 +26,66 @@ BANNED_CHARS = "✅✓❌✗⭐★☆→←↑↓①②③④⑤⚠⚡🎯🔥�
 
 MAX_SCRIPT_LEN = 300
 MIN_SCRIPT_LEN = 20
+ACTION_WORD_HINTS = (
+    "先",
+    "再",
+    "然后",
+    "可以",
+    "建议",
+    "记得",
+    "请",
+    "务必",
+    "避免",
+    "检查",
+    "设置",
+    "执行",
+    "确认",
+    "补充",
+    "重试",
+)
+
+
+def normalize_text_for_compare(text: str) -> str:
+    s = str(text or "").strip().lower()
+    if not s:
+        return ""
+    drop_chars = " \n\r\t，。！？；：、,.!?;:-_()[]{}\"'`~|/\\"
+    return "".join(ch for ch in s if ch not in drop_chars)
+
+
+def is_redundant_text(a: str, b: str) -> bool:
+    na = normalize_text_for_compare(a)
+    nb = normalize_text_for_compare(b)
+    if not na or not nb:
+        return False
+    if na in nb or nb in na:
+        return True
+    min_len = min(len(na), len(nb))
+    if min_len < 12:
+        return False
+    prefix = 0
+    for i in range(min_len):
+        if na[i] != nb[i]:
+            break
+        prefix += 1
+    return (prefix / min_len) >= 0.8
+
+
+def leading_script_chunk(text: str, max_len: int = 36) -> str:
+    s = str(text or "").strip().replace("\n", "")
+    if not s:
+        return ""
+    return s[:max_len]
+
+
+def is_actionable_sentence(text: str) -> bool:
+    s = str(text or "").strip()
+    if len(s) < 8:
+        return False
+    has_action = any(k in s for k in ACTION_WORD_HINTS)
+    # 首帧 subtitle 期望是完整表达，至少有动作词，并且不是纯标签短语。
+    has_sentence_shape = any(p in s for p in ("，", "。", "；", "！", "？")) or len(s) >= 14
+    return has_action and has_sentence_shape
 
 
 async def main(args: dict) -> dict:
@@ -124,6 +184,23 @@ async def main(args: dict) -> dict:
                         f"{prefix}.script 过短({len(script)}字 < {MIN_SCRIPT_LEN})"
                     )
 
+            # subtitle/script 防复读：若 subtitle 与 script 高度重复，要求重写 subtitle
+            subtitle = str(frame.get("subtitle", "")).strip()
+            if subtitle and script and is_redundant_text(subtitle, script):
+                errors.append(f"{prefix}.subtitle 与 script 高度重复，请改写避免同屏复读")
+            if i == 0:
+                if not subtitle:
+                    errors.append("frames[0].subtitle 不能为空，建议写成带动作的完整句子")
+                elif not is_actionable_sentence(subtitle):
+                    errors.append(
+                        "frames[0].subtitle 建议改为带动作的完整句子，例如“先拆任务再分配执行，避免漏项”。"
+                    )
+                if subtitle and (len(subtitle) < 16 or len(subtitle) > 32):
+                    errors.append(
+                        f"frames[0].subtitle 推荐 16~32 字，当前 {len(subtitle)} 字，"
+                        "建议调整以保证首帧中央信息区视觉稳定。"
+                    )
+
             # 禁止字符
             title = frame.get("title", "")
             for ch in BANNED_CHARS:
@@ -177,6 +254,30 @@ async def main(args: dict) -> dict:
                     errors.append(
                         f"{prefix} comparison 内容为空：请至少提供 left.points/right.points 其一，"
                         f"或提供 insight"
+                    )
+
+        # 相邻帧防复读：尤其拦截自动拆页后前后页开头重复
+        for i in range(1, len(frames)):
+            prev = frames[i - 1]
+            curr = frames[i]
+            prev_script = str(prev.get("script", "")).strip()
+            curr_script = str(curr.get("script", "")).strip()
+            if not prev_script or not curr_script:
+                continue
+
+            prev_lead = leading_script_chunk(prev_script, 40)
+            curr_lead = leading_script_chunk(curr_script, 40)
+            if is_redundant_text(prev_lead, curr_lead):
+                errors.append(
+                    f"frames[{i-1}] 与 frames[{i}] 开头表达高度重复，请避免相邻帧复读"
+                )
+
+            prev_id = str(prev.get("id", ""))
+            curr_id = str(curr.get("id", ""))
+            if curr_id.endswith("_p2") or curr_id.startswith(f"{prev_id}_p"):
+                if is_redundant_text(prev_script, curr_script):
+                    errors.append(
+                        f"frames[{i}] 疑似拆页续帧但文案与上一帧重复，请重写后一帧开头"
                     )
 
     is_valid = len(errors) == 0

@@ -95,6 +95,36 @@ curl -X POST http://localhost:8765/render \
 - 轮询状态：`GET /status/{job_id}`
 - 完成后下载：`GET /download/{job_id}`
 
+## Step D：Agent 一体化入口（校验 + 渲染 + 轮询）
+
+当你希望 Agent 自动跑完整链路，而不是手动 `curl` 与轮询时：
+
+```bash
+python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json
+```
+
+仅提交任务不等待完成：
+
+```bash
+python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json --no-wait
+```
+
+将结果 JSON 写入文件（同时仍会打印到终端）：
+
+```bash
+python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json --result-file ./tmp/last_render_result.json
+```
+
+返回为结构化 JSON，包含：
+
+- `ok`：是否成功
+- `stage`：当前阶段（`validate/submitted/poll/done/error/timeout`）
+- `job_id`：渲染任务 ID
+- `watch_url`：浏览器查看进度地址
+- `download_url`：下载地址
+- `last_status`：轮询到的最新任务状态（含 `stage/progress/stage_label`）
+- `error_code/error_message/validation_errors`：失败原因与修复线索
+
 ## 5. 离线分步命令（不经过 HTTP）
 
 给定 `frames.json`（例如 `./tmp/day7_frames.json`）：
