@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import re
 import sys
 
 VALID_VOICES = {
@@ -58,6 +59,49 @@ ACTION_WORD_HINTS = (
     "确认",
     "补充",
     "重试",
+)
+BAD_FIRST_TITLE_PHRASES = (
+    "核心要点",
+    "今日主题",
+    "一图看懂",
+    "快速了解",
+    "入门指南",
+    "完整解析",
+    "原理与实现",
+    "基础概念",
+)
+FIRST_TITLE_TECH_HINTS = (
+    "机制",
+    "策略",
+    "链路",
+    "约束",
+    "增强",
+    "前置",
+    "协同",
+    "提升",
+    "降低",
+    "稳定性",
+    "准确性",
+    "可靠性",
+    "偏差",
+    "幻觉",
+    "生成",
+    "检索",
+)
+FIRST_TITLE_BANNED_COLLOQUIAL = (
+    "更稳",
+    "更好",
+    "靠谱",
+    "管用",
+    "好用",
+)
+MIN_FIRST_TITLE_LEN = 10
+MAX_FIRST_TITLE_LEN = 28
+FIRST_TITLE_STYLE_PATTERNS = (
+    r".+[：:].+(提升|降低|优化|增强|稳定性|准确性|可靠性).+",
+    r"(基于|依托|面向).+(机制|策略|链路|体系).+",
+    r".+(机制|策略|链路|约束).+(提升|降低|优化|增强|稳定性|准确性|可靠性).+",
+    r".+(生成|检索|问答|推理).+(方案|实践|方法|范式).+",
 )
 
 
@@ -130,10 +174,54 @@ def has_quote_alignment(script: str, quote: str) -> bool:
     return any(a and a in ns for a in anchors)
 
 
+def _topic_tokens(topic: str) -> list[str]:
+    raw = str(topic or "").replace("-", " ")
+    return [x for x in raw.split() if len(x) >= 2]
+
+
+def evaluate_first_title(title: str, topic: str = "") -> dict:
+    t = str(title or "").strip()
+    if not t:
+        return {"hard_error": "frames[0].title 不能为空", "score": 0, "matched_styles": []}
+    if len(t) < MIN_FIRST_TITLE_LEN or len(t) > MAX_FIRST_TITLE_LEN:
+        return {
+            "hard_error": f"frames[0].title 推荐 {MIN_FIRST_TITLE_LEN}~{MAX_FIRST_TITLE_LEN} 字，当前 {len(t)} 字",
+            "score": 0,
+            "matched_styles": [],
+        }
+    if any(p in t for p in BAD_FIRST_TITLE_PHRASES):
+        return {"hard_error": "frames[0].title 过于模板化，请改成技术结论标题", "score": 0, "matched_styles": []}
+    if any(p in t for p in FIRST_TITLE_BANNED_COLLOQUIAL):
+        return {"hard_error": "frames[0].title 含口语化词汇，请改为书面技术表达", "score": 0, "matched_styles": []}
+    if re.search(r"先.{0,12}后", t):
+        return {"hard_error": "frames[0].title 命中“先…后…”口语句式，请改为名词化标题", "score": 0, "matched_styles": []}
+
+    score = 60
+    matched_styles = [p for p in FIRST_TITLE_STYLE_PATTERNS if re.search(p, t)]
+    if matched_styles:
+        score += 15
+    if any(k in t for k in FIRST_TITLE_TECH_HINTS):
+        score += 15
+    topic_tokens = _topic_tokens(topic)
+    if topic_tokens and any(tok in t for tok in topic_tokens[:3]):
+        score += 10
+    else:
+        score -= 15
+    if "：" in t or ":" in t:
+        score += 5
+
+    return {
+        "hard_error": "",
+        "score": max(0, min(100, score)),
+        "matched_styles": matched_styles,
+    }
+
+
 async def main(args: dict) -> dict:
     data = args.get("frames_json", {})
     retry_count = args.get("retry_count", 0)
     errors = []
+    warnings = []
 
     # 如果传入的是字符串，尝试解析
     if isinstance(data, str):
@@ -157,11 +245,13 @@ async def main(args: dict) -> dict:
 
     # ── meta 校验 ──
     meta = data.get("meta", {})
+    topic = ""
     if not isinstance(meta, dict):
         errors.append("meta 必须是对象")
     else:
         if not meta.get("topic", "").strip():
             errors.append("meta.topic 不能为空")
+        topic = meta.get("topic", "")
         voice = meta.get("voice", "zh-CN-XiaoyiNeural")
         if voice not in VALID_VOICES:
             errors.append(f"meta.voice '{voice}' 不合法，可选: {list(VALID_VOICES)}")
@@ -243,6 +333,18 @@ async def main(args: dict) -> dict:
             # title
             if not frame.get("title", "").strip():
                 errors.append(f"{prefix}.title 不能为空")
+            elif i == 0:
+                title_eval = evaluate_first_title(frame.get("title", ""), topic)
+                if title_eval["hard_error"]:
+                    errors.append(title_eval["hard_error"])
+                elif title_eval["score"] < 55:
+                    errors.append(
+                        f"frames[0].title 评分过低({title_eval['score']}<55)，请增强技术机制与价值表达"
+                    )
+                elif title_eval["score"] < 75:
+                    warnings.append(
+                        f"frames[0].title 评分一般({title_eval['score']})，建议优化为“技术机制 + 价值结果”"
+                    )
 
             # script
             script = frame.get("script", "")
@@ -470,12 +572,23 @@ async def main(args: dict) -> dict:
                     errors.append(
                         f"frames[{i}] 疑似拆页续帧但文案与上一帧重复，请重写后一帧开头"
                     )
+            # 标题句式多样性提醒（不阻断）
+            prev_title = str(prev.get("title", "")).strip()
+            curr_title = str(curr.get("title", "")).strip()
+            if prev_title and curr_title:
+                prev_has_colon = ("：" in prev_title) or (":" in prev_title)
+                curr_has_colon = ("：" in curr_title) or (":" in curr_title)
+                if prev_has_colon and curr_has_colon:
+                    warnings.append(
+                        f"frames[{i-1}] 与 frames[{i}] 标题句式都为冒号结构，建议改一帧以增强多样性"
+                    )
 
     is_valid = len(errors) == 0
 
     return {
         "is_valid": is_valid,
         "errors": errors,
+        "warnings": warnings,
         "error_summary": "; ".join(errors) if errors else "校验通过",
         "retry_count": retry_count + 1 if not is_valid else retry_count,
         "frames_json_str": json.dumps(data, ensure_ascii=False, indent=2),

@@ -215,6 +215,157 @@ def _render_cover_illustration(img, frame, right_x1, right_x2, load_font):
     img.paste(img_rgba.convert("RGB"))
 
 
+def _build_cover_code_lines(frame, style: str):
+    raw = frame.get("cover_code", [])
+    if isinstance(raw, list):
+        lines = [str(x).rstrip() for x in raw if str(x).strip()]
+        if lines:
+            return lines[:7]
+
+    # 未显式提供时，按主题给一段“示意代码”，减少右侧视觉空白。
+    if style == "trend":
+        return [
+            "metrics = [hit_rate, cite_rate, latency]",
+            "if hit_rate < 0.8:",
+            "    tune_chunking()",
+            "    tune_topk()",
+        ]
+    if style == "flow":
+        return [
+            "query_vec = embed(question)",
+            "docs = vectordb.search(query_vec, top_k=3)",
+            "prompt = build_prompt(docs, question)",
+            "answer = llm.generate(prompt)",
+        ]
+    return [
+        "chunks = splitter.split_text(doc)",
+        "collection.add(documents=chunks, ids=ids)",
+        "results = collection.query(query_texts=[q])",
+        "return results['documents'][0]",
+    ]
+
+
+def _render_cover_code_overlay(img, frame, right_x1, right_x2, load_font):
+    style = _pick_cover_illustration(frame)
+    code_lines = _build_cover_code_lines(frame, style)
+    if not code_lines:
+        return
+
+    overlay = Image.new("RGBA", (W, SAFE_H), (0, 0, 0, 0))
+    od = ImageDraw.Draw(overlay)
+    # 与封面插画主区域对齐：铺满内框，但保留四周安全边距。
+    cx1, cy1, cx2, cy2 = right_x1 + 36, 192, right_x2 - 36, SAFE_H - 70
+    px1 = cx1 + 22
+    px2 = cx2 - 54
+    py1 = cy1 + 16
+    py2 = cy2 - 18
+
+    # 顶部轻标签，位置留白避免压住内容。
+    od.text((px1 + 2, py1), "rag_flow.py", font=load_font(15), fill=(138, 198, 255, 146))
+
+    content_top = py1 + 28
+    content_bottom = py2
+    max_text_w = max(120, px2 - (px1 + 30) - 6)
+    available_h = max(80, content_bottom - content_top)
+
+    def _fit_line(text: str, font, max_w: int) -> str:
+        s = str(text or "")
+        if not s:
+            return ""
+        if od.textbbox((0, 0), s, font=font)[2] <= max_w:
+            return s
+        ell = "..."
+        lo, hi = 0, len(s)
+        best = ""
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            cand = s[:mid].rstrip() + ell
+            if od.textbbox((0, 0), cand, font=font)[2] <= max_w:
+                best = cand
+                lo = mid + 1
+            else:
+                hi = mid - 1
+        return best or ell
+
+    def _wrap_line(text: str, font, max_w: int):
+        raw = str(text or "").strip()
+        if not raw:
+            return []
+        parts = []
+        remain = raw
+        while remain:
+            if od.textbbox((0, 0), remain, font=font)[2] <= max_w:
+                parts.append(remain)
+                break
+            cut = max(8, int(len(remain) * 0.6))
+            probe = remain[:cut]
+            # 向右扩展到最大可容纳长度
+            while cut < len(remain):
+                cand = remain[: cut + 1]
+                if od.textbbox((0, 0), cand, font=font)[2] > max_w:
+                    break
+                cut += 1
+            chunk = remain[:cut].rstrip()
+            if not chunk:
+                parts.append(_fit_line(remain, font, max_w))
+                break
+            parts.append(chunk)
+            remain = remain[cut:].lstrip()
+            if len(parts) >= 3:
+                # 单行最多拆 3 段，最后一段截断避免溢出
+                if remain:
+                    parts[-1] = _fit_line(parts[-1] + " " + remain, font, max_w)
+                break
+        return parts
+
+    code_font = load_font(15)
+    wrapped = []
+    for line in code_lines[:12]:
+        segs = _wrap_line(line, code_font, max_text_w)
+        wrapped.extend(segs if segs else [""])
+    if not wrapped:
+        return
+
+    # 让代码尽量“铺满”区域高度，但仍保持可读。
+    target_lines = min(16, len(wrapped))
+    wrapped = wrapped[:target_lines]
+    line_h = max(18, min(30, available_h // max(1, len(wrapped))))
+    y = content_top
+    num_color = (120, 158, 220, 128)
+    base_color = (210, 230, 255, 188)
+    kw_color = (136, 210, 255, 210)
+    fn_color = (255, 214, 120, 210)
+
+    for i, line in enumerate(wrapped, 1):
+        if y > content_bottom - line_h:
+            break
+        od.text((px1, y), f"{i:>2}", font=code_font, fill=num_color)
+        x = px1 + 30
+
+        # 简单关键词高亮，接近 IDE 阅读感。
+        tokens = line.replace("(", " ( ").replace(")", " ) ").replace(",", " , ").split(" ")
+        for tk in tokens:
+            if tk == "":
+                x += 4
+                continue
+            color = base_color
+            if tk in {"def", "return", "if", "for", "in"}:
+                color = kw_color
+            elif tk.endswith("()") or tk in {"embed", "search", "build_prompt", "generate"}:
+                color = fn_color
+            bb = od.textbbox((x, y), tk, font=code_font)
+            tk_w = bb[2] - bb[0]
+            if x + tk_w > px2 - 4:
+                break
+            od.text((x, y), tk, font=code_font, fill=color)
+            x += tk_w + 5
+        y += line_h
+
+    img_rgba = img.convert("RGBA")
+    img_rgba.alpha_composite(overlay)
+    img.paste(img_rgba.convert("RGB"))
+
+
 def _render_hook_split(draw, img, frame, load_font):
     title = frame.get("title", "")
     subtitle = frame.get("subtitle", "")
@@ -225,7 +376,7 @@ def _render_hook_split(draw, img, frame, load_font):
         left_x1, left_x2 = 70, 760
         right_x1, right_x2 = 800, W - 70
 
-        title_lines, t_font, t_lh, _ = fit_text_block(
+        title_lines, t_font, t_lh, title_total_h = fit_text_block(
             draw, title, left_x2 - left_x1 - 72, 220, [72, 66, 58, 52, 46], max_lines=3, line_gap=10
         )
         ty = 220
@@ -236,12 +387,14 @@ def _render_hook_split(draw, img, frame, load_font):
             s_lines, s_font, s_lh, _ = fit_text_block(
                 draw, subtitle, left_x2 - left_x1 - 72, 96, [34, 30, 28, 24], max_lines=2, line_gap=8
             )
+            # 标题与副标题采用更保守的大间距，避免视觉上“贴太近”。
+            subtitle_y = ty + title_total_h + 28
             draw_text_block(
                 draw,
                 s_lines,
                 s_font,
                 left_x1 + 36,
-                ty + 180,
+                subtitle_y,
                 color=PALETTE["WHITE"],
                 line_h=s_lh,
                 line_gap=8,
@@ -249,6 +402,7 @@ def _render_hook_split(draw, img, frame, load_font):
 
         # 右侧“封面插画”占位：多层文档 + 图表图块，强调视觉记忆点。
         _render_cover_illustration(img, frame, right_x1, right_x2, load_font)
+        _render_cover_code_overlay(img, frame, right_x1, right_x2, load_font)
         return
 
     left_x1, left_x2 = 70, 810
