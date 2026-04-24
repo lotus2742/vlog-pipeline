@@ -36,3 +36,4 @@ env/
 # Project temporary files
 tmp/
 node_modules/
+remotion-demo/public/studio-audio/
