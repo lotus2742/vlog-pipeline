@@ -38,6 +38,24 @@ ACTION_HINTS = [
     "验证",
 ]
 
+EXAMPLE_HINTS = [
+    "比如",
+    "例如",
+    "举个例子",
+    "实操里",
+    "你可以把它当成",
+    "场景是",
+]
+
+ABSTRACT_HINTS = [
+    "是指",
+    "本质上",
+    "核心是",
+    "可以理解为",
+    "通常用于",
+    "主要作用是",
+]
+
 CLICHE_REPLACEMENTS = {
     "首先": "先说重点",
     "其次": "再看关键点",
@@ -75,6 +93,11 @@ def _score_info_density(frames: list[dict]) -> tuple[float, list[str]]:
         ftype = str(frame.get("type", "")).strip()
         if any(h in script for h in ACTION_HINTS):
             score += 1
+        has_example = any(h in script for h in EXAMPLE_HINTS)
+        if has_example:
+            score += 1
+        elif _needs_example(script, ftype):
+            issues.append(f"frames[{idx}] script 建议补一个贴题例子，避免只讲定义")
         if any(p in script for p in EMPTY_PATTERNS):
             score -= 1
             issues.append(f"frames[{idx}] script 含占位表达")
@@ -116,6 +139,21 @@ def _score_info_density(frames: list[dict]) -> tuple[float, list[str]]:
 
     ratio = rich_count / max(len(frames), 1)
     return _clamp(50 + ratio * 50), issues
+
+
+def _needs_example(script: str, frame_type: str) -> bool:
+    s = str(script or "").strip()
+    if not s:
+        return False
+    if frame_type in {"kpi", "quote", "comparison"}:
+        return False
+    has_example = any(h in s for h in EXAMPLE_HINTS)
+    if has_example:
+        return False
+    has_action = any(h in s for h in ACTION_HINTS)
+    looks_abstract = any(h in s for h in ABSTRACT_HINTS)
+    # 仅对“偏定义/偏抽象且缺动作”的文案提示补例子，避免每帧都强制举例。
+    return looks_abstract and (not has_action)
 
 
 def _score_naturalness(frames: list[dict]) -> tuple[float, list[str]]:
@@ -295,6 +333,11 @@ def _rewrite_script(script: str, frame_type: str) -> tuple[str, list[str]]:
             fixes.append(f"替换套话: {old}->{new}")
 
     # 小白可听懂优先：自动修复不再主动压缩文案，避免“听懂但不会做”。
+
+    if _needs_example(s, frame_type):
+        example_line = " 举个例子：新手第一次搭这套流程时，先跑一条最小样例，确认结果对，再批量处理。"
+        s = (s + example_line).strip()
+        fixes.append("补充示例场景，避免定义化输出")
 
     # 保证讲解信息量，避免修复后过短
     if len(s) < 45:

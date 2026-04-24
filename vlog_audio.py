@@ -30,6 +30,181 @@ def simple_split(text, max_w=13):
         lines.append("".join(cur))
     return lines
 
+
+_PUNCT = set("，。！？；：,.!?;:、")
+
+
+def _is_break_token(token_text: str) -> bool:
+    t = (token_text or "").strip()
+    if not t:
+        return False
+    return any(ch in _PUNCT for ch in t)
+
+
+def _line_from_tokens(tokens):
+    if not tokens:
+        return None
+    s = tokens[0]["offset"]
+    e = tokens[-1]["offset"] + tokens[-1]["duration"]
+    txt = "".join(t["text"] for t in tokens)
+    return (s, e, txt)
+
+
+def split_word_boundaries(words, max_w=13):
+    """
+    基于 WordBoundary 的更稳断句：
+    - 优先在标点处分割
+    - 避免把英文词 / 单个 token 硬拆
+    """
+    if not words:
+        return []
+    lines = []
+    cur = []
+    cur_w = 0.0
+    last_break_idx = -1
+
+    i = 0
+    n = len(words)
+    while i < n:
+        w = words[i]
+        token = w.get("text", "")
+        token_w = display_width(token)
+        cur.append(w)
+        cur_w += token_w
+        if _is_break_token(token):
+            last_break_idx = len(cur) - 1
+
+        # 未超宽继续
+        if cur_w < max_w:
+            i += 1
+            continue
+
+        # 超宽：优先在最近标点处分割
+        cut = None
+        if last_break_idx >= 0 and last_break_idx < len(cur) - 1:
+            cut = last_break_idx + 1
+        elif len(cur) >= 2:
+            # 次优：切在当前 token 之前，避免 token 被拆散
+            cut = len(cur) - 1
+        else:
+            cut = 1
+
+        left = cur[:cut]
+        right = cur[cut:]
+        line = _line_from_tokens(left)
+        if line:
+            lines.append(line)
+
+        cur = right
+        cur_w = display_width("".join(t["text"] for t in cur))
+        last_break_idx = -1
+        for idx, tk in enumerate(cur):
+            if _is_break_token(tk.get("text", "")):
+                last_break_idx = idx
+        i += 1
+
+    tail = _line_from_tokens(cur)
+    if tail:
+        lines.append(tail)
+    return lines
+
+
+def semantic_split(text, max_w=13):
+    """
+    语义优先切分：
+    - 先按句号/问号/叹号/分号切句
+    - 再按逗号/顿号切短语并做装箱
+    - 尽量不在词内部硬切
+    """
+    text = (text or "").strip()
+    if not text:
+        return []
+    # 一级分句（保留分隔符）
+    sentence_parts = []
+    buf = ""
+    for ch in text:
+        buf += ch
+        if ch in "。！？；!?;":
+            sentence_parts.append(buf.strip())
+            buf = ""
+    if buf.strip():
+        sentence_parts.append(buf.strip())
+
+    out = []
+    for sent in sentence_parts:
+        # 二级短语（按逗号/顿号）
+        clauses = []
+        cb = ""
+        for ch in sent:
+            cb += ch
+            if ch in "，、,:：":
+                clauses.append(cb)
+                cb = ""
+        if cb:
+            clauses.append(cb)
+
+        line = ""
+        for c in clauses:
+            c = c.strip()
+            if not c:
+                continue
+            # 纯标点短句不单独成行，挂到上一行
+            if all(ch in "，、,:：。！？!?;" for ch in c):
+                if line:
+                    line += c
+                elif out:
+                    out[-1] = out[-1] + c
+                continue
+            # 避免行首出现标点（如“，而是...”）
+            c = c.lstrip("，、,:：")
+            if not c:
+                continue
+            cand = (line + c).strip()
+            if not line:
+                line = c
+                continue
+            if display_width(cand) <= max_w:
+                line = cand
+            else:
+                out.append(line.strip())
+                line = c
+        if line.strip():
+            out.append(line.strip())
+
+    # 兜底：若仍有超长短句，再用 simple_split 细切
+    final = []
+    for ln in out:
+        if display_width(ln) <= max_w:
+            final.append(ln)
+        else:
+            final.extend(simple_split(ln, max_w=max_w))
+    # 清理因兜底切分造成的“纯标点单行”
+    merged = []
+    for ln in final:
+        t = ln.strip()
+        if not t:
+            continue
+        if all(ch in "，、,:：。！？!?;" for ch in t):
+            if merged:
+                merged[-1] = merged[-1] + t
+            continue
+        merged.append(t)
+
+    # 若出现“收益 / 提升”这类被拆成极短尾行，优先并回上一行
+    # 允许轻微超宽，换取词语完整性与可读性
+    stitched = []
+    for ln in merged:
+        if stitched:
+            prev = stitched[-1]
+            is_short_tail = display_width(ln) <= 3.0
+            can_join = display_width(prev + ln) <= (max_w + 2.0)
+            if is_short_tail and can_join:
+                stitched[-1] = prev + ln
+                continue
+        stitched.append(ln)
+
+    return stitched
+
 def probe_duration(path):
     r = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration",
@@ -97,27 +272,19 @@ async def gen_audio(fid, text, voice, rate, audio_dir, force=False):
             else:
                 raise RuntimeError(f"{fid}: 生成失败，已重试{MAX_RETRY}次: {last_err}")
 
-    if words:
-        lines = [];cur_word= []; cs = None; ce = 0
-        for w in words:
-            if cs is None: cs = w["offset"]
-            cur_word.append(w["text"]);ce=w['offset'] + w['duration']
-            cur_text = "".join(cur_word)
-            if display_width(cur_text) >= 13  or w == words[-1]:
-                lines.append((cs, ce, cur_text)); cur_word = []; cs=None
-    else:
-        r = subprocess.run(["ffprobe","-v","error","-show_entries","format=duration",
-                            "-of","default=noprint_wrappers=1:nokey=1", mp3],
-                            capture_output=True, text=True)
-        dur = float(r.stdout.strip() or "10")
-        raw_lines = simple_split(text)
-        widths = [display_width(l) for l in raw_lines]
-        total_w = sum(widths) or 1
-        lines = []; t = 0.0
-        for i, (l, w) in enumerate(zip(raw_lines, widths)):
-            te = t + dur * (w / total_w)
-            if i == len(raw_lines) - 1: te = dur
-            lines.append((t, te, l)); t= te
+    # 使用语义切分，避免把同一词/短语拆成两段字幕
+    dur = probe_duration(mp3)
+    if dur <= 0:
+        dur = 10.0
+    raw_lines = semantic_split(text, max_w=13)
+    widths = [display_width(l) for l in raw_lines]
+    total_w = sum(widths) or 1
+    lines = []; t = 0.0
+    for i, (l, w) in enumerate(zip(raw_lines, widths)):
+        te = t + dur * (w / total_w)
+        if i == len(raw_lines) - 1:
+            te = dur
+        lines.append((t, te, l)); t= te
     with open(srt, "w", encoding='utf-8') as f:
         for i, (s,e,txt) in enumerate(lines, 1):
             f.write(f"{i}\n{fmt_srt_time(s)} --> {fmt_srt_time(e)}\n{txt}\n\n")

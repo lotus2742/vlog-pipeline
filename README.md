@@ -46,6 +46,24 @@ uvicorn render_server:app --host 0.0.0.0 --port 8765
 - 状态：`GET /status/{job_id}`
 - 下载：`GET /download/{job_id}`
 
+### 3.3 渲染引擎选择（legacy / remotion / auto）
+
+服务支持双引擎路由：
+
+- `legacy`：当前稳定链路（`vlog_audio.py -> vlog_render.py -> vlog_merge.py`）
+- `remotion`：Remotion 渲染链路（实验性）
+- `auto`：优先 Remotion（健康检查通过时），否则自动回退 legacy
+
+可通过环境变量控制：
+
+```bash
+export RENDER_ENGINE=auto
+export REMOTION_ENABLED=true
+export REMOTION_FAILOVER_TO_LEGACY=true
+export REMOTION_PROJECT_DIR=/path/to/remotion-project
+export REMOTION_COMPOSITION_ID=SkillDemo
+```
+
 ## 4. 当前推荐流程（按你项目现状）
 
 ## Step A：生成并自动校验 `frames.json`
@@ -103,6 +121,44 @@ curl -X POST http://localhost:8765/render \
 python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json
 ```
 
+指定引擎：
+
+```bash
+python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json --engine remotion
+python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json --engine legacy
+```
+
+生成「完整 Remotion 多段成片」本地 demo（依赖 `remotion-demo` 已 `npm i`，且本机 Remotion 渲染环境可用）：
+
+```bash
+python3 tools/remotion_full_demo.py
+```
+
+对任意已通过校验的 `frames.json`（例如 `tmp/hermes_agent_frames_rich.json`）生成 Remotion props，并尝试渲染 MP4：
+
+```bash
+python3 tools/remotion_from_frames.py --frames tmp/hermes_agent_frames_rich.json
+```
+
+本机 headless 易失败时，可只导出 props；若要用 **有界面 Chromium（Remotion Studio）** 预览，请同步到项目内 JSON 后选 `VlogFramesStudio`：
+
+```bash
+python3 tools/remotion_from_frames.py --frames tmp/hermes_agent_frames_rich.json --studio
+cd remotion-demo && npm run dev
+```
+
+仅写 `out/*.json`、不覆盖 Studio 用文件时：
+
+```bash
+python3 tools/remotion_from_frames.py --frames tmp/hermes_agent_frames_rich.json --props-only
+```
+
+成片默认输出：`remotion-demo/out/vlog_remotion_full_demo.mp4`。若未跑通 TTS，脚本仍会按每帧 `script` 长度估算时长并渲染。
+
+无论 MP4 是否渲染成功，脚本都会在 `remotion-demo/out/vlog_remotion_full_demo_props.json` 写入本次 Remotion 的完整 input props（含每段 `durationInFrames` 与完整 `frame` 数据）。仓库内另有静态样例：`remotion-demo/sample-vlog-frames-props.json`（无配音时长的估算版），便于对照。
+
+说明：Remotion 4 的 CLI 渲染依赖 headless Chrome；在 **低于 macOS 15** 的部分环境中可能出现浏览器进程 `SIGSEGV`，此时 props 仍可用于在较新系统、`npm run dev` 预览或 CI/Linux 上执行 `npx remotion render`。
+
 仅提交任务不等待完成：
 
 ```bash
@@ -146,7 +202,7 @@ python3 vlog_merge.py ./tmp/day7_frames.json ./tmp/day7.mp4
 - `meta.topic` 不能为空
 - `meta.voice` 必须在白名单内（如 `zh-CN-XiaoyiNeural` 等）
 - `meta.rate` 必须是百分比字符串（如 `+5%`）
-- `frames` 数量：`3 ~ 12`
+- `frames` 数量：`3 ~ 20`
 - 首帧和尾帧 `type` 必须是 `hook`
 - 当前允许类型：`hook / cards / comparison / bullets / kpi / quote`（首尾仍为 `hook`）
 - `script` 长度限制：`20 ~ 300` 字

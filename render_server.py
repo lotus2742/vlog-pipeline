@@ -16,6 +16,7 @@ from pydantic import BaseModel, model_validator
 import subprocess, json, os, time, threading, uuid, html
 from validate_frames import run_validation
 from frame_expander import expand_long_frames
+from utils.render_engine_router import pick_render_engine, resolve_requested_engine
 
 app = FastAPI(title="Video Render Server", version="0.1.0")
 
@@ -25,6 +26,21 @@ WORK_DIR = os.path.join(os.path.expanduser("~"), 'vlog-render-job')
 os.makedirs(WORK_DIR, exist_ok=True)
 
 jobs: dict = {}
+
+DEFAULT_ENGINE = os.getenv("RENDER_ENGINE", "auto").strip().lower() or "auto"
+REMOTION_ENABLED = os.getenv("REMOTION_ENABLED", "false").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+REMOTION_FAILOVER_TO_LEGACY = os.getenv(
+    "REMOTION_FAILOVER_TO_LEGACY", "true"
+).strip().lower() in {"1", "true", "yes", "on"}
+REMOTION_PROJECT_DIR = os.getenv(
+    "REMOTION_PROJECT_DIR", os.path.join(SCRIPT_DIR, "remotion-demo")
+)
+REMOTION_COMPOSITION_ID = os.getenv("REMOTION_COMPOSITION_ID", "VlogFrames")
 
 
 def _validate_render_content(frames: list) -> list:
@@ -59,6 +75,8 @@ class RenderRequest(BaseModel):
     topic: str = "未命名"
     voice: str = "zh-CN-XiaoyiNeural"
     rate: str = "+5%"
+    theme: str = ""
+    render_engine: str = "auto"
 
     @model_validator(mode="before")
     @classmethod
@@ -74,6 +92,10 @@ class RenderRequest(BaseModel):
                 out.setdefault("voice", meta["voice"])
             if meta.get("rate"):
                 out.setdefault("rate", meta["rate"])
+            if meta.get("theme"):
+                out.setdefault("theme", meta["theme"])
+            if meta.get("render_engine"):
+                out.setdefault("render_engine", meta["render_engine"])
         if not str(out.get("job_id", "")).strip():
             out["job_id"] = str(uuid.uuid4())
         return out
@@ -87,8 +109,13 @@ def index():
 def submit_render(req: RenderRequest):
     """提交渲染任务,立即返回,后台异步执行"""
     payload_raw = {
-        "meta": {"topic": req.topic, "voice": req.voice, "rate": req.rate},
-        "frames": req.frames
+        "meta": {
+            "topic": req.topic,
+            "voice": req.voice,
+            "rate": req.rate,
+            "theme": req.theme,
+        },
+        "frames": req.frames,
     }
     # 小白讲清楚优先：放宽自动拆页阈值，减少仅因时长被硬拆。
     payload, split_stats = expand_long_frames(payload_raw, target_script_len=170, max_frames=12)
@@ -120,6 +147,12 @@ def submit_render(req: RenderRequest):
 
     with open(frames_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
+    selected_engine, engine_reason = pick_render_engine(
+        req.render_engine,
+        default_engine=DEFAULT_ENGINE,
+        remotion_enabled=REMOTION_ENABLED,
+        remotion_project_dir=REMOTION_PROJECT_DIR,
+    )
     jobs[req.job_id] = {
         "status": "pending",
         "stage": "queued",
@@ -127,6 +160,12 @@ def submit_render(req: RenderRequest):
         "progress": 0,
         "mp4_path": "",
         "error": "",
+        "requested_engine": resolve_requested_engine(
+            req.render_engine, default_engine=DEFAULT_ENGINE
+        ),
+        "engine": selected_engine,
+        "engine_reason": engine_reason,
+        "fallback_used": False,
         "created_at": int(time.time()),
         "updated_at": int(time.time()),
     }
@@ -140,6 +179,8 @@ def submit_render(req: RenderRequest):
     return {
         "job_id": req.job_id,
         "status": "pending",
+        "engine": selected_engine,
+        "engine_reason": engine_reason,
         "job_dir": job_dir,
         "watch_url": f"/watch/{req.job_id}",
         "split_applied": split_stats.get("expanded_count", 0) > 0,
@@ -310,6 +351,43 @@ def watch_progress(job_id: str):
 # 渲染流水线
 
 def run_pipeline(job_id: str, job_dir: str, frames_path: str):
+    selected_engine = jobs.get(job_id, {}).get("engine", "legacy")
+    try:
+        if selected_engine == "remotion":
+            run_pipeline_remotion(job_id, job_dir, frames_path)
+            return
+        run_pipeline_legacy(job_id, job_dir, frames_path)
+    except Exception as e:
+        can_fallback = (
+            selected_engine == "remotion" and REMOTION_FAILOVER_TO_LEGACY
+        )
+        if can_fallback:
+            try:
+                _job_touch(
+                    job_id,
+                    stage="fallback",
+                    stage_label="Remotion 失败，回退 legacy 渲染",
+                    progress=8,
+                    fallback_used=True,
+                    engine="legacy",
+                    engine_reason=f"remotion 失败自动回退: {e}",
+                )
+                run_pipeline_legacy(job_id, job_dir, frames_path)
+                return
+            except Exception as fallback_error:
+                e = Exception(f"remotion 与 fallback 均失败: {fallback_error}")
+        _job_touch(
+            job_id,
+            status="error",
+            stage="error",
+            stage_label="失败",
+            error=str(e),
+            mp4_path="",
+        )
+        print(f"[render] ❌ {job_id} 失败: {e}")
+
+
+def run_pipeline_legacy(job_id: str, job_dir: str, frames_path: str):
     try:
         audio_dir = os.path.join(job_dir, "audio")
         frames_dir = os.path.join(job_dir, "frames")
@@ -369,15 +447,43 @@ def run_pipeline(job_id: str, job_dir: str, frames_path: str):
         )
         print(f"[render] ✅ {job_id} 完成: {mp4_path}")
     except Exception as e:
-        _job_touch(
-            job_id,
-            status="error",
-            stage="error",
-            stage_label="失败",
-            error=str(e),
-            mp4_path="",
-        )
-        print(f"[render] ❌ {job_id} 失败: {e}")
+        raise e
+
+
+def run_pipeline_remotion(job_id: str, job_dir: str, frames_path: str):
+    mp4_path = os.path.join(job_dir, f"{job_id}.mp4")
+    _job_touch(
+        job_id,
+        stage="remotion_render",
+        stage_label="Remotion 渲染中",
+        progress=55,
+    )
+    _run(
+        [
+            "python3",
+            os.path.join(SCRIPT_DIR, "tools", "remotion_renderer.py"),
+            "--frames",
+            frames_path,
+            "--output",
+            mp4_path,
+            "--project-dir",
+            REMOTION_PROJECT_DIR,
+            "--composition-id",
+            REMOTION_COMPOSITION_ID,
+        ],
+        job_dir,
+        "Remotion 渲染",
+    )
+    _job_touch(
+        job_id,
+        status="done",
+        stage="done",
+        stage_label="完成",
+        progress=100,
+        mp4_path=mp4_path,
+        error="",
+    )
+    print(f"[render] ✅ {job_id} 完成(remotion): {mp4_path}")
 def _run(cmd, cwd, label):
     r = subprocess.run(cmd, cwd=cwd, capture_output=True,text=True)
     if r.returncode != 0:

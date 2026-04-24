@@ -20,7 +20,18 @@ from renderers.content_renderer import render_content as render_content_layout
 from renderers.hook_renderer import choose_hook_style_adaptive, render_hook as render_hook_layout
 from renderers.kpi_renderer import render_kpi as render_kpi_layout
 from renderers.quote_renderer import render_quote as render_quote_layout
-from utils.render_consts import FONT_CANDIDATES, FONT_PROBE_TEXT, PALETTE, SAFE_H, STANDARD_GLOW_POS, W, H
+from utils.render_consts import (
+    FONT_CANDIDATES,
+    FONT_PROBE_TEXT,
+    PALETTE,
+    SAFE_H,
+    W,
+    H,
+    apply_theme,
+    get_active_theme,
+    get_theme_background_config,
+    list_theme_names,
+)
 from utils.render_style_utils import (
     choose_comparison_style,
     choose_hook_style,
@@ -56,13 +67,6 @@ def _find_font():
 FONT_PATH, FONT_INDEX = _find_font()
 print(f"[render] 使用字体: {FONT_PATH} (index={FONT_INDEX})")
 
-BG = PALETTE["BG"]
-PURPLE_L = PALETTE["PURPLE_L"]
-WHITE = PALETTE["WHITE"]
-DIM = PALETTE["DIM"]
-GOLD = PALETTE["GOLD"]
-
-
 def load_font(size):
     return ImageFont.truetype(FONT_PATH, size, index=FONT_INDEX)
 
@@ -73,15 +77,17 @@ set_font_loader(load_font)
 def col(name):
     if isinstance(name, (tuple, list)):
         return tuple(name)
-    return PALETTE.get(name, WHITE)
+    return PALETTE.get(name, PALETTE["WHITE"])
 
 
-def make_base_purple(low_noise=False):
+def make_base_background(low_noise=False):
     random.seed(42)
-    img = Image.new("RGB", (W, H), BG)
+    bg_cfg = get_theme_background_config()
+    glow_pos = bg_cfg.get("glow_pos", [])
+    img = Image.new("RGB", (W, H), PALETTE["BG"])
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     glow_alpha = 0.45 if low_noise else 0.65
-    for x1, y1, x2, y2, color in STANDARD_GLOW_POS:
+    for x1, y1, x2, y2, color in glow_pos:
         tmp = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         td = ImageDraw.Draw(tmp)
         td.ellipse([x1, y1, x2, y2], fill=(*color, int(255 * glow_alpha)))
@@ -93,13 +99,17 @@ def make_base_purple(low_noise=False):
 
     draw = ImageDraw.Draw(img)
     grid_step = 72 if low_noise else 60
-    grid_col = (20, 14, 40) if low_noise else (25, 15, 50)
+    grid_col = (
+        tuple(bg_cfg.get("grid_low_noise", (20, 14, 40)))
+        if low_noise
+        else tuple(bg_cfg.get("grid_high_noise", (25, 15, 50)))
+    )
     for x in range(0, W, grid_step):
         draw.line([(x, 0), (x, H)], fill=grid_col, width=1)
     for y in range(0, H, grid_step):
         draw.line([(0, y), (W, y)], fill=grid_col, width=1)
 
-    c = PURPLE_L
+    c = PALETTE.get(bg_cfg.get("star_color", "PURPLE_L"), PALETTE["PURPLE_L"])
     draw.line([(0, 40), (120, 40)], fill=c, width=1)
     draw.line([(120, 40), (120, 0)], fill=c, width=1)
     draw.rectangle([116, 36, 124, 44], fill=c)
@@ -133,10 +143,10 @@ def render_outro(draw, img, frame):
     f48 = load_font(48)
     f24 = load_font(24)
     title = frame.get("title", "")
-    text_center(draw, title, SAFE_H // 2 - 60, f48, GOLD)
+    text_center(draw, title, SAFE_H // 2 - 60, f48, PALETTE["GOLD"])
     subtitle = frame.get("subtitle", "")
     if subtitle:
-        text_center(draw, subtitle, SAFE_H // 2 + 20, f24, DIM)
+        text_center(draw, subtitle, SAFE_H // 2 + 20, f24, PALETTE["DIM"])
 
 
 def render_comparison(draw, img, frame):
@@ -173,7 +183,7 @@ def render_frame(frame, out_dir, idx=0, total=0):
     out_path = os.path.join(out_dir, f"frame_{fid}.png")
 
     low_noise = ftype in {"cards", "comparison", "content", "bullets", "kpi", "quote"}
-    img = make_base_purple(low_noise=low_noise)
+    img = make_base_background(low_noise=low_noise)
     draw = ImageDraw.Draw(img)
 
     frame_ctx = dict(frame)
@@ -222,6 +232,13 @@ if __name__ == "__main__":
 
     with open(json_path, encoding="utf-8") as f:
         data = json.load(f)
+
+    meta = data.get("meta", {}) if isinstance(data.get("meta"), dict) else {}
+    requested_theme = str(meta.get("theme", "")).strip().lower()
+    applied_theme = apply_theme(requested_theme)
+    if requested_theme and requested_theme != applied_theme:
+        print(f"[render] 无效主题 '{requested_theme}'，已回退到 '{applied_theme}'")
+    print(f"[render] 主题: {get_active_theme()} (可选: {', '.join(list_theme_names())})")
 
     frames = data.get("frames", [])
     print(f"渲染 {len(frames)} 帧 → {out_dir}/")

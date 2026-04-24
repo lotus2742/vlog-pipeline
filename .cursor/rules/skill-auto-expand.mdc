@@ -1,0 +1,19 @@
+---
+description: "当任务涉及查找、安装、使用或扩展 Cursor Skill（如 .cursor/skills、SKILL.md、openskills）时应用此规则，指导优先复用现有 Skill，而不是临时编造方案。"
+globs:
+  - "**/.cursor/skills/**"
+  - "**/SKILL.md"
+  - "**/.claude/skills/**"
+  - "**/.cursor/rules/*.mdc"
+  - "**/hooks.json"
+alwaysApply: false
+---
+
+## Skill 自动扩展规则
+
+遇到自身能力不足的任务时：
+1. 先检查 `.cursor/skills/` 有没有现成 Skill
+2. 没有 → 用 `openskills search <关键词>` 搜索
+3. 找到合适的 → `openskills install <skill-name> --target .cursor/skills`
+4. 装完后读 SKILL.md，按指令执行
+5. 都找不到 → 告诉我，别自己瞎编

@@ -2,14 +2,16 @@
   "meta": {
     "topic": "LangChain 与 ReAct Agent 环境搭建",
     "voice": "zh-CN-YunxiNeural",
-    "rate": "+5%"
+    "rate": "+5%",
+    "theme": "purple"
   },
   "frames": [
     {
       "id": "hook_open",
       "type": "hook",
       "title": "20天计划里的 LangChain 实战",
-      "script": "Week2 Day8 要学的是 LangChain 加 ReAct Agent 的完整环境。从虚拟环境、依赖安装到通义千问接口和 Agent 运行，本视频按文档顺序带你搭好一套可复现的本地开发环境，学完就能直接跑 react_agent_demo。"
+      "script": "Week2 Day8 聚焦 LangChain 与 ReAct Agent 环境搭建。我们按文档完成虚拟环境、依赖安装、通义千问接口配置和 Agent 运行，最后直接跑通 react_agent_demo。",
+      "subtitle": "先创建 .venv 再安装依赖，最后运行 demo 验证链路。"
     },
     {
       "id": "env_overview",
@@ -97,7 +99,8 @@
       "right": {
         "label": "工具侧",
         "color": "ORANGE"
-      }
+      },
+      "insight": "核心节奏是 Thought 规划、Action 调用工具、Observation 回写上下文，再迭代到 Final Answer。"
     },
     {
       "id": "run_verify",
@@ -126,7 +129,9 @@
       "id": "faq_next",
       "type": "hook",
       "title": "排错与后续路线",
-      "script": "导入错误多半是新版拆包，改为 langchain_classic.agents。401 检查 Key，404 检查 BASE 路径是否多了斜杠，429 换模型或等配额。后续可加 Memory、自定义 Tool、流式 stream，以及用 LangGraph 做更强编排，对应文档第九节扩展方向。"
+      "script": "导入错误多半是新版拆包，改为 langchain_classic.agents。401 检查 Key，404 检查 BASE 路径是否多了斜杠，429 换模型或等配额。后续可加 Memory、自定义 Tool、流式 stream，以及用 LangGraph 做更强编排，对应文档第九节扩展方向。",
+      "style": "spotlight",
+      "subtitle": "先做一个可跑版本，再按日志逐步迭代优化。"
     }
   ]
 }

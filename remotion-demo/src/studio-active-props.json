@@ -1,0 +1,867 @@
+{
+  "meta": {
+    "topic": "Hermes Agent 最佳实践指南",
+    "voice": "zh-CN-XiaoyiNeural",
+    "rate": "+5%",
+    "theme": "dark"
+  },
+  "slides": [
+    {
+      "id": "hook_open",
+      "type": "hook",
+      "durationInFrames": 534,
+      "frame": {
+        "id": "hook_open",
+        "type": "hook",
+        "style": "spotlight",
+        "title": "Hermes 落地机制：配置、记忆、技能三位一体",
+        "subtitle": "从文档到可执行流程，先跑通再持续优化",
+        "script": "这份最佳实践的核心结论是：Hermes Agent 不是单点功能，而是一套持续迭代系统。先把配置安全、记忆治理、技能沉淀三件事打稳，再扩到多平台和自动化部署，最终效果会随着使用次数持续提升。"
+      },
+      "captionKeywords": [
+        "Hermes",
+        "再扩到多平台和自",
+        "技能沉淀三件事打",
+        "最终效果会随着使",
+        "而是一套持续迭代",
+        "这份最佳实践的核",
+        "用次数持续提升",
+        "不是单点功能"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/hook_open.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.612,
+          "text": "这份最佳实践的核心结论是："
+        },
+        {
+          "start": 2.612,
+          "end": 5.325,
+          "text": "Hermes Agent 不是单点功能，"
+        },
+        {
+          "start": 5.325,
+          "end": 7.535,
+          "text": "而是一套持续迭代系统。"
+        },
+        {
+          "start": 7.535,
+          "end": 9.946,
+          "text": "先把配置安全、记忆治理、"
+        },
+        {
+          "start": 9.946,
+          "end": 11.956,
+          "text": "技能沉淀三件事打稳，"
+        },
+        {
+          "start": 11.956,
+          "end": 14.568,
+          "text": "再扩到多平台和自动化部署，"
+        },
+        {
+          "start": 14.568,
+          "end": 17.181,
+          "text": "最终效果会随着使用次数持续"
+        },
+        {
+          "start": 17.181,
+          "end": 17.783,
+          "text": "提升。"
+        }
+      ]
+    },
+    {
+      "id": "config_security",
+      "type": "cards",
+      "durationInFrames": 461,
+      "frame": {
+        "id": "config_security",
+        "type": "cards",
+        "title": "配置与密钥管理",
+        "cards": [
+          {
+            "title": "密钥隔离",
+            "desc": "API Key 只放 ~/.hermes/.env，禁止写入 config.yaml。"
+          },
+          {
+            "title": "主备 Provider",
+            "desc": "配置 fallback provider chain，主通道限流时自动切换。"
+          },
+          {
+            "title": "模型切换纪律",
+            "desc": "会话内避免频繁换模型，防止 prompt cache 失效。"
+          },
+          {
+            "title": "目录优先级",
+            "desc": "CLI 参数 > config.yaml > .env > 默认值，定位问题更高效。"
+          }
+        ],
+        "script": "配置层先守住两条红线：密钥不落明文、配置分层清晰。生产建议主备模型并行配置，遇到限流自动回退。模型切换要克制，保持会话稳定才能发挥缓存收益。"
+      },
+      "captionKeywords": [
+        "保持会话稳定才能",
+        "生产建议主备模型",
+        "遇到限流自动回退",
+        "配置层先守住两条",
+        "模型切换要克制",
+        "发挥缓存收益",
+        "密钥不落明文",
+        "配置分层清晰"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/config_security.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.409,
+          "text": "配置层先守住两条红线："
+        },
+        {
+          "start": 2.409,
+          "end": 3.943,
+          "text": "密钥不落明文、"
+        },
+        {
+          "start": 3.943,
+          "end": 5.477,
+          "text": "配置分层清晰。"
+        },
+        {
+          "start": 5.477,
+          "end": 8.325,
+          "text": "生产建议主备模型并行配置，"
+        },
+        {
+          "start": 8.325,
+          "end": 10.297,
+          "text": "遇到限流自动回退。"
+        },
+        {
+          "start": 10.297,
+          "end": 12.049,
+          "text": "模型切换要克制，"
+        },
+        {
+          "start": 12.049,
+          "end": 15.336,
+          "text": "保持会话稳定才能发挥缓存收益。"
+        }
+      ]
+    },
+    {
+      "id": "memory_rules",
+      "type": "bullets",
+      "durationInFrames": 481,
+      "frame": {
+        "id": "memory_rules",
+        "type": "bullets",
+        "title": "记忆系统治理策略",
+        "items": [
+          {
+            "title": "写长期规则",
+            "desc": "MEMORY.md 记录技术栈、协作规范、关键决策，不写临时日志。"
+          },
+          {
+            "title": "维护用户画像",
+            "desc": "USER.md 明确身份、偏好、禁忌，提升回复匹配度。"
+          },
+          {
+            "title": "容量管控",
+            "desc": "容量接近上限时主动清理过时记忆，保持检索效率。"
+          },
+          {
+            "title": "会话边界意识",
+            "desc": "记忆修改通常下个会话才生效，验证时需新开会话。"
+          }
+        ],
+        "script": "记忆的关键不是存得多，而是存得准。把可复用规则和偏好留在长期层，临时上下文及时清理，才能避免响应变慢和上下文污染。每周做一次记忆体检，长期收益很明显。"
+      },
+      "captionKeywords": [
+        "临时上下文及时清",
+        "才能避免响应变慢",
+        "把可复用规则和偏",
+        "每周做一次记忆体",
+        "记忆的关键不是存",
+        "长期收益很明显",
+        "和上下文污染",
+        "好留在长期层"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/memory_rules.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.347,
+          "text": "记忆的关键不是存得多，"
+        },
+        {
+          "start": 2.347,
+          "end": 3.628,
+          "text": "而是存得准。"
+        },
+        {
+          "start": 3.628,
+          "end": 6.83,
+          "text": "把可复用规则和偏好留在长期层，"
+        },
+        {
+          "start": 6.83,
+          "end": 8.964,
+          "text": "临时上下文及时清理，"
+        },
+        {
+          "start": 8.964,
+          "end": 12.166,
+          "text": "才能避免响应变慢和上下文污染。"
+        },
+        {
+          "start": 12.166,
+          "end": 14.3,
+          "text": "每周做一次记忆体检，"
+        },
+        {
+          "start": 14.3,
+          "end": 16.007,
+          "text": "长期收益很明显。"
+        }
+      ]
+    },
+    {
+      "id": "skills_system",
+      "type": "cards",
+      "durationInFrames": 449,
+      "frame": {
+        "id": "skills_system",
+        "type": "cards",
+        "title": "技能沉淀方法",
+        "cards": [
+          {
+            "title": "命名规范",
+            "desc": "统一动作-对象.md，方便斜杠命令直达。"
+          },
+          {
+            "title": "触发条件",
+            "desc": "技能必须写清输入条件，避免误触发。"
+          },
+          {
+            "title": "执行步骤",
+            "desc": "任务超过 5 步且高频复用时优先沉淀为技能。"
+          },
+          {
+            "title": "上线校验",
+            "desc": "生成后用 /skills check，人工补边界条件。"
+          }
+        ],
+        "script": "技能是 Hermes 的复利引擎。把高频流程结构化后，后续任务的稳定性和速度都会提升。务必在技能生成后做人审，修正冗余步骤和遗漏条件，避免把错误流程固化。"
+      },
+      "captionKeywords": [
+        "Hermes",
+        "修正冗余步骤和遗",
+        "务必在技能生成后",
+        "后续任务的稳定性",
+        "把高频流程结构化",
+        "避免把错误流程固",
+        "和速度都会提升",
+        "的复利引擎"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/skills_system.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.662,
+          "text": "技能是 Hermes 的复利引擎。"
+        },
+        {
+          "start": 2.662,
+          "end": 4.71,
+          "text": "把高频流程结构化后，"
+        },
+        {
+          "start": 4.71,
+          "end": 7.373,
+          "text": "后续任务的稳定性和速度都会"
+        },
+        {
+          "start": 7.373,
+          "end": 7.9879999999999995,
+          "text": "提升。"
+        },
+        {
+          "start": 7.9879999999999995,
+          "end": 10.445,
+          "text": "务必在技能生成后做人审，"
+        },
+        {
+          "start": 10.445,
+          "end": 12.903,
+          "text": "修正冗余步骤和遗漏条件，"
+        },
+        {
+          "start": 12.903,
+          "end": 14.952,
+          "text": "避免把错误流程固化。"
+        }
+      ]
+    },
+    {
+      "id": "platform_compare",
+      "type": "comparison",
+      "durationInFrames": 461,
+      "frame": {
+        "id": "platform_compare",
+        "type": "comparison",
+        "title": "多平台接入策略对比",
+        "left": {
+          "label": "快速接入",
+          "points": [
+            "Telegram 配置快，适合先做 MVP 验证",
+            "钉钉 Webhook 简单，适合单向通知",
+            "低门槛场景可先跑通触发链路"
+          ]
+        },
+        "right": {
+          "label": "治理优先",
+          "points": [
+            "飞书接入应用级权限，便于企业管控",
+            "按平台拆分 MESSAGING_CWD，隔离上下文污染",
+            "用户白名单与权限边界必须先落地"
+          ]
+        },
+        "insight": "先用低成本平台验证价值，再把治理能力补齐扩到团队协作平台。",
+        "script": "多平台不是越多越好，而是按阶段推进。先选一个接入快的平台验证任务闭环，再逐步补权限、目录隔离和用户管理。这样既能快速见效，也能控制后续治理成本。"
+      },
+      "captionKeywords": [
+        "也能控制后续治理",
+        "先选一个接入快的",
+        "多平台不是越多越",
+        "平台验证任务闭环",
+        "目录隔离和用户管",
+        "这样既能快速见效",
+        "而是按阶段推进",
+        "再逐步补权限"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/platform_compare.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.13,
+          "text": "多平台不是越多越好，"
+        },
+        {
+          "start": 2.13,
+          "end": 3.834,
+          "text": "而是按阶段推进。"
+        },
+        {
+          "start": 3.834,
+          "end": 6.603,
+          "text": "先选一个接入快的平台验证任"
+        },
+        {
+          "start": 6.603,
+          "end": 7.455,
+          "text": "务闭环，"
+        },
+        {
+          "start": 7.455,
+          "end": 8.946,
+          "text": "再逐步补权限、"
+        },
+        {
+          "start": 8.946,
+          "end": 11.076,
+          "text": "目录隔离和用户管理。"
+        },
+        {
+          "start": 11.076,
+          "end": 12.993,
+          "text": "这样既能快速见效，"
+        },
+        {
+          "start": 12.993,
+          "end": 15.336,
+          "text": "也能控制后续治理成本。"
+        }
+      ]
+    },
+    {
+      "id": "deploy_path",
+      "type": "bullets",
+      "durationInFrames": 530,
+      "frame": {
+        "id": "deploy_path",
+        "type": "bullets",
+        "title": "部署路径建议",
+        "items": [
+          {
+            "title": "本地先验收",
+            "desc": "先跑 hermes doctor 与 setup，确认环境完整。"
+          },
+          {
+            "title": "VPS 稳定托管",
+            "desc": "1核1G 即可起步，配置 gateway 自启与日志观察。"
+          },
+          {
+            "title": "迁移要修路径",
+            "desc": "Mac 到 Linux 迁移后修正 config.yaml 中绝对路径。"
+          },
+          {
+            "title": "Serverless 取舍",
+            "desc": "弹性好但冷启动高，不适合强实时场景。"
+          }
+        ],
+        "script": "部署建议分三层：本地开发验证、VPS 稳定托管、Serverless 弹性扩展。大多数团队先从 VPS 起步最稳，成本低且可控。跨系统迁移时优先检查路径和工作目录设置，能少踩很多坑。"
+      },
+      "captionKeywords": [
+        "VPS",
+        "Serverless",
+        "检查路径和工作目",
+        "跨系统迁移时优先",
+        "大多数团队先从",
+        "部署建议分三层",
+        "成本低且可控",
+        "本地开发验证"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/deploy_path.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.744,
+          "text": "部署建议分三层："
+        },
+        {
+          "start": 1.744,
+          "end": 3.271,
+          "text": "本地开发验证、"
+        },
+        {
+          "start": 3.271,
+          "end": 4.797,
+          "text": "VPS 稳定托管、"
+        },
+        {
+          "start": 4.797,
+          "end": 7.087,
+          "text": "Serverless 弹性扩展。"
+        },
+        {
+          "start": 7.087,
+          "end": 10.249,
+          "text": "大多数团队先从 VPS 起步最稳，"
+        },
+        {
+          "start": 10.249,
+          "end": 11.775,
+          "text": "成本低且可控。"
+        },
+        {
+          "start": 11.775,
+          "end": 14.61,
+          "text": "跨系统迁移时优先检查路径和"
+        },
+        {
+          "start": 14.61,
+          "end": 16.137,
+          "text": "工作目录设置，"
+        },
+        {
+          "start": 16.137,
+          "end": 17.664,
+          "text": "能少踩很多坑。"
+        }
+      ]
+    },
+    {
+      "id": "security_checklist",
+      "type": "cards",
+      "durationInFrames": 426,
+      "frame": {
+        "id": "security_checklist",
+        "type": "cards",
+        "title": "生产安全清单",
+        "cards": [
+          {
+            "title": "密钥治理",
+            "desc": ".env 永不入库，禁止在对话与配置中暴露密钥。"
+          },
+          {
+            "title": "审批策略",
+            "desc": "生产环境使用 manual，危险操作必须人工确认。"
+          },
+          {
+            "title": "注入防护",
+            "desc": "识别忽略指令、提权词、隐藏注释等注入信号。"
+          },
+          {
+            "title": "基础设施",
+            "desc": "Docker 隔离 + HTTPS + API 限额 + 定期备份。"
+          }
+        ],
+        "script": "安全策略要前置而不是补丁式追加。密钥、审批、注入防护和环境隔离是四个基线能力。先把这些能力默认开启，再谈自动化提速，风险才可控。"
+      },
+      "captionKeywords": [
+        "先把这些能力默认",
+        "安全策略要前置而",
+        "注入防护和环境隔",
+        "离是四个基线能力",
+        "不是补丁式追加",
+        "再谈自动化提速",
+        "风险才可控",
+        "审批"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/security_checklist.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.8810000000000002,
+          "text": "安全策略要前置而不是补丁式"
+        },
+        {
+          "start": 2.8810000000000002,
+          "end": 3.545,
+          "text": "追加。"
+        },
+        {
+          "start": 3.545,
+          "end": 4.875,
+          "text": "密钥、审批、"
+        },
+        {
+          "start": 4.875,
+          "end": 7.756,
+          "text": "注入防护和环境隔离是四个基"
+        },
+        {
+          "start": 7.756,
+          "end": 8.643,
+          "text": "线能力。"
+        },
+        {
+          "start": 8.643,
+          "end": 11.081,
+          "text": "先把这些能力默认开启，"
+        },
+        {
+          "start": 11.081,
+          "end": 12.854,
+          "text": "再谈自动化提速，"
+        },
+        {
+          "start": 12.854,
+          "end": 14.183,
+          "text": "风险才可控。"
+        }
+      ]
+    },
+    {
+      "id": "performance_kpi",
+      "type": "kpi",
+      "durationInFrames": 471,
+      "frame": {
+        "id": "performance_kpi",
+        "type": "kpi",
+        "style": "dashboard",
+        "title": "性能优化重点",
+        "kpis": [
+          {
+            "title": "工具定义开销",
+            "value": "46%"
+          },
+          {
+            "title": "系统提示开销",
+            "value": "27%"
+          },
+          {
+            "title": "固定开销总占比",
+            "value": "73%"
+          },
+          {
+            "title": "建议 max_tokens",
+            "value": "512"
+          }
+        ],
+        "trend_title": "优先优化固定开销与上下文长度",
+        "trend_points": [
+          "对话变长后及时 /compress 压缩历史",
+          "并行任务用 delegate_task 降低主会话负担",
+          "同会话保持模型一致，保护 prompt cache"
+        ],
+        "script": "文档给出的关键数据说明，固定开销占比已经很高，所以优化重点不是盲目加上下文，而是做压缩、并行和缓存保护。先把这三件事做好，响应速度和成本都会明显改善。"
+      },
+      "captionKeywords": [
+        "先把这三件事做好",
+        "响应速度和成本都",
+        "固定开销占比已经",
+        "所以优化重点不是",
+        "文档给出的关键数",
+        "并行和缓存保护",
+        "盲目加上下文",
+        "会明显改善"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/performance_kpi.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.511,
+          "text": "文档给出的关键数据说明，"
+        },
+        {
+          "start": 2.511,
+          "end": 4.813,
+          "text": "固定开销占比已经很高，"
+        },
+        {
+          "start": 4.813,
+          "end": 7.952,
+          "text": "所以优化重点不是盲目加上下文，"
+        },
+        {
+          "start": 7.952,
+          "end": 9.208,
+          "text": "而是做压缩、"
+        },
+        {
+          "start": 9.208,
+          "end": 10.882,
+          "text": "并行和缓存保护。"
+        },
+        {
+          "start": 10.882,
+          "end": 12.766,
+          "text": "先把这三件事做好，"
+        },
+        {
+          "start": 12.766,
+          "end": 15.695,
+          "text": "响应速度和成本都会明显改善。"
+        }
+      ]
+    },
+    {
+      "id": "pitfalls_fix",
+      "type": "bullets",
+      "durationInFrames": 495,
+      "frame": {
+        "id": "pitfalls_fix",
+        "type": "bullets",
+        "title": "高频踩坑与修正动作",
+        "items": [
+          {
+            "title": "Token 暴涨",
+            "desc": "检查 Gateway 工作目录，确保 MESSAGING_CWD 指向最小上下文。"
+          },
+          {
+            "title": "记忆无更新",
+            "desc": "会话内改动通常不即时生效，重开会话验证。"
+          },
+          {
+            "title": "技能不稳定",
+            "desc": "生成后必须人工审查并补齐边界条件。"
+          },
+          {
+            "title": "Tirith 误拦截",
+            "desc": "在分屏终端手动执行合法命令，不绕过安全基线。"
+          }
+        ],
+        "script": "踩坑时先判断是配置问题、记忆问题还是技能问题，再对症修复。多数故障都能通过目录检查、会话重启和技能审查快速定位。把排障动作标准化，团队协作效率会提升很多。"
+      },
+      "captionKeywords": [
+        "会话重启和技能审",
+        "团队协作效率会提",
+        "多数故障都能通过",
+        "把排障动作标准化",
+        "记忆问题还是技能",
+        "踩坑时先判断是配",
+        "再对症修复",
+        "查快速定位"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/pitfalls_fix.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.569,
+          "text": "踩坑时先判断是配置问题、"
+        },
+        {
+          "start": 2.569,
+          "end": 4.924,
+          "text": "记忆问题还是技能问题，"
+        },
+        {
+          "start": 4.924,
+          "end": 6.209,
+          "text": "再对症修复。"
+        },
+        {
+          "start": 6.209,
+          "end": 8.993,
+          "text": "多数故障都能通过目录检查、"
+        },
+        {
+          "start": 8.993,
+          "end": 11.991,
+          "text": "会话重启和技能审查快速定位。"
+        },
+        {
+          "start": 11.991,
+          "end": 13.918,
+          "text": "把排障动作标准化，"
+        },
+        {
+          "start": 13.918,
+          "end": 16.487,
+          "text": "团队协作效率会提升很多。"
+        }
+      ]
+    },
+    {
+      "id": "action_list",
+      "type": "cards",
+      "durationInFrames": 435,
+      "frame": {
+        "id": "action_list",
+        "type": "cards",
+        "title": "落地执行清单",
+        "cards": [
+          {
+            "title": "第1周",
+            "desc": "完成配置安全基线与单平台接入验证。"
+          },
+          {
+            "title": "第2周",
+            "desc": "建立 MEMORY/USER 维护机制并沉淀首批技能。"
+          },
+          {
+            "title": "第3周",
+            "desc": "上线审批与安全清单，开始性能压测。"
+          },
+          {
+            "title": "第4周",
+            "desc": "扩展多平台协作并固化备份与恢复流程。"
+          }
+        ],
+        "script": "执行上建议按周推进，先基线后扩展。每周只抓关键目标，完成后复盘再进入下一阶段。这样可以避免系统复杂度失控，同时持续积累可复用的组织资产。"
+      },
+      "captionKeywords": [
+        "同时持续积累可复",
+        "完成后复盘再进入",
+        "执行上建议按周推",
+        "每周只抓关键目标",
+        "这样可以避免系统",
+        "先基线后扩展",
+        "用的组织资产",
+        "复杂度失控"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/action_list.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.128,
+          "text": "执行上建议按周推进，"
+        },
+        {
+          "start": 2.128,
+          "end": 3.618,
+          "text": "先基线后扩展。"
+        },
+        {
+          "start": 3.618,
+          "end": 5.533,
+          "text": "每周只抓关键目标，"
+        },
+        {
+          "start": 5.533,
+          "end": 8.3,
+          "text": "完成后复盘再进入下一阶段。"
+        },
+        {
+          "start": 8.3,
+          "end": 11.279,
+          "text": "这样可以避免系统复杂度失控，"
+        },
+        {
+          "start": 11.279,
+          "end": 14.471,
+          "text": "同时持续积累可复用的组织资产。"
+        }
+      ]
+    },
+    {
+      "id": "hook_close",
+      "type": "hook",
+      "durationInFrames": 530,
+      "frame": {
+        "id": "hook_close",
+        "type": "hook",
+        "style": "spotlight",
+        "title": "结论：高频使用 + 持续沉淀，才有 Agent 复利",
+        "subtitle": "先守住安全和治理，再追求自动化规模",
+        "list": [
+          "密钥隔离与审批策略先落地",
+          "记忆精简、技能沉淀双轮驱动",
+          "固定开销优先优化，压缩与并行并用",
+          "按周复盘迭代，持续提高成功率"
+        ],
+        "script": "最终建议是把 Hermes 当成长期系统来经营。你每次规范输入、每次复盘沉淀、每次修正边界，都会让下一次任务更稳更快。先把安全治理打牢，再扩大自动化覆盖范围，效果最可持续。"
+      },
+      "captionKeywords": [
+        "Hermes",
+        "先把安全治理打牢",
+        "再扩大自动化覆盖",
+        "当成长期系统来经",
+        "都会让下一次任务",
+        "你每次规范输入",
+        "效果最可持续",
+        "最终建议是把"
+      ],
+      "audioSrc": "studio-audio/hermes_docx_frames/hook_close.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.8,
+          "text": "最终建议是把 Hermes 当成长"
+        },
+        {
+          "start": 2.8,
+          "end": 4.308,
+          "text": "期系统来经营。"
+        },
+        {
+          "start": 4.308,
+          "end": 6.031,
+          "text": "你每次规范输入、"
+        },
+        {
+          "start": 6.031,
+          "end": 7.539,
+          "text": "每次复盘沉淀、"
+        },
+        {
+          "start": 7.539,
+          "end": 9.047,
+          "text": "每次修正边界，"
+        },
+        {
+          "start": 9.047,
+          "end": 11.847,
+          "text": "都会让下一次任务更稳更快。"
+        },
+        {
+          "start": 11.847,
+          "end": 13.786,
+          "text": "先把安全治理打牢，"
+        },
+        {
+          "start": 13.786,
+          "end": 16.156,
+          "text": "再扩大自动化覆盖范围，"
+        },
+        {
+          "start": 16.156,
+          "end": 17.664,
+          "text": "效果最可持续。"
+        }
+      ]
+    }
+  ]
+}

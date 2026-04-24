@@ -1,13 +1,21 @@
 ---
-description: Generate and validate vlog frames JSON with project schema
-alwaysApply: true
+description: "当用户要求生成、校验或渲染 vlog-pipeline 的 frames JSON（含 meta+frames 结构、validate_frames.py 校验、agent_pipeline 自动渲染）时应用此规则。"
+globs:
+  - "**/*frames*.json"
+  - "**/langchain_setup_frames.json"
+  - "**/validate_frames.py"
+  - "**/tools/agent_pipeline.py"
+alwaysApply: false
 ---
 
 # Vlog Frames JSON Workflow
 
 - 当用户要求生成用于 `vlog-pipeline` 的 `frames.json` 时，必须输出 `meta + frames` 根结构。
 - `meta.voice` 只能使用项目白名单语音；`meta.rate` 必须是百分比字符串；`meta.topic` 不能为空。
-- `frames` 必须 3~12 条，且首帧与尾帧 `type` 必须是 `hook`。
+- `meta.theme` 可选值仅允许：`purple` / `ocean` / `dark` / `light`。
+- 当用户要求“Agent 直接跑完整链路”且未明确主题时，必须在生成 JSON 前先询问主题（四选一）；若用户未指定且不回复，再回落默认 `purple`。
+- 进入渲染阶段前，必须在输出中明确回显“本次使用主题 = <theme>”，避免用户不知当前主题。
+- `frames` 必须 3~20 条，且首帧与尾帧 `type` 必须是 `hook`。
 - 每帧 `type` 允许：`hook` / `cards` / `comparison` / **`bullets`** / **`kpi`** / **`quote`**（首尾仍为 `hook`），并满足各自必填字段约束。
 - `title` 与 `script` 不得包含禁止字符；`script` 长度必须符合项目最小和最大长度限制。
 - 首帧（`frames[0]`）`title` 必须是“整篇核心技术结论”，禁止写成空泛栏目名（如“核心要点/今日主题/一图看懂”）。
@@ -68,6 +76,7 @@ alwaysApply: true
 
 - 默认受众为零基础用户，表达必须通俗、直白，优先用白话解释专业术语。
 - 每帧脚本应先给结论，再给原因或示例，避免抽象定义堆砌。
+- `script` 按需补“微场景例子”（建议全片约 30%~60% 帧包含即可）：优先给概念解释帧加例子；流程、对比、指标帧可不强行举例。
 - 优先给“可以照着做”的内容：步骤顺序、判断标准、常见错误和修正建议。
 - 术语首次出现时要附一句简短解释；避免连续出现多个未解释缩写。
 - 内容要“丰富但不啰嗦”：确保信息密度高，同时句子可听懂、可复述。

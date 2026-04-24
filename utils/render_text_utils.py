@@ -41,6 +41,54 @@ def wrap_text_lines(draw, text, font, max_w):
     return out
 
 
+def fit_line_to_width(draw, text, font, max_w: int, ellipsis: str = "...") -> str:
+    s = str(text or "")
+    if not s:
+        return ""
+    if draw.textbbox((0, 0), s, font=font)[2] <= max_w:
+        return s
+    lo, hi = 0, len(s)
+    best = ""
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        cand = s[:mid].rstrip() + ellipsis
+        if draw.textbbox((0, 0), cand, font=font)[2] <= max_w:
+            best = cand
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return best or ellipsis
+
+
+def wrap_line_to_width(draw, text, font, max_w: int, max_segments: int = 3):
+    raw = str(text or "").strip()
+    if not raw:
+        return []
+    parts = []
+    remain = raw
+    while remain:
+        if draw.textbbox((0, 0), remain, font=font)[2] <= max_w:
+            parts.append(remain)
+            break
+        cut = max(8, int(len(remain) * 0.6))
+        while cut < len(remain):
+            cand = remain[: cut + 1]
+            if draw.textbbox((0, 0), cand, font=font)[2] > max_w:
+                break
+            cut += 1
+        chunk = remain[:cut].rstrip()
+        if not chunk:
+            parts.append(fit_line_to_width(draw, remain, font, max_w))
+            break
+        parts.append(chunk)
+        remain = remain[cut:].lstrip()
+        if len(parts) >= max_segments:
+            if remain:
+                parts[-1] = fit_line_to_width(draw, parts[-1] + " " + remain, font, max_w)
+            break
+    return parts
+
+
 def summarize_script(text, max_len=48):
     s = str(text or "").strip().replace("\n", "")
     if not s:

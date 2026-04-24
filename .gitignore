@@ -35,3 +35,4 @@ env/
 
 # Project temporary files
 tmp/
+node_modules/

@@ -2,6 +2,7 @@
 import argparse
 from datetime import datetime
 import json
+import select
 import sys
 import time
 import urllib.error
@@ -125,6 +126,28 @@ def main() -> int:
     )
     parser.add_argument("--frames", required=True, help="frames.json 文件路径")
     parser.add_argument("--server", default="http://localhost:8765", help="渲染服务地址")
+    parser.add_argument(
+        "--engine",
+        default="auto",
+        choices=["auto", "legacy", "remotion"],
+        help="渲染引擎选择：auto/legacy/remotion（默认 auto）",
+    )
+    parser.add_argument(
+        "--theme",
+        default="",
+        help="可选：强制指定主题（purple/ocean/dark/light），会写入 meta.theme",
+    )
+    parser.add_argument(
+        "--theme-timeout-seconds",
+        type=int,
+        default=30,
+        help="缺少主题时交互等待秒数，超时后自动使用默认 purple（默认 30）",
+    )
+    parser.add_argument(
+        "--require-theme",
+        action="store_true",
+        help="强制要求必须明确指定主题；缺失时直接失败（默认关闭）",
+    )
     parser.add_argument("--poll-interval", type=float, default=1.5, help="轮询间隔（秒）")
     parser.add_argument("--timeout", type=int, default=900, help="总超时（秒）")
     parser.add_argument("--result-file", default="", help="可选：将结果 JSON 写入文件")
@@ -203,6 +226,82 @@ def main() -> int:
         _emit_result(result, args.result_file)
         return 2
 
+    valid_themes = {"purple", "ocean", "dark", "light"}
+    if not isinstance(payload.get("meta"), dict):
+        payload["meta"] = {}
+    cli_theme = str(args.theme or "").strip().lower()
+    if cli_theme:
+        if cli_theme not in valid_themes:
+            result.update(
+                stage="validate",
+                error_code="THEME_INVALID",
+                error_message=(
+                    f"--theme '{cli_theme}' 不合法，可选: {sorted(valid_themes)}"
+                ),
+            )
+            _emit_result(result, args.result_file)
+            return 1
+        payload["meta"]["theme"] = cli_theme
+        frames_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+    meta_theme = str(payload.get("meta", {}).get("theme", "")).strip().lower()
+    if (not meta_theme) and args.require_theme:
+        result.update(
+            stage="validate",
+            error_code="THEME_REQUIRED",
+            error_message=(
+                "完整链路执行前必须指定主题。请在 frames.json 的 meta.theme "
+                "设置 purple/ocean/dark/light，或使用 --theme 参数。"
+            ),
+            validation_errors=["缺少 meta.theme（--require-theme 已开启）"],
+        )
+        _emit_result(result, args.result_file)
+        return 1
+
+    if not meta_theme:
+        timeout_s = max(1, int(args.theme_timeout_seconds))
+        picked = ""
+        if sys.stdin.isatty():
+            choices = "/".join(sorted(valid_themes))
+            print(
+                f"[agent_pipeline] 请选择主题 ({choices})，"
+                f"{timeout_s} 秒内未输入将自动使用默认 purple：",
+                file=sys.stderr,
+            )
+            try:
+                readable, _, _ = select.select([sys.stdin], [], [], timeout_s)
+                if readable:
+                    user_input = sys.stdin.readline().strip().lower()
+                    if user_input in valid_themes:
+                        picked = user_input
+                    elif user_input:
+                        print(
+                            f"[agent_pipeline] 输入主题 '{user_input}' 无效，已使用默认 purple",
+                            file=sys.stderr,
+                        )
+                else:
+                    print(
+                        f"[agent_pipeline] {timeout_s} 秒未选择主题，已自动使用默认 purple",
+                        file=sys.stderr,
+                    )
+            except Exception:
+                # 交互读取失败时回退默认主题，不中断主流程。
+                pass
+        else:
+            print(
+                "[agent_pipeline] 非交互环境且未指定主题，已自动使用默认 purple",
+                file=sys.stderr,
+            )
+
+        payload["meta"]["theme"] = picked or "purple"
+        frames_path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
     if not args.skip_quality_check:
         quality = analyze_frames(payload)
         result["quality_report"] = quality
@@ -265,6 +364,7 @@ def main() -> int:
         )
         _emit_result(result, args.result_file)
         return 1
+    payload["render_engine"] = args.engine
     status, submit_data = _post_json(f"{server}/render", payload, timeout_s=30)
     if status >= 400:
         detail = submit_data.get("detail", submit_data)

@@ -1,0 +1,172 @@
+{
+  "meta": {
+    "topic": "LangChain 与 ReAct Agent 环境搭建",
+    "voice": "zh-CN-YunxiNeural",
+    "rate": "+5%",
+    "theme": "purple"
+  },
+  "slides": [
+    {
+      "id": "hook_open",
+      "type": "hook",
+      "durationInFrames": 193,
+      "frame": {
+        "id": "hook_open",
+        "type": "hook",
+        "title": "20天计划里的 LangChain 实战",
+        "script": "Week2 Day8 聚焦 LangChain 与 ReAct Agent 环境搭建。我们按文档完成虚拟环境、依赖安装、通义千问接口配置和 Agent 运行，最后直接跑通 react_agent_demo。",
+        "subtitle": "先创建 .venv 再安装依赖，最后运行 demo 验证链路。"
+      }
+    },
+    {
+      "id": "env_overview",
+      "type": "cards",
+      "durationInFrames": 258,
+      "frame": {
+        "id": "env_overview",
+        "type": "cards",
+        "title": "环境一览",
+        "script": "文档里推荐 Python 3.11.9，虚拟环境放在项目目录下的 .venv，LangChain 版本示例为 1.2.13。模型走阿里云百炼的 OpenAI 兼容模式，默认模型名 qwen-turbo，基地址指向 dashscope 的 compatible-mode 接口。",
+        "cards": [
+          {
+            "title": "Python",
+            "desc": "建议使用 3.11.9，与教程一致可减少踩坑",
+            "color": "CYAN"
+          },
+          {
+            "title": "虚拟环境",
+            "desc": "项目内 python3 -m venv .venv，激活后前缀显示 (.venv)",
+            "color": "GREEN"
+          },
+          {
+            "title": "LangChain",
+            "desc": "核心包加 community、openai 兼容层等组合安装",
+            "color": "PURPLE_L"
+          },
+          {
+            "title": "模型服务",
+            "desc": "通义千问 qwen-turbo，兼容 OpenAI 客户端配置",
+            "color": "GOLD"
+          }
+        ]
+      }
+    },
+    {
+      "id": "venv_install",
+      "type": "cards",
+      "durationInFrames": 270,
+      "frame": {
+        "id": "venv_install",
+        "type": "cards",
+        "title": "虚拟环境与依赖",
+        "script": "先 cd 到实战项目目录，执行 python3 -m venv .venv，再用 source 激活。依赖用 pip 一次性安装 langchain、langchain-community、langchain-openai、搜索与 dotenv 等。装完用一行 Python 打印 langchain 版本确认成功。",
+        "cards": [
+          {
+            "title": "创建激活",
+            "desc": "macOS 或 Linux 使用 source .venv/bin/activate 进入环境",
+            "color": "CYAN"
+          },
+          {
+            "title": "pip 安装",
+            "desc": "含 wikipedia、duckduckgo-search、python-dotenv 等文档列出的包",
+            "color": "ORANGE"
+          },
+          {
+            "title": "经典拆包",
+            "desc": "create_react_agent 与 AgentExecutor 在 langchain-classic，注意导入路径",
+            "color": "RED"
+          }
+        ]
+      }
+    },
+    {
+      "id": "api_env",
+      "type": "cards",
+      "durationInFrames": 266,
+      "frame": {
+        "id": "api_env",
+        "type": "cards",
+        "title": "配置通义千问",
+        "script": "在百炼控制台申请 API Key，项目根目录建 .env，写入 OPENAI_API_BASE、OPENAI_API_KEY 和 OPENAI_MODEL。学习阶段可优先 qwen-turbo，需要更强效果再换 qwen-plus 或 qwen-max。注意不要泄露真实密钥到版本库。",
+        "cards": [
+          {
+            "title": "API Key",
+            "desc": "阿里云百炼控制台申请，填入 OPENAI_API_KEY",
+            "color": "GOLD"
+          },
+          {
+            "title": ".env 内容",
+            "desc": "BASE 指向 compatible-mode 的 v1 地址，MODEL 写 qwen-turbo",
+            "color": "GREEN"
+          },
+          {
+            "title": "模型选择",
+            "desc": "turbo 省 token 适合练手，plus 与 max 适合正式与复杂任务",
+            "color": "PINK"
+          }
+        ]
+      }
+    },
+    {
+      "id": "react_flow",
+      "type": "comparison",
+      "durationInFrames": 266,
+      "frame": {
+        "id": "react_flow",
+        "type": "comparison",
+        "title": "ReAct 循环在做什么",
+        "script": "Agent 先 Thought 再选 Action 与 Action Input，工具返回 Observation 后继续思考，直到给出 Final Answer。文档示例用本地内置 ReAct Prompt，不依赖 Hub，内网也能跑。verbose 打开可在终端看到完整链式日志。",
+        "left": {
+          "label": "推理侧",
+          "color": "CYAN"
+        },
+        "right": {
+          "label": "工具侧",
+          "color": "ORANGE"
+        },
+        "insight": "核心节奏是 Thought 规划、Action 调用工具、Observation 回写上下文，再迭代到 Final Answer。"
+      }
+    },
+    {
+      "id": "run_verify",
+      "type": "cards",
+      "durationInFrames": 219,
+      "frame": {
+        "id": "run_verify",
+        "type": "cards",
+        "title": "运行与验证",
+        "script": "激活环境后执行 python react_agent_demo.py，终端应出现 AgentExecutor 的链式输出。也可用编辑器选择 .venv 解释器后点击运行。两道测试题都通过即表示链路打通，若报错对照常见问题表格逐项排查。",
+        "cards": [
+          {
+            "title": "命令行",
+            "desc": "cd 项目目录、source 激活、再运行主脚本",
+            "color": "CYAN"
+          },
+          {
+            "title": "IDE 运行",
+            "desc": "选择解释器为 .venv 后运行 react_agent_demo.py",
+            "color": "GREEN"
+          },
+          {
+            "title": "成功标志",
+            "desc": "看到 Thought、Action、Observation 与 Final Answer 完整流程",
+            "color": "GOLD"
+          }
+        ]
+      }
+    },
+    {
+      "id": "faq_next",
+      "type": "hook",
+      "durationInFrames": 270,
+      "frame": {
+        "id": "faq_next",
+        "type": "hook",
+        "title": "排错与后续路线",
+        "script": "导入错误多半是新版拆包，改为 langchain_classic.agents。401 检查 Key，404 检查 BASE 路径是否多了斜杠，429 换模型或等配额。后续可加 Memory、自定义 Tool、流式 stream，以及用 LangGraph 做更强编排，对应文档第九节扩展方向。",
+        "style": "spotlight",
+        "subtitle": "先做一个可跑版本，再按日志逐步迭代优化。"
+      }
+    }
+  ]
+}

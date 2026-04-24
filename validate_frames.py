@@ -11,6 +11,8 @@ VALID_VOICES = {
     "zh-CN-XiaochenNeural",
 }
 
+VALID_THEMES = {"purple", "ocean", "dark", "light"}
+
 VALID_COLORS = {
     "CYAN",
     "GOLD",
@@ -60,6 +62,23 @@ ACTION_WORD_HINTS = (
     "补充",
     "重试",
 )
+SCRIPT_TAIL_GUIDE_WORDS = (
+    "如下",
+    "包括",
+    "分为",
+    "例如",
+    "比如",
+    "有这些",
+    "有以下",
+)
+SCRIPT_MIN_SENTENCES_BY_TYPE = {
+    "hook": 1,
+    "cards": 1,
+    "comparison": 1,
+    "bullets": 2,
+    "kpi": 1,
+    "quote": 1,
+}
 BAD_FIRST_TITLE_PHRASES = (
     "核心要点",
     "今日主题",
@@ -160,6 +179,36 @@ def is_actionable_sentence(text: str) -> bool:
     return has_action and has_sentence_shape
 
 
+def script_sentence_count(text: str) -> int:
+    s = str(text or "").strip()
+    if not s:
+        return 0
+    chunks = [x.strip() for x in re.split(r"[。！？!?；;]", s) if x.strip()]
+    return len(chunks)
+
+
+def has_unfinished_script_tail(text: str) -> bool:
+    s = str(text or "").strip()
+    if not s:
+        return False
+    if s.endswith(("：", ":")):
+        return True
+    s2 = s.rstrip("，,、 ")
+    return any(s2.endswith(x) for x in SCRIPT_TAIL_GUIDE_WORDS)
+
+
+def _script_type_label(ftype: str) -> str:
+    labels = {
+        "hook": "hook",
+        "cards": "cards",
+        "comparison": "comparison",
+        "bullets": "bullets",
+        "kpi": "kpi",
+        "quote": "quote",
+    }
+    return labels.get(ftype, "frame")
+
+
 def has_quote_alignment(script: str, quote: str) -> bool:
     ns = normalize_text_for_compare(script)
     nq = normalize_text_for_compare(quote)
@@ -258,6 +307,9 @@ async def main(args: dict) -> dict:
         rate = meta.get("rate", "+5%")
         if not isinstance(rate, str) or not rate.endswith("%"):
             errors.append(f"meta.rate '{rate}' 格式应为 '+5%' / '-10%'")
+        theme = str(meta.get("theme", "")).strip().lower()
+        if theme and theme not in VALID_THEMES:
+            errors.append(f"meta.theme '{theme}' 不合法，可选: {sorted(VALID_THEMES)}")
 
     # ── frames 校验 ──
     frames = data.get("frames", [])
@@ -266,8 +318,8 @@ async def main(args: dict) -> dict:
     else:
         if len(frames) < 3:
             errors.append(f"frames 数量 {len(frames)} 过少，至少 3 帧")
-        if len(frames) > 12:
-            errors.append(f"frames 数量 {len(frames)} 过多，最多 12 帧")
+        if len(frames) > 20:
+            errors.append(f"frames 数量 {len(frames)} 过多，最多 20 帧")
 
         # 首尾 hook 检查
         if frames[0].get("type") != "hook":
@@ -363,6 +415,16 @@ async def main(args: dict) -> dict:
                     errors.append(
                         f"frames[0].script 过长({len(script)}字 > {MAX_FIRST_HOOK_SCRIPT_LEN})，"
                         "首帧建议只讲主题与主结论"
+                    )
+                min_sentences = SCRIPT_MIN_SENTENCES_BY_TYPE.get(ftype, 2)
+                if script_sentence_count(script) < min_sentences:
+                    errors.append(
+                        f"{prefix}.script 句子闭合不足，{_script_type_label(ftype)} 帧至少写 "
+                        f"{min_sentences} 句完整表达"
+                    )
+                if has_unfinished_script_tail(script):
+                    errors.append(
+                        f"{prefix}.script 结尾疑似引导句未写完，请补全后半句后再提交"
                     )
 
             # subtitle/script 防复读：若 subtitle 与 script 高度重复，要求重写 subtitle

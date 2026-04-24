@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@remotion/bundler": "4.0.451",
+    "@remotion/cli": "4.0.451",
+    "@remotion/eslint-config-flat": "4.0.451",
+    "@remotion/player": "4.0.451",
+    "@remotion/renderer": "4.0.451",
+    "@remotion/studio": "4.0.451",
+    "@remotion/tailwind-v4": "4.0.451",
+    "remotion": "4.0.451"
+  }
+}
