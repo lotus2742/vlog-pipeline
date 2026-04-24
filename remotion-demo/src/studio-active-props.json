@@ -1,865 +1,967 @@
 {
   "meta": {
-    "topic": "Hermes Agent 最佳实践指南",
-    "voice": "zh-CN-XiaoyiNeural",
+    "topic": "LLM进阶知识与实践",
+    "voice": "zh-CN-YunxiNeural",
     "rate": "+5%",
-    "theme": "dark"
+    "theme": "dark",
+    "bgStyle": "cinematic"
   },
   "slides": [
     {
       "id": "hook_open",
       "type": "hook",
-      "durationInFrames": 534,
+      "durationInFrames": 585,
       "frame": {
         "id": "hook_open",
         "type": "hook",
-        "style": "spotlight",
-        "title": "Hermes 落地机制：配置、记忆、技能三位一体",
-        "subtitle": "从文档到可执行流程，先跑通再持续优化",
-        "script": "这份最佳实践的核心结论是：Hermes Agent 不是单点功能，而是一套持续迭代系统。先把配置安全、记忆治理、技能沉淀三件事打稳，再扩到多平台和自动化部署，最终效果会随着使用次数持续提升。"
+        "title": "参数检索架构协同提升稳定性",
+        "subtitle": "先定参数策略，再补检索与监控闭环。",
+        "script": "这篇文档真正的重点，不是单个技巧，而是一整套工程闭环：采样参数要按任务分层，检索链路要做融合与重排，Agent 要有状态与兜底，最后再用监控和成本策略持续收敛。你照这个顺序做，效果和稳定性会一起提升。"
       },
       "captionKeywords": [
-        "Hermes",
-        "再扩到多平台和自",
-        "技能沉淀三件事打",
-        "最终效果会随着使",
-        "而是一套持续迭代",
-        "这份最佳实践的核",
-        "用次数持续提升",
-        "不是单点功能"
+        "效果和稳定性会一",
+        "最后再用监控和成",
+        "检索链路要做融合",
+        "而是一整套工程闭",
+        "这篇文档真正的重",
+        "采样参数要按任务",
+        "你照这个顺序做",
+        "本策略持续收敛"
       ],
-      "audioSrc": "studio-audio/hermes_docx_frames/hook_open.mp3",
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/hook_open.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.612,
-          "text": "这份最佳实践的核心结论是："
+          "end": 2.009,
+          "text": "这篇文档真正的重点，"
         },
         {
-          "start": 2.612,
-          "end": 5.325,
-          "text": "Hermes Agent 不是单点功能，"
+          "start": 2.009,
+          "end": 3.415,
+          "text": "不是单个技巧，"
         },
         {
-          "start": 5.325,
-          "end": 7.535,
-          "text": "而是一套持续迭代系统。"
+          "start": 3.415,
+          "end": 5.424,
+          "text": "而是一整套工程闭环："
         },
         {
-          "start": 7.535,
-          "end": 9.946,
-          "text": "先把配置安全、记忆治理、"
+          "start": 5.424,
+          "end": 7.634,
+          "text": "采样参数要按任务分层，"
         },
         {
-          "start": 9.946,
-          "end": 11.956,
-          "text": "技能沉淀三件事打稳，"
+          "start": 7.634,
+          "end": 10.045,
+          "text": "检索链路要做融合与重排，"
         },
         {
-          "start": 11.956,
-          "end": 14.568,
-          "text": "再扩到多平台和自动化部署，"
+          "start": 10.045,
+          "end": 12.255,
+          "text": "Agent 要有状态与兜底，"
         },
         {
-          "start": 14.568,
-          "end": 17.181,
-          "text": "最终效果会随着使用次数持续"
+          "start": 12.255,
+          "end": 14.867,
+          "text": "最后再用监控和成本策略持续"
         },
         {
-          "start": 17.181,
-          "end": 17.783,
-          "text": "提升。"
+          "start": 14.867,
+          "end": 15.469,
+          "text": "收敛。"
+        },
+        {
+          "start": 15.469,
+          "end": 17.077,
+          "text": "你照这个顺序做，"
+        },
+        {
+          "start": 17.077,
+          "end": 19.487,
+          "text": "效果和稳定性会一起提升。"
         }
       ]
     },
     {
-      "id": "config_security",
+      "id": "sampling_matrix",
       "type": "cards",
-      "durationInFrames": 461,
+      "durationInFrames": 575,
       "frame": {
-        "id": "config_security",
+        "id": "sampling_matrix",
         "type": "cards",
-        "title": "配置与密钥管理",
+        "title": "采样参数要成组管理",
+        "script": "很多人只改 temperature，结果同一问题每次风格都不一样。更稳的方案是把 temperature、top-p、top-k 作为一组配置，并按场景预设。代码生成、摘要和翻译要偏低随机；创意写作可以提高温度，但仍要设边界，避免跑题。",
         "cards": [
           {
-            "title": "密钥隔离",
-            "desc": "API Key 只放 ~/.hermes/.env，禁止写入 config.yaml。"
+            "title": "代码生成",
+            "desc": "温度低，优先确定性；减少语法漂移与结构发散。",
+            "color": "CYAN"
           },
           {
-            "title": "主备 Provider",
-            "desc": "配置 fallback provider chain，主通道限流时自动切换。"
+            "title": "客服对话",
+            "desc": "中低随机，兼顾自然表达与事实准确。",
+            "color": "GREEN"
           },
           {
-            "title": "模型切换纪律",
-            "desc": "会话内避免频繁换模型，防止 prompt cache 失效。"
+            "title": "创意场景",
+            "desc": "提高温度与候选范围，但保留格式约束。",
+            "color": "PURPLE_L"
           },
           {
-            "title": "目录优先级",
-            "desc": "CLI 参数 > config.yaml > .env > 默认值，定位问题更高效。"
+            "title": "摘要翻译",
+            "desc": "强调忠实原文，优先低温与低发散。",
+            "color": "GOLD"
           }
-        ],
-        "script": "配置层先守住两条红线：密钥不落明文、配置分层清晰。生产建议主备模型并行配置，遇到限流自动回退。模型切换要克制，保持会话稳定才能发挥缓存收益。"
+        ]
       },
       "captionKeywords": [
-        "保持会话稳定才能",
-        "生产建议主备模型",
-        "遇到限流自动回退",
-        "配置层先守住两条",
-        "模型切换要克制",
-        "发挥缓存收益",
-        "密钥不落明文",
-        "配置分层清晰"
+        "temperature",
+        "top-k",
+        "top-p",
+        "创意写作可以提高",
+        "摘要和翻译要偏低",
+        "结果同一问题每次",
+        "更稳的方案是把",
+        "但仍要设边界"
       ],
-      "audioSrc": "studio-audio/hermes_docx_frames/config_security.mp3",
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/sampling_matrix.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.409,
-          "text": "配置层先守住两条红线："
+          "end": 2.286,
+          "text": "很多人只改 temperature，"
         },
         {
-          "start": 2.409,
-          "end": 3.943,
-          "text": "密钥不落明文、"
+          "start": 2.286,
+          "end": 5.145,
+          "text": "结果同一问题每次风格都不一样。"
         },
         {
-          "start": 3.943,
-          "end": 5.477,
-          "text": "配置分层清晰。"
+          "start": 5.145,
+          "end": 7.813,
+          "text": "更稳的方案是把 temperature、"
         },
         {
-          "start": 5.477,
-          "end": 8.325,
-          "text": "生产建议主备模型并行配置，"
+          "start": 7.813,
+          "end": 8.48,
+          "text": "top-p、"
         },
         {
-          "start": 8.325,
-          "end": 10.297,
-          "text": "遇到限流自动回退。"
+          "start": 8.48,
+          "end": 10.385,
+          "text": "top-k 作为一组配置，"
         },
         {
-          "start": 10.297,
-          "end": 12.049,
-          "text": "模型切换要克制，"
+          "start": 10.385,
+          "end": 11.719,
+          "text": "并按场景预设。"
         },
         {
-          "start": 12.049,
-          "end": 15.336,
-          "text": "保持会话稳定才能发挥缓存收益。"
+          "start": 11.719,
+          "end": 12.672,
+          "text": "代码生成、"
+        },
+        {
+          "start": 12.672,
+          "end": 14.768,
+          "text": "摘要和翻译要偏低随机；"
+        },
+        {
+          "start": 14.768,
+          "end": 16.865,
+          "text": "创意写作可以提高温度，"
+        },
+        {
+          "start": 16.865,
+          "end": 19.152,
+          "text": "但仍要设边界，避免跑题。"
         }
       ]
     },
     {
-      "id": "memory_rules",
+      "id": "context_opt",
       "type": "bullets",
-      "durationInFrames": 481,
+      "durationInFrames": 597,
       "frame": {
-        "id": "memory_rules",
+        "id": "context_opt",
         "type": "bullets",
-        "title": "记忆系统治理策略",
+        "title": "上下文窗口要做主动压缩",
+        "script": "大窗口不等于高质量。输入太长会抬高成本，还会稀释关键信号。文档里给的实操是三步：保留系统提示和核心规则，提炼最近轮次的用户意图，再压缩历史重复内容。RAG 场景只保留与问题相关的段落，别整篇塞进来。",
         "items": [
           {
-            "title": "写长期规则",
-            "desc": "MEMORY.md 记录技术栈、协作规范、关键决策，不写临时日志。"
+            "title": "保留硬约束",
+            "desc": "系统提示、输出格式、边界条件必须原样保留。"
           },
           {
-            "title": "维护用户画像",
-            "desc": "USER.md 明确身份、偏好、禁忌，提升回复匹配度。"
+            "title": "提炼近期意图",
+            "desc": "优先保留最近对话中的任务目标与状态变化。"
           },
           {
-            "title": "容量管控",
-            "desc": "容量接近上限时主动清理过时记忆，保持检索效率。"
+            "title": "压缩重复历史",
+            "desc": "合并同类内容，减少无效 token 占用。"
           },
           {
-            "title": "会话边界意识",
-            "desc": "记忆修改通常下个会话才生效，验证时需新开会话。"
+            "title": "RAG按相关截取",
+            "desc": "只放相关段落，不把整份文档直接灌入上下文。"
           }
-        ],
-        "script": "记忆的关键不是存得多，而是存得准。把可复用规则和偏好留在长期层，临时上下文及时清理，才能避免响应变慢和上下文污染。每周做一次记忆体检，长期收益很明显。"
+        ]
       },
       "captionKeywords": [
-        "临时上下文及时清",
-        "才能避免响应变慢",
-        "把可复用规则和偏",
-        "每周做一次记忆体",
-        "记忆的关键不是存",
-        "长期收益很明显",
-        "和上下文污染",
-        "好留在长期层"
+        "RAG",
+        "保留系统提示和核",
+        "再压缩历史重复内",
+        "场景只保留与问题",
+        "大窗口不等于高质",
+        "提炼最近轮次的用",
+        "文档里给的实操是",
+        "输入太长会抬高成"
       ],
-      "audioSrc": "studio-audio/hermes_docx_frames/memory_rules.mp3",
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/context_opt.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.347,
-          "text": "记忆的关键不是存得多，"
+          "end": 2.048,
+          "text": "大窗口不等于高质量。"
         },
         {
-          "start": 2.347,
-          "end": 3.628,
-          "text": "而是存得准。"
+          "start": 2.048,
+          "end": 4.097,
+          "text": "输入太长会抬高成本，"
         },
         {
-          "start": 3.628,
-          "end": 6.83,
-          "text": "把可复用规则和偏好留在长期层，"
+          "start": 4.097,
+          "end": 5.941,
+          "text": "还会稀释关键信号。"
         },
         {
-          "start": 6.83,
-          "end": 8.964,
-          "text": "临时上下文及时清理，"
+          "start": 5.941,
+          "end": 8.194,
+          "text": "文档里给的实操是三步："
         },
         {
-          "start": 8.964,
-          "end": 12.166,
-          "text": "才能避免响应变慢和上下文污染。"
+          "start": 8.194,
+          "end": 10.653,
+          "text": "保留系统提示和核心规则，"
         },
         {
-          "start": 12.166,
-          "end": 14.3,
-          "text": "每周做一次记忆体检，"
+          "start": 10.653,
+          "end": 13.111,
+          "text": "提炼最近轮次的用户意图，"
         },
         {
-          "start": 14.3,
-          "end": 16.007,
-          "text": "长期收益很明显。"
+          "start": 13.111,
+          "end": 15.16,
+          "text": "再压缩历史重复内容。"
+        },
+        {
+          "start": 15.16,
+          "end": 17.823,
+          "text": "RAG 场景只保留与问题相关的"
+        },
+        {
+          "start": 17.823,
+          "end": 18.437,
+          "text": "段落，"
+        },
+        {
+          "start": 18.437,
+          "end": 19.871,
+          "text": "别整篇塞进来。"
         }
       ]
     },
     {
-      "id": "skills_system",
-      "type": "cards",
-      "durationInFrames": 449,
-      "frame": {
-        "id": "skills_system",
-        "type": "cards",
-        "title": "技能沉淀方法",
-        "cards": [
-          {
-            "title": "命名规范",
-            "desc": "统一动作-对象.md，方便斜杠命令直达。"
-          },
-          {
-            "title": "触发条件",
-            "desc": "技能必须写清输入条件，避免误触发。"
-          },
-          {
-            "title": "执行步骤",
-            "desc": "任务超过 5 步且高频复用时优先沉淀为技能。"
-          },
-          {
-            "title": "上线校验",
-            "desc": "生成后用 /skills check，人工补边界条件。"
-          }
-        ],
-        "script": "技能是 Hermes 的复利引擎。把高频流程结构化后，后续任务的稳定性和速度都会提升。务必在技能生成后做人审，修正冗余步骤和遗漏条件，避免把错误流程固化。"
-      },
-      "captionKeywords": [
-        "Hermes",
-        "修正冗余步骤和遗",
-        "务必在技能生成后",
-        "后续任务的稳定性",
-        "把高频流程结构化",
-        "避免把错误流程固",
-        "和速度都会提升",
-        "的复利引擎"
-      ],
-      "audioSrc": "studio-audio/hermes_docx_frames/skills_system.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.662,
-          "text": "技能是 Hermes 的复利引擎。"
-        },
-        {
-          "start": 2.662,
-          "end": 4.71,
-          "text": "把高频流程结构化后，"
-        },
-        {
-          "start": 4.71,
-          "end": 7.373,
-          "text": "后续任务的稳定性和速度都会"
-        },
-        {
-          "start": 7.373,
-          "end": 7.9879999999999995,
-          "text": "提升。"
-        },
-        {
-          "start": 7.9879999999999995,
-          "end": 10.445,
-          "text": "务必在技能生成后做人审，"
-        },
-        {
-          "start": 10.445,
-          "end": 12.903,
-          "text": "修正冗余步骤和遗漏条件，"
-        },
-        {
-          "start": 12.903,
-          "end": 14.952,
-          "text": "避免把错误流程固化。"
-        }
-      ]
-    },
-    {
-      "id": "platform_compare",
+      "id": "rag_upgrade",
       "type": "comparison",
-      "durationInFrames": 461,
+      "durationInFrames": 544,
       "frame": {
-        "id": "platform_compare",
+        "id": "rag_upgrade",
         "type": "comparison",
-        "title": "多平台接入策略对比",
+        "title": "RAG进阶关键是检索质量",
+        "script": "基础 RAG 常见问题是召回不准。进阶做法是语义分块或递归分块，再把向量检索和关键词检索做融合，最后重排序。这样能减少答非所问，也能避免模型只抓到语义相近但业务无关的片段。",
         "left": {
-          "label": "快速接入",
+          "label": "基础RAG",
+          "color": "ORANGE",
           "points": [
-            "Telegram 配置快，适合先做 MVP 验证",
-            "钉钉 Webhook 简单，适合单向通知",
-            "低门槛场景可先跑通触发链路"
+            "固定切块容易切断语义",
+            "仅向量检索，精确词命中弱",
+            "缺少重排，噪声片段上榜"
           ]
         },
         "right": {
-          "label": "治理优先",
+          "label": "进阶RAG",
+          "color": "CYAN",
           "points": [
-            "飞书接入应用级权限，便于企业管控",
-            "按平台拆分 MESSAGING_CWD，隔离上下文污染",
-            "用户白名单与权限边界必须先落地"
+            "语义或递归分块保结构",
+            "向量+关键词混合召回",
+            "RRF融合后再重排序生成"
           ]
         },
-        "insight": "先用低成本平台验证价值，再把治理能力补齐扩到团队协作平台。",
-        "script": "多平台不是越多越好，而是按阶段推进。先选一个接入快的平台验证任务闭环，再逐步补权限、目录隔离和用户管理。这样既能快速见效，也能控制后续治理成本。"
+        "insight": "先把检索做准，再讨论生成文风。"
       },
       "captionKeywords": [
-        "也能控制后续治理",
-        "先选一个接入快的",
-        "多平台不是越多越",
-        "平台验证任务闭环",
-        "目录隔离和用户管",
-        "这样既能快速见效",
-        "而是按阶段推进",
-        "再逐步补权限"
+        "RAG",
+        "也能避免模型只抓",
+        "再把向量检索和关",
+        "到语义相近但业务",
+        "常见问题是召回不",
+        "这样能减少答非所",
+        "进阶做法是语义分",
+        "键词检索做融合"
       ],
-      "audioSrc": "studio-audio/hermes_docx_frames/platform_compare.mp3",
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/rag_upgrade.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.13,
-          "text": "多平台不是越多越好，"
+          "end": 3.146,
+          "text": "基础 RAG 常见问题是召回不准。"
         },
         {
-          "start": 2.13,
-          "end": 3.834,
-          "text": "而是按阶段推进。"
+          "start": 3.146,
+          "end": 6.401,
+          "text": "进阶做法是语义分块或递归分块，"
         },
         {
-          "start": 3.834,
-          "end": 6.603,
-          "text": "先选一个接入快的平台验证任"
+          "start": 6.401,
+          "end": 9.222,
+          "text": "再把向量检索和关键词检索做"
         },
         {
-          "start": 6.603,
-          "end": 7.455,
-          "text": "务闭环，"
+          "start": 9.222,
+          "end": 9.873,
+          "text": "融合，"
         },
         {
-          "start": 7.455,
-          "end": 8.946,
-          "text": "再逐步补权限、"
+          "start": 9.873,
+          "end": 11.175,
+          "text": "最后重排序。"
         },
         {
-          "start": 8.946,
-          "end": 11.076,
-          "text": "目录隔离和用户管理。"
+          "start": 11.175,
+          "end": 13.345,
+          "text": "这样能减少答非所问，"
         },
         {
-          "start": 11.076,
-          "end": 12.993,
-          "text": "这样既能快速见效，"
+          "start": 13.345,
+          "end": 16.166,
+          "text": "也能避免模型只抓到语义相近"
         },
         {
-          "start": 12.993,
-          "end": 15.336,
-          "text": "也能控制后续治理成本。"
+          "start": 16.166,
+          "end": 18.12,
+          "text": "但业务无关的片段。"
         }
       ]
     },
     {
-      "id": "deploy_path",
-      "type": "bullets",
-      "durationInFrames": 530,
-      "frame": {
-        "id": "deploy_path",
-        "type": "bullets",
-        "title": "部署路径建议",
-        "items": [
-          {
-            "title": "本地先验收",
-            "desc": "先跑 hermes doctor 与 setup，确认环境完整。"
-          },
-          {
-            "title": "VPS 稳定托管",
-            "desc": "1核1G 即可起步，配置 gateway 自启与日志观察。"
-          },
-          {
-            "title": "迁移要修路径",
-            "desc": "Mac 到 Linux 迁移后修正 config.yaml 中绝对路径。"
-          },
-          {
-            "title": "Serverless 取舍",
-            "desc": "弹性好但冷启动高，不适合强实时场景。"
-          }
-        ],
-        "script": "部署建议分三层：本地开发验证、VPS 稳定托管、Serverless 弹性扩展。大多数团队先从 VPS 起步最稳，成本低且可控。跨系统迁移时优先检查路径和工作目录设置，能少踩很多坑。"
-      },
-      "captionKeywords": [
-        "VPS",
-        "Serverless",
-        "检查路径和工作目",
-        "跨系统迁移时优先",
-        "大多数团队先从",
-        "部署建议分三层",
-        "成本低且可控",
-        "本地开发验证"
-      ],
-      "audioSrc": "studio-audio/hermes_docx_frames/deploy_path.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 1.744,
-          "text": "部署建议分三层："
-        },
-        {
-          "start": 1.744,
-          "end": 3.271,
-          "text": "本地开发验证、"
-        },
-        {
-          "start": 3.271,
-          "end": 4.797,
-          "text": "VPS 稳定托管、"
-        },
-        {
-          "start": 4.797,
-          "end": 7.087,
-          "text": "Serverless 弹性扩展。"
-        },
-        {
-          "start": 7.087,
-          "end": 10.249,
-          "text": "大多数团队先从 VPS 起步最稳，"
-        },
-        {
-          "start": 10.249,
-          "end": 11.775,
-          "text": "成本低且可控。"
-        },
-        {
-          "start": 11.775,
-          "end": 14.61,
-          "text": "跨系统迁移时优先检查路径和"
-        },
-        {
-          "start": 14.61,
-          "end": 16.137,
-          "text": "工作目录设置，"
-        },
-        {
-          "start": 16.137,
-          "end": 17.664,
-          "text": "能少踩很多坑。"
-        }
-      ]
-    },
-    {
-      "id": "security_checklist",
+      "id": "function_calling",
       "type": "cards",
-      "durationInFrames": 426,
+      "durationInFrames": 561,
       "frame": {
-        "id": "security_checklist",
+        "id": "function_calling",
         "type": "cards",
-        "title": "生产安全清单",
+        "title": "工具调用设计决定可控性",
+        "script": "Function Calling 能力强不强，不在模型，而在你工具协议设计得是否清晰。参数要有枚举、默认值和边界，返回要标准化；同时要限制调用深度，防止嵌套死循环。工具选择可以先精确匹配，再做语义相似匹配。",
         "cards": [
           {
-            "title": "密钥治理",
-            "desc": ".env 永不入库，禁止在对话与配置中暴露密钥。"
+            "title": "参数边界",
+            "desc": "字段类型、取值范围、默认值都要写清楚。",
+            "color": "CYAN"
           },
           {
-            "title": "审批策略",
-            "desc": "生产环境使用 manual，危险操作必须人工确认。"
+            "title": "结果标准化",
+            "desc": "统一 success/error 结构，方便链路回放和重试。",
+            "color": "GREEN"
           },
           {
-            "title": "注入防护",
-            "desc": "识别忽略指令、提权词、隐藏注释等注入信号。"
-          },
-          {
-            "title": "基础设施",
-            "desc": "Docker 隔离 + HTTPS + API 限额 + 定期备份。"
+            "title": "深度限制",
+            "desc": "限制嵌套调用层级，避免工具反复互调卡死。",
+            "color": "RED"
           }
-        ],
-        "script": "安全策略要前置而不是补丁式追加。密钥、审批、注入防护和环境隔离是四个基线能力。先把这些能力默认开启，再谈自动化提速，风险才可控。"
+        ]
       },
       "captionKeywords": [
-        "先把这些能力默认",
-        "安全策略要前置而",
-        "注入防护和环境隔",
-        "离是四个基线能力",
-        "不是补丁式追加",
-        "再谈自动化提速",
-        "风险才可控",
-        "审批"
+        "Function",
+        "Calling",
+        "再做语义相似匹配",
+        "同时要限制调用深",
+        "工具选择可以先精",
+        "而在你工具协议设",
+        "防止嵌套死循环",
+        "参数要有枚举"
       ],
-      "audioSrc": "studio-audio/hermes_docx_frames/security_checklist.mp3",
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/function_calling.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.8810000000000002,
-          "text": "安全策略要前置而不是补丁式"
+          "end": 2.868,
+          "text": "Function Calling 能力强不强，"
         },
         {
-          "start": 2.8810000000000002,
-          "end": 3.545,
-          "text": "追加。"
+          "start": 2.868,
+          "end": 3.857,
+          "text": "不在模型，"
         },
         {
-          "start": 3.545,
-          "end": 4.875,
-          "text": "密钥、审批、"
+          "start": 3.857,
+          "end": 6.825,
+          "text": "而在你工具协议设计得是否清晰。"
         },
         {
-          "start": 4.875,
-          "end": 7.756,
-          "text": "注入防护和环境隔离是四个基"
+          "start": 6.825,
+          "end": 8.21,
+          "text": "参数要有枚举、"
         },
         {
-          "start": 7.756,
-          "end": 8.643,
-          "text": "线能力。"
+          "start": 8.21,
+          "end": 9.595,
+          "text": "默认值和边界，"
         },
         {
-          "start": 8.643,
-          "end": 11.081,
-          "text": "先把这些能力默认开启，"
+          "start": 9.595,
+          "end": 10.98,
+          "text": "返回要标准化；"
         },
         {
-          "start": 11.081,
-          "end": 12.854,
-          "text": "再谈自动化提速，"
+          "start": 10.98,
+          "end": 12.958,
+          "text": "同时要限制调用深度，"
         },
         {
-          "start": 12.854,
-          "end": 14.183,
-          "text": "风险才可控。"
+          "start": 12.958,
+          "end": 14.541,
+          "text": "防止嵌套死循环。"
+        },
+        {
+          "start": 14.541,
+          "end": 16.915,
+          "text": "工具选择可以先精确匹配，"
+        },
+        {
+          "start": 16.915,
+          "end": 18.696,
+          "text": "再做语义相似匹配。"
         }
       ]
     },
     {
-      "id": "performance_kpi",
-      "type": "kpi",
-      "durationInFrames": 471,
+      "id": "agent_architecture",
+      "type": "comparison",
+      "durationInFrames": 512,
       "frame": {
-        "id": "performance_kpi",
+        "id": "agent_architecture",
+        "type": "comparison",
+        "title": "单Agent与多Agent如何取舍",
+        "script": "简单任务用单 Agent，链路短、延迟低。复杂任务用多 Agent 协同，由主管做任务拆解、分发与汇总。关键点是共享状态和统一回传协议，不然不同 Agent 会给出冲突结论，最后无法落地。",
+        "left": {
+          "label": "单Agent",
+          "color": "GREEN",
+          "points": [
+            "适合固定流程与简单问答",
+            "实现成本低，延迟更可控",
+            "维护简单，排障路径短"
+          ]
+        },
+        "right": {
+          "label": "多Agent",
+          "color": "PURPLE_L",
+          "points": [
+            "适合复杂拆解与并行处理",
+            "需主管协调与共享状态",
+            "更依赖协议与观测体系"
+          ]
+        },
+        "insight": "先单体跑稳，再按瓶颈扩成多Agent。"
+      },
+      "captionKeywords": [
+        "关键点是共享状态",
+        "由主管做任务拆解",
+        "会给出冲突结论",
+        "和统一回传协议",
+        "复杂任务用多",
+        "最后无法落地",
+        "简单任务用单",
+        "分发与汇总"
+      ],
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/agent_architecture.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.028,
+          "text": "简单任务用单 Agent，"
+        },
+        {
+          "start": 2.028,
+          "end": 3.651,
+          "text": "链路短、延迟低。"
+        },
+        {
+          "start": 3.651,
+          "end": 6.187,
+          "text": "复杂任务用多 Agent 协同，"
+        },
+        {
+          "start": 6.187,
+          "end": 8.012,
+          "text": "由主管做任务拆解、"
+        },
+        {
+          "start": 8.012,
+          "end": 9.23,
+          "text": "分发与汇总。"
+        },
+        {
+          "start": 9.23,
+          "end": 11.867,
+          "text": "关键点是共享状态和统一回传"
+        },
+        {
+          "start": 11.867,
+          "end": 12.475,
+          "text": "协议，"
+        },
+        {
+          "start": 12.475,
+          "end": 15.011,
+          "text": "不然不同 Agent 会给出冲突"
+        },
+        {
+          "start": 15.011,
+          "end": 15.619,
+          "text": "结论，"
+        },
+        {
+          "start": 15.619,
+          "end": 17.039,
+          "text": "最后无法落地。"
+        }
+      ]
+    },
+    {
+      "id": "state_memory",
+      "type": "bullets",
+      "durationInFrames": 582,
+      "frame": {
+        "id": "state_memory",
+        "type": "bullets",
+        "title": "状态管理是稳定性的底座",
+        "script": "文档强调会话状态和跨会话记忆都要做。会话内要定期快照，保留关键变量和最近消息；跨会话要抽取用户实体与偏好，用向量检索回填上下文。这样用户下次回来，系统不会像第一次见面那样重头开始。",
+        "items": [
+          {
+            "title": "会话快照",
+            "desc": "长对话定期保存，防止中断后状态丢失。"
+          },
+          {
+            "title": "增量更新",
+            "desc": "仅追加新消息，避免全量重写导致性能抖动。"
+          },
+          {
+            "title": "跨会话记忆",
+            "desc": "抽取用户偏好与历史实体，按查询相关回填。"
+          },
+          {
+            "title": "历史压缩",
+            "desc": "老消息摘要化，保留决策线索与近期上下文。"
+          }
+        ]
+      },
+      "captionKeywords": [
+        "会话内要定期快照",
+        "保留关键变量和最",
+        "和跨会话记忆都要",
+        "文档强调会话状态",
+        "用向量检索回填上",
+        "系统不会像第一次",
+        "见面那样重头开始",
+        "跨会话要抽取用户"
+      ],
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/state_memory.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.801,
+          "text": "文档强调会话状态和跨会话记"
+        },
+        {
+          "start": 2.801,
+          "end": 3.878,
+          "text": "忆都要做。"
+        },
+        {
+          "start": 3.878,
+          "end": 5.817,
+          "text": "会话内要定期快照，"
+        },
+        {
+          "start": 5.817,
+          "end": 8.403,
+          "text": "保留关键变量和最近消息；"
+        },
+        {
+          "start": 8.403,
+          "end": 11.419,
+          "text": "跨会话要抽取用户实体与偏好，"
+        },
+        {
+          "start": 11.419,
+          "end": 13.789,
+          "text": "用向量检索回填上下文。"
+        },
+        {
+          "start": 13.789,
+          "end": 15.729,
+          "text": "这样用户下次回来，"
+        },
+        {
+          "start": 15.729,
+          "end": 18.53,
+          "text": "系统不会像第一次见面那样重"
+        },
+        {
+          "start": 18.53,
+          "end": 19.391,
+          "text": "头开始。"
+        }
+      ]
+    },
+    {
+      "id": "risk_control",
+      "type": "quote",
+      "durationInFrames": 628,
+      "frame": {
+        "id": "risk_control",
+        "type": "quote",
+        "title": "高风险操作必须人机协作",
+        "quote": "在关键场景下，完全依赖AI可能存在风险，这时就需要人机协作。",
+        "attribution": "《LLM进阶知识与实践》人机协作章节",
+        "script": "文档原话是“在关键场景下，完全依赖AI可能存在风险，这时就需要人机协作”。落到执行层面，就是删用户、退款、敏感数据访问、系统配置修改都必须人工复核。再加置信度阈值，低于0.7自动转人工，能提前拦住事故成本。"
+      },
+      "captionKeywords": [
+        "AI",
+        "系统配置修改都必",
+        "能提前拦住事故成",
+        "这时就需要人机协",
+        "再加置信度阈值",
+        "可能存在风险",
+        "在关键场景下",
+        "敏感数据访问"
+      ],
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/risk_control.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.703,
+          "text": "文档原话是“在关键场景下，"
+        },
+        {
+          "start": 2.703,
+          "end": 5.199,
+          "text": "完全依赖AI可能存在风险，"
+        },
+        {
+          "start": 5.199,
+          "end": 7.487,
+          "text": "这时就需要人机协作”。"
+        },
+        {
+          "start": 7.487,
+          "end": 10.192,
+          "text": "落到执行层面，就是删用户、"
+        },
+        {
+          "start": 10.192,
+          "end": 12.272,
+          "text": "退款、敏感数据访问、"
+        },
+        {
+          "start": 12.272,
+          "end": 15.184,
+          "text": "系统配置修改都必须人工复核。"
+        },
+        {
+          "start": 15.184,
+          "end": 16.848,
+          "text": "再加置信度阈值，"
+        },
+        {
+          "start": 16.848,
+          "end": 18.824,
+          "text": "低于0.7自动转人工，"
+        },
+        {
+          "start": 18.824,
+          "end": 20.903,
+          "text": "能提前拦住事故成本。"
+        }
+      ]
+    },
+    {
+      "id": "perf_cost",
+      "type": "kpi",
+      "durationInFrames": 514,
+      "frame": {
+        "id": "perf_cost",
         "type": "kpi",
-        "style": "dashboard",
-        "title": "性能优化重点",
+        "title": "性能成本优化要量化执行",
+        "script": "文档给的是可量化策略，不是口号。先做 Prompt 压缩和输出长度控制，再做模型路由和缓存命中，最后看延迟指标和日成本阈值触发自动降级。你只要把这些指标接上告警，成本失控会明显减少。",
         "kpis": [
           {
-            "title": "工具定义开销",
-            "value": "46%"
+            "title": "Prompt压缩",
+            "value": "15-30%",
+            "label": "节省区间",
+            "unit": "token"
           },
           {
-            "title": "系统提示开销",
-            "value": "27%"
+            "title": "输出长度控制",
+            "value": "20-40%",
+            "label": "节省区间",
+            "unit": "cost"
           },
           {
-            "title": "固定开销总占比",
-            "value": "73%"
+            "title": "模型降级",
+            "value": "50-80%",
+            "label": "简单任务节省",
+            "unit": "cost"
           },
           {
-            "title": "建议 max_tokens",
-            "value": "512"
+            "title": "缓存命中",
+            "value": "30-60%",
+            "label": "重复请求收益",
+            "unit": "cost"
           }
         ],
-        "trend_title": "优先优化固定开销与上下文长度",
+        "trend_title": "优化优先级",
         "trend_points": [
-          "对话变长后及时 /compress 压缩历史",
-          "并行任务用 delegate_task 降低主会话负担",
-          "同会话保持模型一致，保护 prompt cache"
-        ],
-        "script": "文档给出的关键数据说明，固定开销占比已经很高，所以优化重点不是盲目加上下文，而是做压缩、并行和缓存保护。先把这三件事做好，响应速度和成本都会明显改善。"
+          "先压缩",
+          "再路由",
+          "后缓存",
+          "接告警闭环"
+        ]
       },
       "captionKeywords": [
-        "先把这三件事做好",
-        "响应速度和成本都",
-        "固定开销占比已经",
-        "所以优化重点不是",
-        "文档给出的关键数",
-        "并行和缓存保护",
-        "盲目加上下文",
-        "会明显改善"
+        "Prompt",
+        "你只要把这些指标",
+        "再做模型路由和缓",
+        "压缩和输出长度控",
+        "成本失控会明显减",
+        "文档给的是可量化",
+        "日成本阈值触发自",
+        "最后看延迟指标和"
       ],
-      "audioSrc": "studio-audio/hermes_docx_frames/performance_kpi.mp3",
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/perf_cost.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.511,
-          "text": "文档给出的关键数据说明，"
+          "end": 2.163,
+          "text": "文档给的是可量化策略，"
         },
         {
-          "start": 2.511,
-          "end": 4.813,
-          "text": "固定开销占比已经很高，"
+          "start": 2.163,
+          "end": 3.147,
+          "text": "不是口号。"
         },
         {
-          "start": 4.813,
-          "end": 7.952,
-          "text": "所以优化重点不是盲目加上下文，"
+          "start": 3.147,
+          "end": 5.704,
+          "text": "先做 Prompt 压缩和输出长度"
         },
         {
-          "start": 7.952,
-          "end": 9.208,
-          "text": "而是做压缩、"
+          "start": 5.704,
+          "end": 6.294,
+          "text": "控制，"
         },
         {
-          "start": 9.208,
-          "end": 10.882,
-          "text": "并行和缓存保护。"
+          "start": 6.294,
+          "end": 8.654,
+          "text": "再做模型路由和缓存命中，"
         },
         {
-          "start": 10.882,
-          "end": 12.766,
-          "text": "先把这三件事做好，"
+          "start": 8.654,
+          "end": 11.211,
+          "text": "最后看延迟指标和日成本阈值"
         },
         {
-          "start": 12.766,
-          "end": 15.695,
-          "text": "响应速度和成本都会明显改善。"
+          "start": 11.211,
+          "end": 12.588,
+          "text": "触发自动降级。"
+        },
+        {
+          "start": 12.588,
+          "end": 15.145,
+          "text": "你只要把这些指标接上告警，"
+        },
+        {
+          "start": 15.145,
+          "end": 17.111,
+          "text": "成本失控会明显减少。"
         }
       ]
     },
     {
-      "id": "pitfalls_fix",
-      "type": "bullets",
-      "durationInFrames": 495,
-      "frame": {
-        "id": "pitfalls_fix",
-        "type": "bullets",
-        "title": "高频踩坑与修正动作",
-        "items": [
-          {
-            "title": "Token 暴涨",
-            "desc": "检查 Gateway 工作目录，确保 MESSAGING_CWD 指向最小上下文。"
-          },
-          {
-            "title": "记忆无更新",
-            "desc": "会话内改动通常不即时生效，重开会话验证。"
-          },
-          {
-            "title": "技能不稳定",
-            "desc": "生成后必须人工审查并补齐边界条件。"
-          },
-          {
-            "title": "Tirith 误拦截",
-            "desc": "在分屏终端手动执行合法命令，不绕过安全基线。"
-          }
-        ],
-        "script": "踩坑时先判断是配置问题、记忆问题还是技能问题，再对症修复。多数故障都能通过目录检查、会话重启和技能审查快速定位。把排障动作标准化，团队协作效率会提升很多。"
-      },
-      "captionKeywords": [
-        "会话重启和技能审",
-        "团队协作效率会提",
-        "多数故障都能通过",
-        "把排障动作标准化",
-        "记忆问题还是技能",
-        "踩坑时先判断是配",
-        "再对症修复",
-        "查快速定位"
-      ],
-      "audioSrc": "studio-audio/hermes_docx_frames/pitfalls_fix.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.569,
-          "text": "踩坑时先判断是配置问题、"
-        },
-        {
-          "start": 2.569,
-          "end": 4.924,
-          "text": "记忆问题还是技能问题，"
-        },
-        {
-          "start": 4.924,
-          "end": 6.209,
-          "text": "再对症修复。"
-        },
-        {
-          "start": 6.209,
-          "end": 8.993,
-          "text": "多数故障都能通过目录检查、"
-        },
-        {
-          "start": 8.993,
-          "end": 11.991,
-          "text": "会话重启和技能审查快速定位。"
-        },
-        {
-          "start": 11.991,
-          "end": 13.918,
-          "text": "把排障动作标准化，"
-        },
-        {
-          "start": 13.918,
-          "end": 16.487,
-          "text": "团队协作效率会提升很多。"
-        }
-      ]
-    },
-    {
-      "id": "action_list",
+      "id": "pitfalls",
       "type": "cards",
-      "durationInFrames": 435,
+      "durationInFrames": 546,
       "frame": {
-        "id": "action_list",
+        "id": "pitfalls",
         "type": "cards",
-        "title": "落地执行清单",
+        "title": "踩坑清单与修复动作",
+        "script": "最后这一段最值钱：上下文稀释、Prompt 注入、函数调用死循环、检索不准、输出格式错误、成本失控，这些坑都给了修复思路。你可以把它直接变成上线前检查单，每次发版逐条过，稳定性会明显提升。",
         "cards": [
           {
-            "title": "第1周",
-            "desc": "完成配置安全基线与单平台接入验证。"
+            "title": "上下文稀释",
+            "desc": "定期总结会话，注入关键状态，必要时重置长对话。",
+            "color": "ORANGE"
           },
           {
-            "title": "第2周",
-            "desc": "建立 MEMORY/USER 维护机制并沉淀首批技能。"
+            "title": "Prompt注入",
+            "desc": "做输入验证、指令隔离和权限分层，避免被劫持。",
+            "color": "RED"
           },
           {
-            "title": "第3周",
-            "desc": "上线审批与安全清单，开始性能压测。"
+            "title": "调用死循环",
+            "desc": "限制调用深度并缓存结果，增加前置条件检查。",
+            "color": "PURPLE_L"
           },
           {
-            "title": "第4周",
-            "desc": "扩展多平台协作并固化备份与恢复流程。"
+            "title": "格式不稳定",
+            "desc": "强制结构化输出并在后处理阶段做解析校验。",
+            "color": "CYAN"
           }
-        ],
-        "script": "执行上建议按周推进，先基线后扩展。每周只抓关键目标，完成后复盘再进入下一阶段。这样可以避免系统复杂度失控，同时持续积累可复用的组织资产。"
+        ]
       },
       "captionKeywords": [
-        "同时持续积累可复",
-        "完成后复盘再进入",
-        "执行上建议按周推",
-        "每周只抓关键目标",
-        "这样可以避免系统",
-        "先基线后扩展",
-        "用的组织资产",
-        "复杂度失控"
+        "Prompt",
+        "你可以把它直接变",
+        "最后这一段最值钱",
+        "稳定性会明显提升",
+        "这些坑都给了修复",
+        "函数调用死循环",
+        "成上线前检查单",
+        "每次发版逐条过"
       ],
-      "audioSrc": "studio-audio/hermes_docx_frames/action_list.mp3",
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/pitfalls.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.128,
-          "text": "执行上建议按周推进，"
+          "end": 1.8090000000000002,
+          "text": "最后这一段最值钱："
         },
         {
-          "start": 2.128,
-          "end": 3.618,
-          "text": "先基线后扩展。"
+          "start": 1.8090000000000002,
+          "end": 4.321,
+          "text": "上下文稀释、Prompt 注入、"
         },
         {
-          "start": 3.618,
-          "end": 5.533,
-          "text": "每周只抓关键目标，"
+          "start": 4.321,
+          "end": 6.9350000000000005,
+          "text": "函数调用死循环、检索不准、"
         },
         {
-          "start": 5.533,
-          "end": 8.3,
-          "text": "完成后复盘再进入下一阶段。"
+          "start": 6.9350000000000005,
+          "end": 9.347,
+          "text": "输出格式错误、成本失控，"
         },
         {
-          "start": 8.3,
-          "end": 11.279,
-          "text": "这样可以避免系统复杂度失控，"
+          "start": 9.347,
+          "end": 11.558,
+          "text": "这些坑都给了修复思路。"
         },
         {
-          "start": 11.279,
-          "end": 14.471,
-          "text": "同时持续积累可复用的组织资产。"
+          "start": 11.558,
+          "end": 14.171,
+          "text": "你可以把它直接变成上线前检"
+        },
+        {
+          "start": 14.171,
+          "end": 14.774000000000001,
+          "text": "查单，"
+        },
+        {
+          "start": 14.774000000000001,
+          "end": 16.382,
+          "text": "每次发版逐条过，"
+        },
+        {
+          "start": 16.382,
+          "end": 18.192,
+          "text": "稳定性会明显提升。"
         }
       ]
     },
     {
       "id": "hook_close",
       "type": "hook",
-      "durationInFrames": 530,
+      "durationInFrames": 578,
       "frame": {
         "id": "hook_close",
         "type": "hook",
         "style": "spotlight",
-        "title": "结论：高频使用 + 持续沉淀，才有 Agent 复利",
-        "subtitle": "先守住安全和治理，再追求自动化规模",
+        "title": "从可用到可生产的进阶路径",
+        "subtitle": "先跑通链路，再做稳定性和成本优化。",
+        "script": "你可以直接照这个路线落地：第一步把参数与模板固化，保证可复现；第二步把 RAG 召回和重排做准，减少幻觉；第三步补状态管理和人工兜底，拦住高风险操作；第四步接入监控告警与自动降级，形成长期可运营的生产闭环。",
         "list": [
-          "密钥隔离与审批策略先落地",
-          "记忆精简、技能沉淀双轮驱动",
-          "固定开销优先优化，压缩与并行并用",
-          "按周复盘迭代，持续提高成功率"
-        ],
-        "script": "最终建议是把 Hermes 当成长期系统来经营。你每次规范输入、每次复盘沉淀、每次修正边界，都会让下一次任务更稳更快。先把安全治理打牢，再扩大自动化覆盖范围，效果最可持续。"
+          "参数模板先标准化",
+          "检索重排优先做准",
+          "状态持久化加人工兜底",
+          "监控告警驱动自动降级"
+        ]
       },
       "captionKeywords": [
-        "Hermes",
-        "先把安全治理打牢",
-        "再扩大自动化覆盖",
-        "当成长期系统来经",
-        "都会让下一次任务",
-        "你每次规范输入",
-        "效果最可持续",
-        "最终建议是把"
+        "RAG",
+        "你可以直接照这个",
+        "形成长期可运营的",
+        "第一步把参数与模",
+        "第三步补状态管理",
+        "第四步接入监控告",
+        "召回和重排做准",
+        "拦住高风险操作"
       ],
-      "audioSrc": "studio-audio/hermes_docx_frames/hook_close.mp3",
+      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/hook_close.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.8,
-          "text": "最终建议是把 Hermes 当成长"
+          "end": 2.489,
+          "text": "你可以直接照这个路线落地："
         },
         {
-          "start": 2.8,
-          "end": 4.308,
-          "text": "期系统来经营。"
+          "start": 2.489,
+          "end": 4.788,
+          "text": "第一步把参数与模板固化，"
         },
         {
-          "start": 4.308,
-          "end": 6.031,
-          "text": "你每次规范输入、"
+          "start": 4.788,
+          "end": 5.937,
+          "text": "保证可复现；"
         },
         {
-          "start": 6.031,
-          "end": 7.539,
-          "text": "每次复盘沉淀、"
+          "start": 5.937,
+          "end": 8.714,
+          "text": "第二步把 RAG 召回和重排做准，"
         },
         {
-          "start": 7.539,
-          "end": 9.047,
-          "text": "每次修正边界，"
+          "start": 8.714,
+          "end": 9.671,
+          "text": "减少幻觉；"
         },
         {
-          "start": 9.047,
-          "end": 11.847,
-          "text": "都会让下一次任务更稳更快。"
+          "start": 9.671,
+          "end": 12.353,
+          "text": "第三步补状态管理和人工兜底，"
         },
         {
-          "start": 11.847,
-          "end": 13.786,
-          "text": "先把安全治理打牢，"
+          "start": 12.353,
+          "end": 13.885,
+          "text": "拦住高风险操作；"
         },
         {
-          "start": 13.786,
-          "end": 16.156,
-          "text": "再扩大自动化覆盖范围，"
+          "start": 13.885,
+          "end": 16.758,
+          "text": "第四步接入监控告警与自动降级，"
         },
         {
-          "start": 16.156,
-          "end": 17.664,
-          "text": "效果最可持续。"
+          "start": 16.758,
+          "end": 19.248,
+          "text": "形成长期可运营的生产闭环。"
         }
       ]
     }
