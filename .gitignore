@@ -37,3 +37,5 @@ env/
 tmp/
 node_modules/
 remotion-demo/public/studio-audio/
+**/frames/*.png
+**/frame_*.png
