@@ -27,15 +27,15 @@ os.makedirs(WORK_DIR, exist_ok=True)
 
 jobs: dict = {}
 
-DEFAULT_ENGINE = os.getenv("RENDER_ENGINE", "auto").strip().lower() or "auto"
-REMOTION_ENABLED = os.getenv("REMOTION_ENABLED", "false").strip().lower() in {
+DEFAULT_ENGINE = os.getenv("RENDER_ENGINE", "remotion").strip().lower() or "remotion"
+REMOTION_ENABLED = os.getenv("REMOTION_ENABLED", "true").strip().lower() in {
     "1",
     "true",
     "yes",
     "on",
 }
 REMOTION_FAILOVER_TO_LEGACY = os.getenv(
-    "REMOTION_FAILOVER_TO_LEGACY", "true"
+    "REMOTION_FAILOVER_TO_LEGACY", "false"
 ).strip().lower() in {"1", "true", "yes", "on"}
 REMOTION_PROJECT_DIR = os.getenv(
     "REMOTION_PROJECT_DIR", os.path.join(SCRIPT_DIR, "remotion-demo")
@@ -76,7 +76,7 @@ class RenderRequest(BaseModel):
     voice: str = "zh-CN-XiaoyiNeural"
     rate: str = "+5%"
     theme: str = ""
-    render_engine: str = "auto"
+    render_engine: str = "remotion"
 
     @model_validator(mode="before")
     @classmethod

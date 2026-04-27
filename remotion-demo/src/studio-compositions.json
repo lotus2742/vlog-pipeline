@@ -1,0 +1,3656 @@
+[
+  {
+    "id": "VlogFrames-hermes-gateway-arch-md-frames-20260427-162700",
+    "label": "hermes_gateway_arch_md_frames (04-27 16:27)",
+    "props": {
+      "meta": {
+        "topic": "Hermes源码拆解：消息网关架构",
+        "voice": "zh-CN-XiaoyiNeural",
+        "rate": "+5%",
+        "theme": "purple"
+      },
+      "slides": [
+        {
+          "id": "hook_open",
+          "type": "hook",
+          "durationInFrames": 582,
+          "frame": {
+            "id": "hook_open",
+            "type": "hook",
+            "style": "spotlight",
+            "title": "消息网关编排机制：一实例接入多平台",
+            "subtitle": "先统一连接层，再做会话编排，Agent 才能稳定服务多端。",
+            "script": "先说结论，Hermes 的 Gateway 不是简单转发器，而是会话编排系统。它把多平台接入、消息标准化、会话管理和实例池放在同一条执行链路里，让一个 Agent 实例可以同时服务 Telegram、Discord、Slack 等多个入口。"
+          },
+          "captionKeywords": [
+            "Telegram",
+            "Discord",
+            "Gateway",
+            "Hermes",
+            "Slack",
+            "会话管理和实例池",
+            "实例可以同时服务",
+            "放在同一条执行链"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/hook_open.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 0.993,
+              "text": "先说结论，"
+            },
+            {
+              "start": 0.993,
+              "end": 3.575,
+              "text": "Hermes 的 Gateway 不是简单"
+            },
+            {
+              "start": 3.575,
+              "end": 4.37,
+              "text": "转发器，"
+            },
+            {
+              "start": 4.37,
+              "end": 6.158,
+              "text": "而是会话编排系统。"
+            },
+            {
+              "start": 6.158,
+              "end": 7.747,
+              "text": "它把多平台接入、"
+            },
+            {
+              "start": 7.747,
+              "end": 8.939,
+              "text": "消息标准化、"
+            },
+            {
+              "start": 8.939,
+              "end": 11.521,
+              "text": "会话管理和实例池放在同一条"
+            },
+            {
+              "start": 11.521,
+              "end": 12.713,
+              "text": "执行链路里，"
+            },
+            {
+              "start": 12.713,
+              "end": 15.196,
+              "text": "让一个 Agent 实例可以同时"
+            },
+            {
+              "start": 15.196,
+              "end": 16.686,
+              "text": "服务 Telegram、"
+            },
+            {
+              "start": 16.686,
+              "end": 17.58,
+              "text": "Discord、"
+            },
+            {
+              "start": 17.58,
+              "end": 19.367,
+              "text": "Slack 等多个入口。"
+            }
+          ]
+        },
+        {
+          "id": "cards_components",
+          "type": "cards",
+          "durationInFrames": 576,
+          "frame": {
+            "id": "cards_components",
+            "type": "cards",
+            "style": "grid",
+            "title": "GatewayRunner 的四个核心组件",
+            "subtitle": "职责拆清楚，才能保证连接层长期稳定运行。",
+            "script": "文档里的组件图很关键。GatewayRunner 由平台适配器、会话管理、媒体缓存和 AIAgent 实例池组成。你可以把它理解成一个中枢：前面接收不同平台协议，后面统一交给 Agent 执行，再把结果按平台能力回发。",
+            "cards": [
+              {
+                "title": "平台适配器",
+                "desc": "负责连接与发送，屏蔽 Telegram、飞书等协议差异",
+                "color": "CYAN"
+              },
+              {
+                "title": "会话管理",
+                "desc": "维护 chat_id 与上下文绑定，避免跨平台串话",
+                "color": "GOLD"
+              },
+              {
+                "title": "媒体缓存",
+                "desc": "把附件落地成本地路径，避免远程 URL 过期失效",
+                "color": "WHITE"
+              },
+              {
+                "title": "实例池",
+                "desc": "复用 AIAgent 实例并做空闲驱逐，控制内存上限",
+                "color": "GREEN"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "GatewayRunner",
+            "AIAgent",
+            "你可以把它理解成",
+            "再把结果按平台能",
+            "前面接收不同平台",
+            "文档里的组件图很",
+            "后面统一交给",
+            "由平台适配器"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/cards_components.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.246,
+              "text": "文档里的组件图很关键。"
+            },
+            {
+              "start": 2.246,
+              "end": 5.106,
+              "text": "GatewayRunner 由平台适配器、"
+            },
+            {
+              "start": 5.106,
+              "end": 6.127,
+              "text": "会话管理、"
+            },
+            {
+              "start": 6.127,
+              "end": 8.68,
+              "text": "媒体缓存和 AIAgent 实例池"
+            },
+            {
+              "start": 8.68,
+              "end": 9.293,
+              "text": "组成。"
+            },
+            {
+              "start": 9.293,
+              "end": 11.948,
+              "text": "你可以把它理解成一个中枢："
+            },
+            {
+              "start": 11.948,
+              "end": 14.195,
+              "text": "前面接收不同平台协议，"
+            },
+            {
+              "start": 14.195,
+              "end": 16.748,
+              "text": "后面统一交给 Agent 执行，"
+            },
+            {
+              "start": 16.748,
+              "end": 19.199,
+              "text": "再把结果按平台能力回发。"
+            }
+          ]
+        },
+        {
+          "id": "comparison_gateway_vs_forward",
+          "type": "comparison",
+          "durationInFrames": 516,
+          "frame": {
+            "id": "comparison_gateway_vs_forward",
+            "type": "comparison",
+            "style": "table",
+            "title": "转发层与编排层的能力差异",
+            "subtitle": "只是转发能跑通，但无法支撑多平台长期运营。",
+            "script": "很多人会把 Gateway 当消息中转，但 Hermes 的设计更重编排。转发层只做传输，编排层会处理会话状态、附件缓存、格式转换和容错。你系统规模一上来，后者差异会非常明显。",
+            "left": {
+              "label": "简单转发层",
+              "points": [
+                "只转消息不管状态",
+                "平台差异上浮到业务层",
+                "长期运行易积累隐患"
+              ],
+              "color": "RED"
+            },
+            "right": {
+              "label": "会话编排层",
+              "points": [
+                "统一会话与事件模型",
+                "格式转换和缓存内建",
+                "可控扩展多平台"
+              ],
+              "color": "GREEN"
+            },
+            "insight": "多平台系统要先做编排，再谈功能扩展。"
+          },
+          "captionKeywords": [
+            "Gateway",
+            "Hermes",
+            "你系统规模一上来",
+            "后者差异会非常明",
+            "编排层会处理会话",
+            "格式转换和容错",
+            "的设计更重编排",
+            "转发层只做传输"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/comparison_gateway_vs_forward.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.701,
+              "text": "很多人会把 Gateway 当消息"
+            },
+            {
+              "start": 2.701,
+              "end": 3.35,
+              "text": "中转，"
+            },
+            {
+              "start": 3.35,
+              "end": 6.16,
+              "text": "但 Hermes 的设计更重编排。"
+            },
+            {
+              "start": 6.16,
+              "end": 7.889,
+              "text": "转发层只做传输，"
+            },
+            {
+              "start": 7.889,
+              "end": 10.267,
+              "text": "编排层会处理会话状态、"
+            },
+            {
+              "start": 10.267,
+              "end": 13.077,
+              "text": "附件缓存、格式转换和容错。"
+            },
+            {
+              "start": 13.077,
+              "end": 15.022,
+              "text": "你系统规模一上来，"
+            },
+            {
+              "start": 15.022,
+              "end": 17.184,
+              "text": "后者差异会非常明显。"
+            }
+          ]
+        },
+        {
+          "id": "bullets_adapter_contract",
+          "type": "bullets",
+          "durationInFrames": 682,
+          "frame": {
+            "id": "bullets_adapter_contract",
+            "type": "bullets",
+            "title": "BasePlatformAdapter 契约的工程价值",
+            "subtitle": "先统一接口，平台特性才能在边界内演进。",
+            "script": "Hermes 用 BasePlatformAdapter 约束所有平台实现，核心方法就是 connect、disconnect 和 send。这意味着对 Agent 核心来说，不管是 Telegram 还是企业微信，调用形态都是同一套。平台特有逻辑，比如 MarkdownV2 或交互卡片，被收敛在适配器内部。",
+            "items": [
+              {
+                "title": "统一连接生命周期",
+                "desc": "connect/disconnect 规范化，便于统一健康检查和重连策略"
+              },
+              {
+                "title": "统一发送接口",
+                "desc": "send(chat_id, content, ...) 固定签名，降低核心逻辑分支"
+              },
+              {
+                "title": "平台差异下沉",
+                "desc": "格式化、线程、卡片等能力在适配器层处理，不污染核心"
+              },
+              {
+                "title": "新增平台低成本",
+                "desc": "新平台实现同一抽象接口，即可接入现有编排体系"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "BasePlatformAdapter",
+            "MarkdownV2",
+            "disconnect",
+            "Telegram",
+            "connect",
+            "Hermes",
+            "send",
+            "约束所有平台实现"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/bullets_adapter_contract.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.58,
+              "text": "Hermes 用 BasePlatformAdap"
+            },
+            {
+              "start": 2.58,
+              "end": 4.763,
+              "text": "ter 约束所有平台实现，"
+            },
+            {
+              "start": 4.763,
+              "end": 6.947,
+              "text": "核心方法就是 connect、"
+            },
+            {
+              "start": 6.947,
+              "end": 8.932,
+              "text": "disconnect 和 send。"
+            },
+            {
+              "start": 8.932,
+              "end": 11.612,
+              "text": "这意味着对 Agent 核心来说，"
+            },
+            {
+              "start": 11.612,
+              "end": 14.589,
+              "text": "不管是 Telegram 还是企业微信，"
+            },
+            {
+              "start": 14.589,
+              "end": 16.574,
+              "text": "调用形态都是同一套。"
+            },
+            {
+              "start": 16.574,
+              "end": 17.964,
+              "text": "平台特有逻辑，"
+            },
+            {
+              "start": 17.964,
+              "end": 20.743,
+              "text": "比如 MarkdownV2 或交互卡片，"
+            },
+            {
+              "start": 20.743,
+              "end": 22.728,
+              "text": "被收敛在适配器内部。"
+            }
+          ]
+        },
+        {
+          "id": "cards_message_event",
+          "type": "cards",
+          "durationInFrames": 738,
+          "frame": {
+            "id": "cards_message_event",
+            "type": "cards",
+            "style": "timeline",
+            "title": "MessageEvent 标准化字段怎么落地",
+            "subtitle": "先统一事件结构，再做缓存和格式转换，链路才可维护。",
+            "script": "MessageEvent 是跨平台统一事件模型。它固定 text、sender、chat_id、platform、attachments、timestamp 等字段，保证后续流程只面对一种输入结构。配套动作是附件先缓存到本地、文本统一从 text 或 caption 提取、再把 Markdown 转成平台可识别格式。",
+            "cards": [
+              {
+                "title": "统一字段",
+                "desc": "text/sender/chat_id/platform/attachments/timestamp 一次定义全链路复用",
+                "color": "CYAN"
+              },
+              {
+                "title": "媒体缓存",
+                "desc": "先落本地再处理，避免平台外链过期导致后续步骤失败",
+                "color": "ORANGE"
+              },
+              {
+                "title": "格式转换",
+                "desc": "把通用 Markdown 映射到平台协议，减少适配冲突",
+                "color": "WHITE"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "text",
+            "MessageEvent",
+            "attachments",
+            "timestamp",
+            "Markdown",
+            "platform",
+            "caption",
+            "chat_id"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/cards_message_event.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.65,
+              "text": "MessageEvent 是跨平台统一"
+            },
+            {
+              "start": 2.65,
+              "end": 3.711,
+              "text": "事件模型。"
+            },
+            {
+              "start": 3.711,
+              "end": 5.937,
+              "text": "它固定 text、sender、"
+            },
+            {
+              "start": 5.937,
+              "end": 7.952,
+              "text": "chat_id、platform、"
+            },
+            {
+              "start": 7.952,
+              "end": 9.331,
+              "text": "attachments、"
+            },
+            {
+              "start": 9.331,
+              "end": 11.239,
+              "text": "timestamp 等字段，"
+            },
+            {
+              "start": 11.239,
+              "end": 13.996,
+              "text": "保证后续流程只面对一种输入"
+            },
+            {
+              "start": 13.996,
+              "end": 14.632,
+              "text": "结构。"
+            },
+            {
+              "start": 14.632,
+              "end": 17.601,
+              "text": "配套动作是附件先缓存到本地、"
+            },
+            {
+              "start": 17.601,
+              "end": 20.358,
+              "text": "文本统一从 text 或 caption"
+            },
+            {
+              "start": 20.358,
+              "end": 20.994,
+              "text": "提取、"
+            },
+            {
+              "start": 20.994,
+              "end": 23.751,
+              "text": "再把 Markdown 转成平台可识"
+            },
+            {
+              "start": 23.751,
+              "end": 24.6,
+              "text": "别格式。"
+            }
+          ]
+        },
+        {
+          "id": "kpi_pool_limits",
+          "type": "kpi",
+          "durationInFrames": 650,
+          "frame": {
+            "id": "kpi_pool_limits",
+            "type": "kpi",
+            "title": "实例池限制是防 OOM 的关键开关",
+            "subtitle": "限制数量和空闲时长，守护进程才能长期稳定。",
+            "script": "文档里的两个参数非常实用：实例池上限 128，空闲驱逐 3600 秒。因为每个 AIAgent 实例都包含对话历史、上下文、模型连接和工具状态，不做上限控制，内存会持续增长。实例池 + 驱逐策略是消息网关可运行性的底线。",
+            "kpis": [
+              {
+                "title": "实例上限",
+                "value": "128",
+                "label": "agent_cache_cap"
+              },
+              {
+                "title": "空闲驱逐",
+                "value": "3600s",
+                "label": "idle_eviction_seconds"
+              },
+              {
+                "title": "典型平台数",
+                "value": "15+",
+                "label": "并发接入目标"
+              }
+            ],
+            "footnote": "新消息优先复用旧实例，池满再驱逐最久未使用实例。"
+          },
+          "captionKeywords": [
+            "AIAgent",
+            "关可运行性的底线",
+            "实例都包含对话历",
+            "文档里的两个参数",
+            "模型连接和工具状",
+            "驱逐策略是消息网",
+            "内存会持续增长",
+            "不做上限控制"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/kpi_pool_limits.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.842,
+              "text": "文档里的两个参数非常实用："
+            },
+            {
+              "start": 2.842,
+              "end": 4.592,
+              "text": "实例池上限 128，"
+            },
+            {
+              "start": 4.592,
+              "end": 6.5600000000000005,
+              "text": "空闲驱逐 3600 秒。"
+            },
+            {
+              "start": 6.5600000000000005,
+              "end": 9.293,
+              "text": "因为每个 AIAgent 实例都包"
+            },
+            {
+              "start": 9.293,
+              "end": 10.605,
+              "text": "含对话历史、"
+            },
+            {
+              "start": 10.605,
+              "end": 11.479,
+              "text": "上下文、"
+            },
+            {
+              "start": 11.479,
+              "end": 13.666,
+              "text": "模型连接和工具状态，"
+            },
+            {
+              "start": 13.666,
+              "end": 15.197,
+              "text": "不做上限控制，"
+            },
+            {
+              "start": 15.197,
+              "end": 16.946,
+              "text": "内存会持续增长。"
+            },
+            {
+              "start": 16.946,
+              "end": 19.679,
+              "text": "实例池 + 驱逐策略是消息网"
+            },
+            {
+              "start": 19.679,
+              "end": 21.647,
+              "text": "关可运行性的底线。"
+            }
+          ]
+        },
+        {
+          "id": "comparison_single_multi_gateway",
+          "type": "comparison",
+          "durationInFrames": 533,
+          "frame": {
+            "id": "comparison_single_multi_gateway",
+            "type": "comparison",
+            "title": "单 Gateway 与多 Gateway 的权衡",
+            "subtitle": "先选共享策略，再补隔离机制，避免后期重构成本。",
+            "script": "Hermes 选的是单 Gateway 加多适配器。这样配置简单、记忆可共享，但风险是一个平台异常可能波及整体。对应的补救是会话隔离和适配器级容错，把故障限制在平台边界内，不让网关整体崩掉。",
+            "left": {
+              "label": "单 Gateway",
+              "points": [
+                "配置和部署简单",
+                "跨平台可共享记忆",
+                "需重点做故障隔离"
+              ],
+              "color": "GOLD"
+            },
+            "right": {
+              "label": "多 Gateway",
+              "points": [
+                "平台隔离天然更强",
+                "资源占用更高",
+                "记忆同步成本上升"
+              ],
+              "color": "GREEN"
+            },
+            "insight": "Hermes 通过隔离和容错把单网关风险控制在可接受范围。"
+          },
+          "captionKeywords": [
+            "Gateway",
+            "Hermes",
+            "不让网关整体崩掉",
+            "但风险是一个平台",
+            "对应的补救是会话",
+            "异常可能波及整体",
+            "把故障限制在平台",
+            "隔离和适配器级容"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/comparison_single_multi_gateway.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.653,
+              "text": "Hermes 选的是单 Gateway 加"
+            },
+            {
+              "start": 2.653,
+              "end": 3.674,
+              "text": "多适配器。"
+            },
+            {
+              "start": 3.674,
+              "end": 6.328,
+              "text": "这样配置简单、记忆可共享，"
+            },
+            {
+              "start": 6.328,
+              "end": 8.982,
+              "text": "但风险是一个平台异常可能波"
+            },
+            {
+              "start": 8.982,
+              "end": 9.798,
+              "text": "及整体。"
+            },
+            {
+              "start": 9.798,
+              "end": 12.452,
+              "text": "对应的补救是会话隔离和适配"
+            },
+            {
+              "start": 12.452,
+              "end": 13.473,
+              "text": "器级容错，"
+            },
+            {
+              "start": 13.473,
+              "end": 15.922,
+              "text": "把故障限制在平台边界内，"
+            },
+            {
+              "start": 15.922,
+              "end": 17.76,
+              "text": "不让网关整体崩掉。"
+            }
+          ]
+        },
+        {
+          "id": "quote_core",
+          "type": "quote",
+          "durationInFrames": 536,
+          "frame": {
+            "id": "quote_core",
+            "type": "quote",
+            "title": "这篇拆解的核心判断",
+            "subtitle": "真正的网关价值，不在接入数量，而在编排稳定性。",
+            "quote": "Gateway 不是一个简单转发层，而是一个完整的会话编排系统。",
+            "attribution": "Hermes源码拆解（三）",
+            "script": "Gateway 不是一个简单转发层，而是一个完整的会话编排系统。落到工程实现，就是把会话管理、媒体缓存、格式转换和实例生命周期都放进网关主链路，而不是分散到业务层临时处理。只有这样，15+ 平台接入才会长期稳定，不会随着平台增多快速失控。"
+          },
+          "captionKeywords": [
+            "Gateway",
+            "不会随着平台增多",
+            "不是一个简单转发",
+            "命周期都放进网关",
+            "平台接入才会长期",
+            "格式转换和实例生",
+            "而不是分散到业务",
+            "而是一个完整的会"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/quote_core.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.993,
+              "text": "这句判断直接定义了架构边界："
+            },
+            {
+              "start": 2.993,
+              "end": 5.346,
+              "text": "Gateway 必须管理会话、"
+            },
+            {
+              "start": 5.346,
+              "end": 8.126,
+              "text": "缓存、格式和实例生命周期，"
+            },
+            {
+              "start": 8.126,
+              "end": 11.012,
+              "text": "而不是只把消息从 A 发到 B。"
+            },
+            {
+              "start": 11.012,
+              "end": 13.151,
+              "text": "只有把这些职责前置，"
+            },
+            {
+              "start": 13.151,
+              "end": 16.145,
+              "text": "15+ 平台接入才是可持续运行，"
+            },
+            {
+              "start": 16.145,
+              "end": 17.856,
+              "text": "而不是短期演示。"
+            }
+          ]
+        },
+        {
+          "id": "bullets_cron_integration",
+          "type": "bullets",
+          "durationInFrames": 502,
+          "frame": {
+            "id": "bullets_cron_integration",
+            "type": "bullets",
+            "title": "Cron 集成让网关从被动响应变主动执行",
+            "subtitle": "消息入口和定时任务共用网关，任务链路更统一。",
+            "script": "Hermes 网关不仅处理即时消息，还能承接 cron 任务。通过 /hermes cron 配置后，Gateway 在后台执行并投递结果。这样你可以把提醒、巡检、日报这类任务放进同一执行域，减少系统割裂。",
+            "items": [
+              {
+                "title": "统一任务入口",
+                "desc": "即时消息与定时任务都走 Gateway，链路治理一致"
+              },
+              {
+                "title": "后台执行投递",
+                "desc": "CronManager 调度后由 Gateway 执行并回传到目标平台"
+              },
+              {
+                "title": "运营能力增强",
+                "desc": "支持周期提醒、自动巡检、定时报表等主动服务场景"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "cron",
+            "Gateway",
+            "Hermes",
+            "hermes",
+            "在后台执行并投递",
+            "日报这类任务放进",
+            "网关不仅处理即时",
+            "这样你可以把提醒"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/bullets_cron_integration.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.832,
+              "text": "Hermes 网关不仅处理即时消息，"
+            },
+            {
+              "start": 2.832,
+              "end": 4.786,
+              "text": "还能承接 cron 任务。"
+            },
+            {
+              "start": 4.786,
+              "end": 7.326,
+              "text": "通过 /hermes cron 配置后，"
+            },
+            {
+              "start": 7.326,
+              "end": 10.256,
+              "text": "Gateway 在后台执行并投递结果。"
+            },
+            {
+              "start": 10.256,
+              "end": 12.600999999999999,
+              "text": "这样你可以把提醒、巡检、"
+            },
+            {
+              "start": 12.600999999999999,
+              "end": 15.336,
+              "text": "日报这类任务放进同一执行域，"
+            },
+            {
+              "start": 15.336,
+              "end": 16.704,
+              "text": "减少系统割裂。"
+            }
+          ]
+        },
+        {
+          "id": "hook_close",
+          "type": "hook",
+          "durationInFrames": 575,
+          "frame": {
+            "id": "hook_close",
+            "type": "hook",
+            "style": "spotlight",
+            "title": "网关工程化闭环：统一、隔离、可扩展",
+            "subtitle": "先固定适配器契约，再管实例生命周期，最后扩平台。",
+            "script": "最后收束一下，这篇的实操价值有三点：先用统一适配器接口稳定扩展边界，再用实例池和驱逐策略守住资源上限，再用会话隔离和容错保证多平台并行稳定。按这个顺序做，网关会从能用变成能长期运行。",
+            "list": [
+              "先统一适配器接口",
+              "事件模型标准化",
+              "实例池限制防OOM",
+              "平台异常隔离容错"
+            ]
+          },
+          "captionKeywords": [
+            "先用统一适配器接",
+            "再用会话隔离和容",
+            "再用实例池和驱逐",
+            "策略守住资源上限",
+            "网关会从能用变成",
+            "这篇的实操价值有",
+            "错保证多平台并行",
+            "口稳定扩展边界"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/hook_close.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.4729999999999999,
+              "text": "最后收束一下，"
+            },
+            {
+              "start": 1.4729999999999999,
+              "end": 3.7880000000000003,
+              "text": "这篇的实操价值有三点："
+            },
+            {
+              "start": 3.7880000000000003,
+              "end": 6.524,
+              "text": "先用统一适配器接口稳定扩展"
+            },
+            {
+              "start": 6.524,
+              "end": 7.155,
+              "text": "边界，"
+            },
+            {
+              "start": 7.155,
+              "end": 9.891,
+              "text": "再用实例池和驱逐策略守住资"
+            },
+            {
+              "start": 9.891,
+              "end": 10.733,
+              "text": "源上限，"
+            },
+            {
+              "start": 10.733,
+              "end": 13.469,
+              "text": "再用会话隔离和容错保证多平"
+            },
+            {
+              "start": 13.469,
+              "end": 14.732,
+              "text": "台并行稳定。"
+            },
+            {
+              "start": 14.732,
+              "end": 16.205,
+              "text": "按这个顺序做，"
+            },
+            {
+              "start": 16.205,
+              "end": 19.152,
+              "text": "网关会从能用变成能长期运行。"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "VlogFrames-hermes-gateway-arch-md-frames-20260427-162906",
+    "label": "hermes_gateway_arch_md_frames (04-27 16:29)",
+    "props": {
+      "meta": {
+        "topic": "Hermes源码拆解：消息网关架构",
+        "voice": "zh-CN-XiaoyiNeural",
+        "rate": "+5%",
+        "theme": "purple"
+      },
+      "slides": [
+        {
+          "id": "hook_open",
+          "type": "hook",
+          "durationInFrames": 582,
+          "frame": {
+            "id": "hook_open",
+            "type": "hook",
+            "style": "spotlight",
+            "title": "消息网关编排机制：一实例接入多平台",
+            "subtitle": "先统一连接层，再做会话编排，Agent 才能稳定服务多端。",
+            "script": "先说结论，Hermes 的 Gateway 不是简单转发器，而是会话编排系统。它把多平台接入、消息标准化、会话管理和实例池放在同一条执行链路里，让一个 Agent 实例可以同时服务 Telegram、Discord、Slack 等多个入口。"
+          },
+          "captionKeywords": [
+            "Telegram",
+            "Discord",
+            "Gateway",
+            "Hermes",
+            "Slack",
+            "会话管理和实例池",
+            "实例可以同时服务",
+            "放在同一条执行链"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/hook_open.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 0.993,
+              "text": "先说结论，"
+            },
+            {
+              "start": 0.993,
+              "end": 3.575,
+              "text": "Hermes 的 Gateway 不是简单"
+            },
+            {
+              "start": 3.575,
+              "end": 4.37,
+              "text": "转发器，"
+            },
+            {
+              "start": 4.37,
+              "end": 6.158,
+              "text": "而是会话编排系统。"
+            },
+            {
+              "start": 6.158,
+              "end": 7.747,
+              "text": "它把多平台接入、"
+            },
+            {
+              "start": 7.747,
+              "end": 8.939,
+              "text": "消息标准化、"
+            },
+            {
+              "start": 8.939,
+              "end": 11.521,
+              "text": "会话管理和实例池放在同一条"
+            },
+            {
+              "start": 11.521,
+              "end": 12.713,
+              "text": "执行链路里，"
+            },
+            {
+              "start": 12.713,
+              "end": 15.196,
+              "text": "让一个 Agent 实例可以同时"
+            },
+            {
+              "start": 15.196,
+              "end": 16.686,
+              "text": "服务 Telegram、"
+            },
+            {
+              "start": 16.686,
+              "end": 17.58,
+              "text": "Discord、"
+            },
+            {
+              "start": 17.58,
+              "end": 19.367,
+              "text": "Slack 等多个入口。"
+            }
+          ]
+        },
+        {
+          "id": "cards_components",
+          "type": "cards",
+          "durationInFrames": 576,
+          "frame": {
+            "id": "cards_components",
+            "type": "cards",
+            "style": "grid",
+            "title": "GatewayRunner 的四个核心组件",
+            "subtitle": "职责拆清楚，才能保证连接层长期稳定运行。",
+            "script": "文档里的组件图很关键。GatewayRunner 由平台适配器、会话管理、媒体缓存和 AIAgent 实例池组成。你可以把它理解成一个中枢：前面接收不同平台协议，后面统一交给 Agent 执行，再把结果按平台能力回发。",
+            "cards": [
+              {
+                "title": "平台适配器",
+                "desc": "负责连接与发送，屏蔽 Telegram、飞书等协议差异",
+                "color": "CYAN"
+              },
+              {
+                "title": "会话管理",
+                "desc": "维护 chat_id 与上下文绑定，避免跨平台串话",
+                "color": "GOLD"
+              },
+              {
+                "title": "媒体缓存",
+                "desc": "把附件落地成本地路径，避免远程 URL 过期失效",
+                "color": "WHITE"
+              },
+              {
+                "title": "实例池",
+                "desc": "复用 AIAgent 实例并做空闲驱逐，控制内存上限",
+                "color": "GREEN"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "GatewayRunner",
+            "AIAgent",
+            "你可以把它理解成",
+            "再把结果按平台能",
+            "前面接收不同平台",
+            "文档里的组件图很",
+            "后面统一交给",
+            "由平台适配器"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/cards_components.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.246,
+              "text": "文档里的组件图很关键。"
+            },
+            {
+              "start": 2.246,
+              "end": 5.106,
+              "text": "GatewayRunner 由平台适配器、"
+            },
+            {
+              "start": 5.106,
+              "end": 6.127,
+              "text": "会话管理、"
+            },
+            {
+              "start": 6.127,
+              "end": 8.68,
+              "text": "媒体缓存和 AIAgent 实例池"
+            },
+            {
+              "start": 8.68,
+              "end": 9.293,
+              "text": "组成。"
+            },
+            {
+              "start": 9.293,
+              "end": 11.948,
+              "text": "你可以把它理解成一个中枢："
+            },
+            {
+              "start": 11.948,
+              "end": 14.195,
+              "text": "前面接收不同平台协议，"
+            },
+            {
+              "start": 14.195,
+              "end": 16.748,
+              "text": "后面统一交给 Agent 执行，"
+            },
+            {
+              "start": 16.748,
+              "end": 19.199,
+              "text": "再把结果按平台能力回发。"
+            }
+          ]
+        },
+        {
+          "id": "comparison_gateway_vs_forward",
+          "type": "comparison",
+          "durationInFrames": 516,
+          "frame": {
+            "id": "comparison_gateway_vs_forward",
+            "type": "comparison",
+            "style": "table",
+            "title": "转发层与编排层的能力差异",
+            "subtitle": "只是转发能跑通，但无法支撑多平台长期运营。",
+            "script": "很多人会把 Gateway 当消息中转，但 Hermes 的设计更重编排。转发层只做传输，编排层会处理会话状态、附件缓存、格式转换和容错。你系统规模一上来，后者差异会非常明显。",
+            "left": {
+              "label": "简单转发层",
+              "points": [
+                "只转消息不管状态",
+                "平台差异上浮到业务层",
+                "长期运行易积累隐患"
+              ],
+              "color": "RED"
+            },
+            "right": {
+              "label": "会话编排层",
+              "points": [
+                "统一会话与事件模型",
+                "格式转换和缓存内建",
+                "可控扩展多平台"
+              ],
+              "color": "GREEN"
+            },
+            "insight": "多平台系统要先做编排，再谈功能扩展。"
+          },
+          "captionKeywords": [
+            "Gateway",
+            "Hermes",
+            "你系统规模一上来",
+            "后者差异会非常明",
+            "编排层会处理会话",
+            "格式转换和容错",
+            "的设计更重编排",
+            "转发层只做传输"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/comparison_gateway_vs_forward.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.701,
+              "text": "很多人会把 Gateway 当消息"
+            },
+            {
+              "start": 2.701,
+              "end": 3.35,
+              "text": "中转，"
+            },
+            {
+              "start": 3.35,
+              "end": 6.16,
+              "text": "但 Hermes 的设计更重编排。"
+            },
+            {
+              "start": 6.16,
+              "end": 7.889,
+              "text": "转发层只做传输，"
+            },
+            {
+              "start": 7.889,
+              "end": 10.267,
+              "text": "编排层会处理会话状态、"
+            },
+            {
+              "start": 10.267,
+              "end": 13.077,
+              "text": "附件缓存、格式转换和容错。"
+            },
+            {
+              "start": 13.077,
+              "end": 15.022,
+              "text": "你系统规模一上来，"
+            },
+            {
+              "start": 15.022,
+              "end": 17.184,
+              "text": "后者差异会非常明显。"
+            }
+          ]
+        },
+        {
+          "id": "bullets_adapter_contract",
+          "type": "bullets",
+          "durationInFrames": 682,
+          "frame": {
+            "id": "bullets_adapter_contract",
+            "type": "bullets",
+            "title": "BasePlatformAdapter 契约的工程价值",
+            "subtitle": "先统一接口，平台特性才能在边界内演进。",
+            "script": "Hermes 用 BasePlatformAdapter 约束所有平台实现，核心方法就是 connect、disconnect 和 send。这意味着对 Agent 核心来说，不管是 Telegram 还是企业微信，调用形态都是同一套。平台特有逻辑，比如 MarkdownV2 或交互卡片，被收敛在适配器内部。",
+            "items": [
+              {
+                "title": "统一连接生命周期",
+                "desc": "connect/disconnect 规范化，便于统一健康检查和重连策略"
+              },
+              {
+                "title": "统一发送接口",
+                "desc": "send(chat_id, content, ...) 固定签名，降低核心逻辑分支"
+              },
+              {
+                "title": "平台差异下沉",
+                "desc": "格式化、线程、卡片等能力在适配器层处理，不污染核心"
+              },
+              {
+                "title": "新增平台低成本",
+                "desc": "新平台实现同一抽象接口，即可接入现有编排体系"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "BasePlatformAdapter",
+            "MarkdownV2",
+            "disconnect",
+            "Telegram",
+            "connect",
+            "Hermes",
+            "send",
+            "约束所有平台实现"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/bullets_adapter_contract.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.58,
+              "text": "Hermes 用 BasePlatformAdap"
+            },
+            {
+              "start": 2.58,
+              "end": 4.763,
+              "text": "ter 约束所有平台实现，"
+            },
+            {
+              "start": 4.763,
+              "end": 6.947,
+              "text": "核心方法就是 connect、"
+            },
+            {
+              "start": 6.947,
+              "end": 8.932,
+              "text": "disconnect 和 send。"
+            },
+            {
+              "start": 8.932,
+              "end": 11.612,
+              "text": "这意味着对 Agent 核心来说，"
+            },
+            {
+              "start": 11.612,
+              "end": 14.589,
+              "text": "不管是 Telegram 还是企业微信，"
+            },
+            {
+              "start": 14.589,
+              "end": 16.574,
+              "text": "调用形态都是同一套。"
+            },
+            {
+              "start": 16.574,
+              "end": 17.964,
+              "text": "平台特有逻辑，"
+            },
+            {
+              "start": 17.964,
+              "end": 20.743,
+              "text": "比如 MarkdownV2 或交互卡片，"
+            },
+            {
+              "start": 20.743,
+              "end": 22.728,
+              "text": "被收敛在适配器内部。"
+            }
+          ]
+        },
+        {
+          "id": "cards_message_event",
+          "type": "cards",
+          "durationInFrames": 738,
+          "frame": {
+            "id": "cards_message_event",
+            "type": "cards",
+            "style": "timeline",
+            "title": "MessageEvent 标准化字段怎么落地",
+            "subtitle": "先统一事件结构，再做缓存和格式转换，链路才可维护。",
+            "script": "MessageEvent 是跨平台统一事件模型。它固定 text、sender、chat_id、platform、attachments、timestamp 等字段，保证后续流程只面对一种输入结构。配套动作是附件先缓存到本地、文本统一从 text 或 caption 提取、再把 Markdown 转成平台可识别格式。",
+            "cards": [
+              {
+                "title": "统一字段",
+                "desc": "text/sender/chat_id/platform/attachments/timestamp 一次定义全链路复用",
+                "color": "CYAN"
+              },
+              {
+                "title": "媒体缓存",
+                "desc": "先落本地再处理，避免平台外链过期导致后续步骤失败",
+                "color": "ORANGE"
+              },
+              {
+                "title": "格式转换",
+                "desc": "把通用 Markdown 映射到平台协议，减少适配冲突",
+                "color": "WHITE"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "text",
+            "MessageEvent",
+            "attachments",
+            "timestamp",
+            "Markdown",
+            "platform",
+            "caption",
+            "chat_id"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/cards_message_event.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.65,
+              "text": "MessageEvent 是跨平台统一"
+            },
+            {
+              "start": 2.65,
+              "end": 3.711,
+              "text": "事件模型。"
+            },
+            {
+              "start": 3.711,
+              "end": 5.937,
+              "text": "它固定 text、sender、"
+            },
+            {
+              "start": 5.937,
+              "end": 7.952,
+              "text": "chat_id、platform、"
+            },
+            {
+              "start": 7.952,
+              "end": 9.331,
+              "text": "attachments、"
+            },
+            {
+              "start": 9.331,
+              "end": 11.239,
+              "text": "timestamp 等字段，"
+            },
+            {
+              "start": 11.239,
+              "end": 13.996,
+              "text": "保证后续流程只面对一种输入"
+            },
+            {
+              "start": 13.996,
+              "end": 14.632,
+              "text": "结构。"
+            },
+            {
+              "start": 14.632,
+              "end": 17.601,
+              "text": "配套动作是附件先缓存到本地、"
+            },
+            {
+              "start": 17.601,
+              "end": 20.358,
+              "text": "文本统一从 text 或 caption"
+            },
+            {
+              "start": 20.358,
+              "end": 20.994,
+              "text": "提取、"
+            },
+            {
+              "start": 20.994,
+              "end": 23.751,
+              "text": "再把 Markdown 转成平台可识"
+            },
+            {
+              "start": 23.751,
+              "end": 24.6,
+              "text": "别格式。"
+            }
+          ]
+        },
+        {
+          "id": "kpi_pool_limits",
+          "type": "kpi",
+          "durationInFrames": 650,
+          "frame": {
+            "id": "kpi_pool_limits",
+            "type": "kpi",
+            "title": "实例池限制是防 OOM 的关键开关",
+            "subtitle": "限制数量和空闲时长，守护进程才能长期稳定。",
+            "script": "文档里的两个参数非常实用：实例池上限 128，空闲驱逐 3600 秒。因为每个 AIAgent 实例都包含对话历史、上下文、模型连接和工具状态，不做上限控制，内存会持续增长。实例池 + 驱逐策略是消息网关可运行性的底线。",
+            "kpis": [
+              {
+                "title": "实例上限",
+                "value": "128",
+                "label": "agent_cache_cap"
+              },
+              {
+                "title": "空闲驱逐",
+                "value": "3600s",
+                "label": "idle_eviction_seconds"
+              },
+              {
+                "title": "典型平台数",
+                "value": "15+",
+                "label": "并发接入目标"
+              }
+            ],
+            "footnote": "新消息优先复用旧实例，池满再驱逐最久未使用实例。"
+          },
+          "captionKeywords": [
+            "AIAgent",
+            "关可运行性的底线",
+            "实例都包含对话历",
+            "文档里的两个参数",
+            "模型连接和工具状",
+            "驱逐策略是消息网",
+            "内存会持续增长",
+            "不做上限控制"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/kpi_pool_limits.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.842,
+              "text": "文档里的两个参数非常实用："
+            },
+            {
+              "start": 2.842,
+              "end": 4.592,
+              "text": "实例池上限 128，"
+            },
+            {
+              "start": 4.592,
+              "end": 6.5600000000000005,
+              "text": "空闲驱逐 3600 秒。"
+            },
+            {
+              "start": 6.5600000000000005,
+              "end": 9.293,
+              "text": "因为每个 AIAgent 实例都包"
+            },
+            {
+              "start": 9.293,
+              "end": 10.605,
+              "text": "含对话历史、"
+            },
+            {
+              "start": 10.605,
+              "end": 11.479,
+              "text": "上下文、"
+            },
+            {
+              "start": 11.479,
+              "end": 13.666,
+              "text": "模型连接和工具状态，"
+            },
+            {
+              "start": 13.666,
+              "end": 15.197,
+              "text": "不做上限控制，"
+            },
+            {
+              "start": 15.197,
+              "end": 16.946,
+              "text": "内存会持续增长。"
+            },
+            {
+              "start": 16.946,
+              "end": 19.679,
+              "text": "实例池 + 驱逐策略是消息网"
+            },
+            {
+              "start": 19.679,
+              "end": 21.647,
+              "text": "关可运行性的底线。"
+            }
+          ]
+        },
+        {
+          "id": "comparison_single_multi_gateway",
+          "type": "comparison",
+          "durationInFrames": 533,
+          "frame": {
+            "id": "comparison_single_multi_gateway",
+            "type": "comparison",
+            "title": "单 Gateway 与多 Gateway 的权衡",
+            "subtitle": "先选共享策略，再补隔离机制，避免后期重构成本。",
+            "script": "Hermes 选的是单 Gateway 加多适配器。这样配置简单、记忆可共享，但风险是一个平台异常可能波及整体。对应的补救是会话隔离和适配器级容错，把故障限制在平台边界内，不让网关整体崩掉。",
+            "left": {
+              "label": "单 Gateway",
+              "points": [
+                "配置和部署简单",
+                "跨平台可共享记忆",
+                "需重点做故障隔离"
+              ],
+              "color": "GOLD"
+            },
+            "right": {
+              "label": "多 Gateway",
+              "points": [
+                "平台隔离天然更强",
+                "资源占用更高",
+                "记忆同步成本上升"
+              ],
+              "color": "GREEN"
+            },
+            "insight": "Hermes 通过隔离和容错把单网关风险控制在可接受范围。"
+          },
+          "captionKeywords": [
+            "Gateway",
+            "Hermes",
+            "不让网关整体崩掉",
+            "但风险是一个平台",
+            "对应的补救是会话",
+            "异常可能波及整体",
+            "把故障限制在平台",
+            "隔离和适配器级容"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/comparison_single_multi_gateway.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.653,
+              "text": "Hermes 选的是单 Gateway 加"
+            },
+            {
+              "start": 2.653,
+              "end": 3.674,
+              "text": "多适配器。"
+            },
+            {
+              "start": 3.674,
+              "end": 6.328,
+              "text": "这样配置简单、记忆可共享，"
+            },
+            {
+              "start": 6.328,
+              "end": 8.982,
+              "text": "但风险是一个平台异常可能波"
+            },
+            {
+              "start": 8.982,
+              "end": 9.798,
+              "text": "及整体。"
+            },
+            {
+              "start": 9.798,
+              "end": 12.452,
+              "text": "对应的补救是会话隔离和适配"
+            },
+            {
+              "start": 12.452,
+              "end": 13.473,
+              "text": "器级容错，"
+            },
+            {
+              "start": 13.473,
+              "end": 15.922,
+              "text": "把故障限制在平台边界内，"
+            },
+            {
+              "start": 15.922,
+              "end": 17.76,
+              "text": "不让网关整体崩掉。"
+            }
+          ]
+        },
+        {
+          "id": "quote_core",
+          "type": "quote",
+          "durationInFrames": 536,
+          "frame": {
+            "id": "quote_core",
+            "type": "quote",
+            "title": "这篇拆解的核心判断",
+            "subtitle": "真正的网关价值，不在接入数量，而在编排稳定性。",
+            "quote": "Gateway 不是一个简单转发层，而是一个完整的会话编排系统。",
+            "attribution": "Hermes源码拆解（三）",
+            "script": "Gateway 不是一个简单转发层，而是一个完整的会话编排系统。落到工程实现，就是把会话管理、媒体缓存、格式转换和实例生命周期都放进网关主链路，而不是分散到业务层临时处理。只有这样，15+ 平台接入才会长期稳定，不会随着平台增多快速失控。"
+          },
+          "captionKeywords": [
+            "Gateway",
+            "不会随着平台增多",
+            "不是一个简单转发",
+            "命周期都放进网关",
+            "平台接入才会长期",
+            "格式转换和实例生",
+            "而不是分散到业务",
+            "而是一个完整的会"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/quote_core.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.993,
+              "text": "这句判断直接定义了架构边界："
+            },
+            {
+              "start": 2.993,
+              "end": 5.346,
+              "text": "Gateway 必须管理会话、"
+            },
+            {
+              "start": 5.346,
+              "end": 8.126,
+              "text": "缓存、格式和实例生命周期，"
+            },
+            {
+              "start": 8.126,
+              "end": 11.012,
+              "text": "而不是只把消息从 A 发到 B。"
+            },
+            {
+              "start": 11.012,
+              "end": 13.151,
+              "text": "只有把这些职责前置，"
+            },
+            {
+              "start": 13.151,
+              "end": 16.145,
+              "text": "15+ 平台接入才是可持续运行，"
+            },
+            {
+              "start": 16.145,
+              "end": 17.856,
+              "text": "而不是短期演示。"
+            }
+          ]
+        },
+        {
+          "id": "bullets_cron_integration",
+          "type": "bullets",
+          "durationInFrames": 502,
+          "frame": {
+            "id": "bullets_cron_integration",
+            "type": "bullets",
+            "title": "Cron 集成让网关从被动响应变主动执行",
+            "subtitle": "消息入口和定时任务共用网关，任务链路更统一。",
+            "script": "Hermes 网关不仅处理即时消息，还能承接 cron 任务。通过 /hermes cron 配置后，Gateway 在后台执行并投递结果。这样你可以把提醒、巡检、日报这类任务放进同一执行域，减少系统割裂。",
+            "items": [
+              {
+                "title": "统一任务入口",
+                "desc": "即时消息与定时任务都走 Gateway，链路治理一致"
+              },
+              {
+                "title": "后台执行投递",
+                "desc": "CronManager 调度后由 Gateway 执行并回传到目标平台"
+              },
+              {
+                "title": "运营能力增强",
+                "desc": "支持周期提醒、自动巡检、定时报表等主动服务场景"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "cron",
+            "Gateway",
+            "Hermes",
+            "hermes",
+            "在后台执行并投递",
+            "日报这类任务放进",
+            "网关不仅处理即时",
+            "这样你可以把提醒"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/bullets_cron_integration.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.832,
+              "text": "Hermes 网关不仅处理即时消息，"
+            },
+            {
+              "start": 2.832,
+              "end": 4.786,
+              "text": "还能承接 cron 任务。"
+            },
+            {
+              "start": 4.786,
+              "end": 7.326,
+              "text": "通过 /hermes cron 配置后，"
+            },
+            {
+              "start": 7.326,
+              "end": 10.256,
+              "text": "Gateway 在后台执行并投递结果。"
+            },
+            {
+              "start": 10.256,
+              "end": 12.600999999999999,
+              "text": "这样你可以把提醒、巡检、"
+            },
+            {
+              "start": 12.600999999999999,
+              "end": 15.336,
+              "text": "日报这类任务放进同一执行域，"
+            },
+            {
+              "start": 15.336,
+              "end": 16.704,
+              "text": "减少系统割裂。"
+            }
+          ]
+        },
+        {
+          "id": "hook_close",
+          "type": "hook",
+          "durationInFrames": 575,
+          "frame": {
+            "id": "hook_close",
+            "type": "hook",
+            "style": "spotlight",
+            "title": "网关工程化闭环：统一、隔离、可扩展",
+            "subtitle": "先固定适配器契约，再管实例生命周期，最后扩平台。",
+            "script": "最后收束一下，这篇的实操价值有三点：先用统一适配器接口稳定扩展边界，再用实例池和驱逐策略守住资源上限，再用会话隔离和容错保证多平台并行稳定。按这个顺序做，网关会从能用变成能长期运行。",
+            "list": [
+              "先统一适配器接口",
+              "事件模型标准化",
+              "实例池限制防OOM",
+              "平台异常隔离容错"
+            ]
+          },
+          "captionKeywords": [
+            "先用统一适配器接",
+            "再用会话隔离和容",
+            "再用实例池和驱逐",
+            "策略守住资源上限",
+            "网关会从能用变成",
+            "这篇的实操价值有",
+            "错保证多平台并行",
+            "口稳定扩展边界"
+          ],
+          "audioSrc": "studio-audio/hermes_gateway_arch_md_frames/hook_close.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.4729999999999999,
+              "text": "最后收束一下，"
+            },
+            {
+              "start": 1.4729999999999999,
+              "end": 3.7880000000000003,
+              "text": "这篇的实操价值有三点："
+            },
+            {
+              "start": 3.7880000000000003,
+              "end": 6.524,
+              "text": "先用统一适配器接口稳定扩展"
+            },
+            {
+              "start": 6.524,
+              "end": 7.155,
+              "text": "边界，"
+            },
+            {
+              "start": 7.155,
+              "end": 9.891,
+              "text": "再用实例池和驱逐策略守住资"
+            },
+            {
+              "start": 9.891,
+              "end": 10.733,
+              "text": "源上限，"
+            },
+            {
+              "start": 10.733,
+              "end": 13.469,
+              "text": "再用会话隔离和容错保证多平"
+            },
+            {
+              "start": 13.469,
+              "end": 14.732,
+              "text": "台并行稳定。"
+            },
+            {
+              "start": 14.732,
+              "end": 16.205,
+              "text": "按这个顺序做，"
+            },
+            {
+              "start": 16.205,
+              "end": 19.152,
+              "text": "网关会从能用变成能长期运行。"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "VlogFrames-ai-agent-memory-md-frames-20260427-163033",
+    "label": "ai_agent_memory_md_frames (04-27 16:30)",
+    "props": {
+      "meta": {
+        "topic": "AI Agent记忆管理：从理论到实践",
+        "voice": "zh-CN-XiaoyiNeural",
+        "rate": "+5%",
+        "theme": "ocean"
+      },
+      "slides": [
+        {
+          "id": "hook_open",
+          "type": "hook",
+          "durationInFrames": 671,
+          "frame": {
+            "id": "hook_open",
+            "type": "hook",
+            "style": "spotlight",
+            "title": "记忆分层机制：突破上下文窗口上限",
+            "subtitle": "先做四层记忆分工，再接检索与遗忘策略。",
+            "script": "先说结论，AI 助手记不住事，不是模型笨，而是上下文窗口天生有限。你这篇文档给出的核心做法是记忆分层：工作记忆负责当前对话，短期记忆保留最近任务，长期记忆和图记忆负责沉淀事实与关系。把这套机制落地后，助手才能跨会话连续工作。"
+          },
+          "captionKeywords": [
+            "AI",
+            "你这篇文档给出的",
+            "助手才能跨会话连",
+            "工作记忆负责当前",
+            "把这套机制落地后",
+            "核心做法是记忆分",
+            "短期记忆保留最近",
+            "而是上下文窗口天"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/hook_open.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.011,
+              "text": "先说结论，"
+            },
+            {
+              "start": 1.011,
+              "end": 2.729,
+              "text": "AI 助手记不住事，"
+            },
+            {
+              "start": 2.729,
+              "end": 3.943,
+              "text": "不是模型笨，"
+            },
+            {
+              "start": 3.943,
+              "end": 6.369,
+              "text": "而是上下文窗口天生有限。"
+            },
+            {
+              "start": 6.369,
+              "end": 8.998,
+              "text": "你这篇文档给出的核心做法是"
+            },
+            {
+              "start": 8.998,
+              "end": 10.009,
+              "text": "记忆分层："
+            },
+            {
+              "start": 10.009,
+              "end": 12.233,
+              "text": "工作记忆负责当前对话，"
+            },
+            {
+              "start": 12.233,
+              "end": 14.457,
+              "text": "短期记忆保留最近任务，"
+            },
+            {
+              "start": 14.457,
+              "end": 17.086,
+              "text": "长期记忆和图记忆负责沉淀事"
+            },
+            {
+              "start": 17.086,
+              "end": 18.097,
+              "text": "实与关系。"
+            },
+            {
+              "start": 18.097,
+              "end": 19.917,
+              "text": "把这套机制落地后，"
+            },
+            {
+              "start": 19.917,
+              "end": 22.344,
+              "text": "助手才能跨会话连续工作。"
+            }
+          ]
+        },
+        {
+          "id": "cards_core_questions",
+          "type": "cards",
+          "durationInFrames": 592,
+          "frame": {
+            "id": "cards_core_questions",
+            "type": "cards",
+            "style": "grid",
+            "title": "记忆系统的四个设计问题",
+            "subtitle": "先定义边界，再做实现，避免只存数据不解决问题。",
+            "script": "文档把复杂问题拆成四个工程问题：记什么、怎么存、怎么查、怎么忘。你可以按这个顺序实现，先定义采集规则，再选存储结构，再定检索策略，最后补遗忘策略。这样做的好处是每一层都可独立迭代，不会一改全崩。",
+            "cards": [
+              {
+                "title": "记什么",
+                "desc": "采集主动偏好、被动事实、以及记忆管理本身的元信息",
+                "color": "CYAN"
+              },
+              {
+                "title": "怎么存",
+                "desc": "文本、结构化关系、向量三种存储并用，兼顾灵活与检索",
+                "color": "GOLD"
+              },
+              {
+                "title": "怎么查",
+                "desc": "精确检索与语义检索混合，先召回再排序提升准确性",
+                "color": "PURPLE_L"
+              },
+              {
+                "title": "怎么忘",
+                "desc": "结合TTL、LRU和重要性评分，让记忆可控而不是无限膨胀",
+                "color": "GREEN"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "一层都可独立迭代",
+            "你可以按这个顺序",
+            "文档把复杂问题拆",
+            "这样做的好处是每",
+            "先定义采集规则",
+            "成四个工程问题",
+            "最后补遗忘策略",
+            "不会一改全崩"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/cards_core_questions.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.643,
+              "text": "文档把复杂问题拆成四个工程"
+            },
+            {
+              "start": 2.643,
+              "end": 3.254,
+              "text": "问题："
+            },
+            {
+              "start": 3.254,
+              "end": 5.694,
+              "text": "记什么、怎么存、怎么查、"
+            },
+            {
+              "start": 5.694,
+              "end": 6.508,
+              "text": "怎么忘。"
+            },
+            {
+              "start": 6.508,
+              "end": 8.745,
+              "text": "你可以按这个顺序实现，"
+            },
+            {
+              "start": 8.745,
+              "end": 10.372,
+              "text": "先定义采集规则，"
+            },
+            {
+              "start": 10.372,
+              "end": 11.796,
+              "text": "再选存储结构，"
+            },
+            {
+              "start": 11.796,
+              "end": 13.219,
+              "text": "再定检索策略，"
+            },
+            {
+              "start": 13.219,
+              "end": 14.846,
+              "text": "最后补遗忘策略。"
+            },
+            {
+              "start": 14.846,
+              "end": 17.49,
+              "text": "这样做的好处是每一层都可独"
+            },
+            {
+              "start": 17.49,
+              "end": 18.304,
+              "text": "立迭代，"
+            },
+            {
+              "start": 18.304,
+              "end": 19.728,
+              "text": "不会一改全崩。"
+            }
+          ]
+        },
+        {
+          "id": "bullets_memory_levels",
+          "type": "bullets",
+          "durationInFrames": 757,
+          "frame": {
+            "id": "bullets_memory_levels",
+            "type": "bullets",
+            "title": "四层记忆如何各司其职",
+            "subtitle": "按生命周期分层，能明显降低上下文塞满导致的失真。",
+            "script": "你文档里的四层记忆其实非常工程化。工作记忆只管当前任务，短期记忆保存最近事件，长期记忆沉淀稳定事实，图记忆负责实体关系。实操时最容易踩坑的是把所有信息都塞进当前上下文，这会让模型噪声上升。正确做法是按层回填，只加载当前问题真正需要的那一部分。",
+            "items": [
+              {
+                "title": "工作记忆",
+                "desc": "只保留当前会话必须信息，任务结束立即释放"
+              },
+              {
+                "title": "短期记忆",
+                "desc": "保存近一周关键事件，支持近期偏好和状态延续"
+              },
+              {
+                "title": "长期记忆",
+                "desc": "沉淀稳定事实与技能，作为长期知识底座"
+              },
+              {
+                "title": "图记忆",
+                "desc": "维护人、项目、组织关系，支持复杂关联查询"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "你文档里的四层记",
+            "只加载当前问题真",
+            "图记忆负责实体关",
+            "实操时最容易踩坑",
+            "工作记忆只管当前",
+            "忆其实非常工程化",
+            "正确做法是按层回",
+            "正需要的那一部分"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/bullets_memory_levels.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.71,
+              "text": "你文档里的四层记忆其实非常"
+            },
+            {
+              "start": 2.71,
+              "end": 3.543,
+              "text": "工程化。"
+            },
+            {
+              "start": 3.543,
+              "end": 5.836,
+              "text": "工作记忆只管当前任务，"
+            },
+            {
+              "start": 5.836,
+              "end": 8.13,
+              "text": "短期记忆保存最近事件，"
+            },
+            {
+              "start": 8.13,
+              "end": 10.423,
+              "text": "长期记忆沉淀稳定事实，"
+            },
+            {
+              "start": 10.423,
+              "end": 12.507,
+              "text": "图记忆负责实体关系。"
+            },
+            {
+              "start": 12.507,
+              "end": 15.217,
+              "text": "实操时最容易踩坑的是把所有"
+            },
+            {
+              "start": 15.217,
+              "end": 17.51,
+              "text": "信息都塞进当前上下文，"
+            },
+            {
+              "start": 17.51,
+              "end": 19.595,
+              "text": "这会让模型噪声上升。"
+            },
+            {
+              "start": 19.595,
+              "end": 21.68,
+              "text": "正确做法是按层回填，"
+            },
+            {
+              "start": 21.68,
+              "end": 24.39,
+              "text": "只加载当前问题真正需要的那"
+            },
+            {
+              "start": 24.39,
+              "end": 25.224,
+              "text": "一部分。"
+            }
+          ]
+        },
+        {
+          "id": "comparison_retrieval",
+          "type": "comparison",
+          "durationInFrames": 639,
+          "frame": {
+            "id": "comparison_retrieval",
+            "type": "comparison",
+            "style": "table",
+            "title": "关键词检索与向量检索的取舍",
+            "subtitle": "先向量召回候选，再关键词过滤，效果通常最稳。",
+            "script": "你文档明确指出：关键词检索像查字典，前提是你知道准确词；向量检索像按语义找相近内容，即使表达不同也能命中。实战里直接二选一效果都不够稳，建议混合检索，先用向量扩大召回，再用关键词和业务规则做排序收敛。",
+            "left": {
+              "label": "关键词检索",
+              "points": [
+                "精确命中快",
+                "依赖词面一致",
+                "对同义改写不友好"
+              ],
+              "color": "RED"
+            },
+            "right": {
+              "label": "向量检索",
+              "points": [
+                "语义泛化强",
+                "召回覆盖更高",
+                "需要额外排序约束"
+              ],
+              "color": "GREEN"
+            },
+            "insight": "混合检索是大多数Agent产品的默认解。"
+          },
+          "captionKeywords": [
+            "先用向量扩大召回",
+            "关键词检索像查字",
+            "再用关键词和业务",
+            "前提是你知道准确",
+            "即使表达不同也能",
+            "向量检索像按语义",
+            "实战里直接二选一",
+            "你文档明确指出"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/comparison_retrieval.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.7029999999999998,
+              "text": "你文档明确指出："
+            },
+            {
+              "start": 1.7029999999999998,
+              "end": 3.831,
+              "text": "关键词检索像查字典，"
+            },
+            {
+              "start": 3.831,
+              "end": 5.96,
+              "text": "前提是你知道准确词；"
+            },
+            {
+              "start": 5.96,
+              "end": 8.94,
+              "text": "向量检索像按语义找相近内容，"
+            },
+            {
+              "start": 8.94,
+              "end": 11.282,
+              "text": "即使表达不同也能命中。"
+            },
+            {
+              "start": 11.282,
+              "end": 14.475,
+              "text": "实战里直接二选一效果都不够稳，"
+            },
+            {
+              "start": 14.475,
+              "end": 15.966,
+              "text": "建议混合检索，"
+            },
+            {
+              "start": 15.966,
+              "end": 17.881,
+              "text": "先用向量扩大召回，"
+            },
+            {
+              "start": 17.881,
+              "end": 20.649,
+              "text": "再用关键词和业务规则做排序"
+            },
+            {
+              "start": 20.649,
+              "end": 21.288,
+              "text": "收敛。"
+            }
+          ]
+        },
+        {
+          "id": "cards_solution_matrix",
+          "type": "cards",
+          "durationInFrames": 655,
+          "frame": {
+            "id": "cards_solution_matrix",
+            "type": "cards",
+            "style": "timeline",
+            "title": "五种开源方案怎么选",
+            "subtitle": "先看自动化诉求，再看规范程度和隐私要求。",
+            "script": "这篇文档最实用的一段是选型对比。AgentMemory适合快速起步，MemPalace偏规范流程，AMP适合多Agent共享，Memento适合精细控制，OAMP适合隐私和可移植。你可以先用AgentMemory跑通最小闭环，再按团队约束升级。",
+            "cards": [
+              {
+                "title": "AgentMemory",
+                "desc": "自动化最强，安装简单，适合先跑通再优化",
+                "color": "WHITE"
+              },
+              {
+                "title": "MemPalace",
+                "desc": "协议规范完整，适合需要强治理和版本管理的团队",
+                "color": "CYAN"
+              },
+              {
+                "title": "AMP/Memento/OAMP",
+                "desc": "分别偏跨Agent共享、精细评分控制、隐私合规可移植",
+                "color": "ORANGE"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "AgentMemory",
+            "MemPalace",
+            "Memento",
+            "OAMP",
+            "AMP",
+            "再按团队约束升级",
+            "这篇文档最实用的",
+            "适合隐私和可移植"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/cards_solution_matrix.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.923,
+              "text": "这篇文档最实用的一段是选型"
+            },
+            {
+              "start": 2.923,
+              "end": 3.598,
+              "text": "对比。"
+            },
+            {
+              "start": 3.598,
+              "end": 6.409,
+              "text": "AgentMemory适合快速起步，"
+            },
+            {
+              "start": 6.409,
+              "end": 8.771,
+              "text": "MemPalace偏规范流程，"
+            },
+            {
+              "start": 8.771,
+              "end": 11.02,
+              "text": "AMP适合多Agent共享，"
+            },
+            {
+              "start": 11.02,
+              "end": 13.381,
+              "text": "Memento适合精细控制，"
+            },
+            {
+              "start": 13.381,
+              "end": 15.855,
+              "text": "OAMP适合隐私和可移植。"
+            },
+            {
+              "start": 15.855,
+              "end": 18.667,
+              "text": "你可以先用AgentMemory跑通"
+            },
+            {
+              "start": 18.667,
+              "end": 19.791,
+              "text": "最小闭环，"
+            },
+            {
+              "start": 19.791,
+              "end": 21.815,
+              "text": "再按团队约束升级。"
+            }
+          ]
+        },
+        {
+          "id": "quote_core",
+          "type": "quote",
+          "durationInFrames": 581,
+          "frame": {
+            "id": "quote_core",
+            "type": "quote",
+            "title": "这篇文章的核心工程观点",
+            "subtitle": "记忆管理不是功能点，而是完整的数据生命周期设计。",
+            "quote": "记忆管理不是存数据，而是存什么、怎么存、怎么查、怎么忘。",
+            "attribution": "AI-Agent记忆管理-从理论到实践",
+            "script": "这句引用的重点是“记忆管理不是只存数据，而是存什么、怎么存、怎么查、怎么忘”。如果只做存储层，不做检索和遗忘，系统很快会出现命中低、冲突多、成本高的问题。按这四步设计闭环，才是真正可运行的记忆工程。"
+          },
+          "captionKeywords": [
+            "才是真正可运行的",
+            "按这四步设计闭环",
+            "系统很快会出现命",
+            "记忆管理不是只存",
+            "这句引用的重点是",
+            "不做检索和遗忘",
+            "如果只做存储层",
+            "成本高的问题"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/quote_core.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.7189999999999999,
+              "text": "这句话非常关键，"
+            },
+            {
+              "start": 1.7189999999999999,
+              "end": 4.513,
+              "text": "它把记忆系统从功能实现拉回"
+            },
+            {
+              "start": 4.513,
+              "end": 5.803,
+              "text": "到工程设计。"
+            },
+            {
+              "start": 5.803,
+              "end": 8.167,
+              "text": "很多团队只做了存储层，"
+            },
+            {
+              "start": 8.167,
+              "end": 10.746,
+              "text": "结果查询混乱、过期失控、"
+            },
+            {
+              "start": 10.746,
+              "end": 11.821,
+              "text": "成本飙升。"
+            },
+            {
+              "start": 11.821,
+              "end": 14.83,
+              "text": "你这篇文档的价值在于把采集、"
+            },
+            {
+              "start": 14.83,
+              "end": 17.624,
+              "text": "存储、检索、遗忘串成闭环，"
+            },
+            {
+              "start": 17.624,
+              "end": 19.344,
+              "text": "能直接指导实现。"
+            }
+          ]
+        },
+        {
+          "id": "bullets_cursor_practice",
+          "type": "bullets",
+          "durationInFrames": 628,
+          "frame": {
+            "id": "bullets_cursor_practice",
+            "type": "bullets",
+            "title": "给Cursor助手落地记忆的四步法",
+            "subtitle": "先接MCP，再注入偏好，再做行为验证。",
+            "script": "你在实践篇给了非常清晰的落地步骤。先安装AgentMemory并接入Cursor MCP，然后把项目背景和编码偏好显式写入，再通过新任务验证模型是否按偏好输出。这样做的关键不是一次性写很多规则，而是每轮都验证“记住了什么、漏了什么”。",
+            "items": [
+              {
+                "title": "安装并接入",
+                "desc": "通过 npx 安装 AgentMemory，并在 Cursor 配置 MCP Server"
+              },
+              {
+                "title": "注入偏好",
+                "desc": "明确技术栈、命名风格、包管理器等可执行约束"
+              },
+              {
+                "title": "任务验证",
+                "desc": "用新文件生成任务检查是否按记忆策略产出代码"
+              },
+              {
+                "title": "持续调优",
+                "desc": "根据命中率与遗漏点迭代记忆采集和检索策略"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "AgentMemory",
+            "Cursor",
+            "MCP",
+            "一次性写很多规则",
+            "你在实践篇给了非",
+            "再通过新任务验证",
+            "常清晰的落地步骤",
+            "模型是否按偏好输"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/bullets_cursor_practice.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.551,
+              "text": "你在实践篇给了非常清晰的落"
+            },
+            {
+              "start": 2.551,
+              "end": 3.336,
+              "text": "地步骤。"
+            },
+            {
+              "start": 3.336,
+              "end": 5.888,
+              "text": "先安装AgentMemory并接入Cur"
+            },
+            {
+              "start": 5.888,
+              "end": 6.771,
+              "text": "sor MCP，"
+            },
+            {
+              "start": 6.771,
+              "end": 9.323,
+              "text": "然后把项目背景和编码偏好显"
+            },
+            {
+              "start": 9.323,
+              "end": 10.108,
+              "text": "式写入，"
+            },
+            {
+              "start": 10.108,
+              "end": 12.66,
+              "text": "再通过新任务验证模型是否按"
+            },
+            {
+              "start": 12.66,
+              "end": 13.641,
+              "text": "偏好输出。"
+            },
+            {
+              "start": 13.641,
+              "end": 16.193,
+              "text": "这样做的关键不是一次性写很"
+            },
+            {
+              "start": 16.193,
+              "end": 16.978,
+              "text": "多规则，"
+            },
+            {
+              "start": 16.978,
+              "end": 19.726,
+              "text": "而是每轮都验证“记住了什么、"
+            },
+            {
+              "start": 19.726,
+              "end": 20.903,
+              "text": "漏了什么”。"
+            }
+          ]
+        },
+        {
+          "id": "kpi_operate",
+          "type": "kpi",
+          "durationInFrames": 642,
+          "frame": {
+            "id": "kpi_operate",
+            "type": "kpi",
+            "title": "记忆系统运行阶段建议观察指标",
+            "subtitle": "先监控命中与准确，再优化性能和成本。",
+            "script": "为了让记忆系统可运营，你至少要追三类指标：检索命中率、答案准确率、平均响应延迟。命中率低通常是采集或召回问题，准确率低通常是排序和事实冲突问题，延迟高则多是检索链路过重。用这三项先定位问题，优化效率最高。",
+            "kpis": [
+              {
+                "title": "记忆命中率",
+                "value": "78%",
+                "label": "被成功检索并使用"
+              },
+              {
+                "title": "回答准确率",
+                "value": "86%",
+                "label": "含事实类问答"
+              },
+              {
+                "title": "平均延迟",
+                "value": "1.6s",
+                "label": "检索+生成端到端"
+              }
+            ],
+            "footnote": "优先固定评测集，否则指标无法横向比较。"
+          },
+          "captionKeywords": [
+            "为了让记忆系统可",
+            "你至少要追三类指",
+            "准确率低通常是排",
+            "命中率低通常是采",
+            "序和事实冲突问题",
+            "延迟高则多是检索",
+            "用这三项先定位问",
+            "优化效率最高"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/kpi_operate.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.306,
+              "text": "为了让记忆系统可运营，"
+            },
+            {
+              "start": 2.306,
+              "end": 4.402,
+              "text": "你至少要追三类指标："
+            },
+            {
+              "start": 4.402,
+              "end": 6.918,
+              "text": "检索命中率、答案准确率、"
+            },
+            {
+              "start": 6.918,
+              "end": 8.385,
+              "text": "平均响应延迟。"
+            },
+            {
+              "start": 8.385,
+              "end": 11.53,
+              "text": "命中率低通常是采集或召回问题，"
+            },
+            {
+              "start": 11.53,
+              "end": 14.256,
+              "text": "准确率低通常是排序和事实冲"
+            },
+            {
+              "start": 14.256,
+              "end": 15.094,
+              "text": "突问题，"
+            },
+            {
+              "start": 15.094,
+              "end": 17.82,
+              "text": "延迟高则多是检索链路过重。"
+            },
+            {
+              "start": 17.82,
+              "end": 19.916,
+              "text": "用这三项先定位问题，"
+            },
+            {
+              "start": 19.916,
+              "end": 21.384,
+              "text": "优化效率最高。"
+            }
+          ]
+        },
+        {
+          "id": "comparison_security_perf",
+          "type": "comparison",
+          "durationInFrames": 591,
+          "frame": {
+            "id": "comparison_security_perf",
+            "type": "comparison",
+            "title": "性能优化与隐私安全要并行推进",
+            "subtitle": "只追速度不做治理，最终会被数据风险反噬。",
+            "script": "文档在踩坑部分给了很实用的双线建议。一条线做性能优化，比如懒加载、TTL、批量写入；另一条线做安全治理，比如敏感信息过滤、本地优先存储、必要加密。很多项目只做一条线，后期不是慢就是不合规。",
+            "left": {
+              "label": "性能侧动作",
+              "points": [
+                "按需加载记忆",
+                "设置TTL分层",
+                "批量写入提速"
+              ],
+              "color": "GOLD"
+            },
+            "right": {
+              "label": "安全侧动作",
+              "points": [
+                "敏感字段脱敏",
+                "本地向量库优先",
+                "关键数据加密"
+              ],
+              "color": "GREEN"
+            },
+            "insight": "性能与安全是同一条交付链路的两端。"
+          },
+          "captionKeywords": [
+            "TTL",
+            "一条线做性能优化",
+            "了很实用的双线建",
+            "另一条线做安全治",
+            "后期不是慢就是不",
+            "很多项目只做一条",
+            "文档在踩坑部分给",
+            "比如敏感信息过滤"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/comparison_security_perf.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.765,
+              "text": "文档在踩坑部分给了很实用的"
+            },
+            {
+              "start": 2.765,
+              "end": 3.8289999999999997,
+              "text": "双线建议。"
+            },
+            {
+              "start": 3.8289999999999997,
+              "end": 5.744,
+              "text": "一条线做性能优化，"
+            },
+            {
+              "start": 5.744,
+              "end": 7.552,
+              "text": "比如懒加载、TTL、"
+            },
+            {
+              "start": 7.552,
+              "end": 8.616,
+              "text": "批量写入；"
+            },
+            {
+              "start": 8.616,
+              "end": 10.744,
+              "text": "另一条线做安全治理，"
+            },
+            {
+              "start": 10.744,
+              "end": 12.659,
+              "text": "比如敏感信息过滤、"
+            },
+            {
+              "start": 12.659,
+              "end": 15.212,
+              "text": "本地优先存储、必要加密。"
+            },
+            {
+              "start": 15.212,
+              "end": 17.339,
+              "text": "很多项目只做一条线，"
+            },
+            {
+              "start": 17.339,
+              "end": 19.679,
+              "text": "后期不是慢就是不合规。"
+            }
+          ]
+        },
+        {
+          "id": "hook_close",
+          "type": "hook",
+          "durationInFrames": 613,
+          "frame": {
+            "id": "hook_close",
+            "type": "hook",
+            "style": "spotlight",
+            "title": "分层记忆闭环：让Agent从会聊到会做",
+            "subtitle": "先用开箱方案跑通，再按业务目标做分层治理。",
+            "script": "最后总结一下，你这篇文档给出的最佳路径是先从AgentMemory起步，快速验证价值，再逐步补齐检索、遗忘、安全和指标治理。记忆系统真正的目标不是让助手记得更多，而是让它在关键任务上更稳定、更可控、更可复用。",
+            "list": [
+              "先跑最小可用闭环",
+              "按四层记忆分治",
+              "混合检索提升稳定性",
+              "把安全与指标前置"
+            ]
+          },
+          "captionKeywords": [
+            "AgentMemory",
+            "你这篇文档给出的",
+            "标不是让助手记得",
+            "而是让它在关键任",
+            "记忆系统真正的目",
+            "再逐步补齐检索",
+            "安全和指标治理",
+            "最佳路径是先从"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/hook_close.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.451,
+              "text": "最后总结一下，"
+            },
+            {
+              "start": 1.451,
+              "end": 4.147,
+              "text": "你这篇文档给出的最佳路径是"
+            },
+            {
+              "start": 4.147,
+              "end": 6.324,
+              "text": "先从AgentMemory起步，"
+            },
+            {
+              "start": 6.324,
+              "end": 7.775,
+              "text": "快速验证价值，"
+            },
+            {
+              "start": 7.775,
+              "end": 10.056,
+              "text": "再逐步补齐检索、遗忘、"
+            },
+            {
+              "start": 10.056,
+              "end": 11.715,
+              "text": "安全和指标治理。"
+            },
+            {
+              "start": 11.715,
+              "end": 14.41,
+              "text": "记忆系统真正的目标不是让助"
+            },
+            {
+              "start": 14.41,
+              "end": 15.654,
+              "text": "手记得更多，"
+            },
+            {
+              "start": 15.654,
+              "end": 18.557,
+              "text": "而是让它在关键任务上更稳定、"
+            },
+            {
+              "start": 18.557,
+              "end": 20.423,
+              "text": "更可控、更可复用。"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "VlogFrames-ai-agent-memory-md-frames-20260427-163149",
+    "label": "ai_agent_memory_md_frames (04-27 16:31)",
+    "props": {
+      "meta": {
+        "topic": "AI Agent记忆管理：从理论到实践",
+        "voice": "zh-CN-XiaoyiNeural",
+        "rate": "+5%",
+        "theme": "light"
+      },
+      "slides": [
+        {
+          "id": "hook_open",
+          "type": "hook",
+          "durationInFrames": 671,
+          "frame": {
+            "id": "hook_open",
+            "type": "hook",
+            "style": "spotlight",
+            "title": "记忆分层机制：突破上下文窗口上限",
+            "subtitle": "先做四层记忆分工，再接检索与遗忘策略。",
+            "script": "先说结论，AI 助手记不住事，不是模型笨，而是上下文窗口天生有限。你这篇文档给出的核心做法是记忆分层：工作记忆负责当前对话，短期记忆保留最近任务，长期记忆和图记忆负责沉淀事实与关系。把这套机制落地后，助手才能跨会话连续工作。"
+          },
+          "captionKeywords": [
+            "AI",
+            "你这篇文档给出的",
+            "助手才能跨会话连",
+            "工作记忆负责当前",
+            "把这套机制落地后",
+            "核心做法是记忆分",
+            "短期记忆保留最近",
+            "而是上下文窗口天"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/hook_open.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.011,
+              "text": "先说结论，"
+            },
+            {
+              "start": 1.011,
+              "end": 2.729,
+              "text": "AI 助手记不住事，"
+            },
+            {
+              "start": 2.729,
+              "end": 3.943,
+              "text": "不是模型笨，"
+            },
+            {
+              "start": 3.943,
+              "end": 6.369,
+              "text": "而是上下文窗口天生有限。"
+            },
+            {
+              "start": 6.369,
+              "end": 8.998,
+              "text": "你这篇文档给出的核心做法是"
+            },
+            {
+              "start": 8.998,
+              "end": 10.009,
+              "text": "记忆分层："
+            },
+            {
+              "start": 10.009,
+              "end": 12.233,
+              "text": "工作记忆负责当前对话，"
+            },
+            {
+              "start": 12.233,
+              "end": 14.457,
+              "text": "短期记忆保留最近任务，"
+            },
+            {
+              "start": 14.457,
+              "end": 17.086,
+              "text": "长期记忆和图记忆负责沉淀事"
+            },
+            {
+              "start": 17.086,
+              "end": 18.097,
+              "text": "实与关系。"
+            },
+            {
+              "start": 18.097,
+              "end": 19.917,
+              "text": "把这套机制落地后，"
+            },
+            {
+              "start": 19.917,
+              "end": 22.344,
+              "text": "助手才能跨会话连续工作。"
+            }
+          ]
+        },
+        {
+          "id": "cards_core_questions",
+          "type": "cards",
+          "durationInFrames": 592,
+          "frame": {
+            "id": "cards_core_questions",
+            "type": "cards",
+            "style": "grid",
+            "title": "记忆系统的四个设计问题",
+            "subtitle": "先定义边界，再做实现，避免只存数据不解决问题。",
+            "script": "文档把复杂问题拆成四个工程问题：记什么、怎么存、怎么查、怎么忘。你可以按这个顺序实现，先定义采集规则，再选存储结构，再定检索策略，最后补遗忘策略。这样做的好处是每一层都可独立迭代，不会一改全崩。",
+            "cards": [
+              {
+                "title": "记什么",
+                "desc": "采集主动偏好、被动事实、以及记忆管理本身的元信息",
+                "color": "CYAN"
+              },
+              {
+                "title": "怎么存",
+                "desc": "文本、结构化关系、向量三种存储并用，兼顾灵活与检索",
+                "color": "GOLD"
+              },
+              {
+                "title": "怎么查",
+                "desc": "精确检索与语义检索混合，先召回再排序提升准确性",
+                "color": "PURPLE_L"
+              },
+              {
+                "title": "怎么忘",
+                "desc": "结合TTL、LRU和重要性评分，让记忆可控而不是无限膨胀",
+                "color": "GREEN"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "一层都可独立迭代",
+            "你可以按这个顺序",
+            "文档把复杂问题拆",
+            "这样做的好处是每",
+            "先定义采集规则",
+            "成四个工程问题",
+            "最后补遗忘策略",
+            "不会一改全崩"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/cards_core_questions.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.643,
+              "text": "文档把复杂问题拆成四个工程"
+            },
+            {
+              "start": 2.643,
+              "end": 3.254,
+              "text": "问题："
+            },
+            {
+              "start": 3.254,
+              "end": 5.694,
+              "text": "记什么、怎么存、怎么查、"
+            },
+            {
+              "start": 5.694,
+              "end": 6.508,
+              "text": "怎么忘。"
+            },
+            {
+              "start": 6.508,
+              "end": 8.745,
+              "text": "你可以按这个顺序实现，"
+            },
+            {
+              "start": 8.745,
+              "end": 10.372,
+              "text": "先定义采集规则，"
+            },
+            {
+              "start": 10.372,
+              "end": 11.796,
+              "text": "再选存储结构，"
+            },
+            {
+              "start": 11.796,
+              "end": 13.219,
+              "text": "再定检索策略，"
+            },
+            {
+              "start": 13.219,
+              "end": 14.846,
+              "text": "最后补遗忘策略。"
+            },
+            {
+              "start": 14.846,
+              "end": 17.49,
+              "text": "这样做的好处是每一层都可独"
+            },
+            {
+              "start": 17.49,
+              "end": 18.304,
+              "text": "立迭代，"
+            },
+            {
+              "start": 18.304,
+              "end": 19.728,
+              "text": "不会一改全崩。"
+            }
+          ]
+        },
+        {
+          "id": "bullets_memory_levels",
+          "type": "bullets",
+          "durationInFrames": 757,
+          "frame": {
+            "id": "bullets_memory_levels",
+            "type": "bullets",
+            "title": "四层记忆如何各司其职",
+            "subtitle": "按生命周期分层，能明显降低上下文塞满导致的失真。",
+            "script": "你文档里的四层记忆其实非常工程化。工作记忆只管当前任务，短期记忆保存最近事件，长期记忆沉淀稳定事实，图记忆负责实体关系。实操时最容易踩坑的是把所有信息都塞进当前上下文，这会让模型噪声上升。正确做法是按层回填，只加载当前问题真正需要的那一部分。",
+            "items": [
+              {
+                "title": "工作记忆",
+                "desc": "只保留当前会话必须信息，任务结束立即释放"
+              },
+              {
+                "title": "短期记忆",
+                "desc": "保存近一周关键事件，支持近期偏好和状态延续"
+              },
+              {
+                "title": "长期记忆",
+                "desc": "沉淀稳定事实与技能，作为长期知识底座"
+              },
+              {
+                "title": "图记忆",
+                "desc": "维护人、项目、组织关系，支持复杂关联查询"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "你文档里的四层记",
+            "只加载当前问题真",
+            "图记忆负责实体关",
+            "实操时最容易踩坑",
+            "工作记忆只管当前",
+            "忆其实非常工程化",
+            "正确做法是按层回",
+            "正需要的那一部分"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/bullets_memory_levels.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.71,
+              "text": "你文档里的四层记忆其实非常"
+            },
+            {
+              "start": 2.71,
+              "end": 3.543,
+              "text": "工程化。"
+            },
+            {
+              "start": 3.543,
+              "end": 5.836,
+              "text": "工作记忆只管当前任务，"
+            },
+            {
+              "start": 5.836,
+              "end": 8.13,
+              "text": "短期记忆保存最近事件，"
+            },
+            {
+              "start": 8.13,
+              "end": 10.423,
+              "text": "长期记忆沉淀稳定事实，"
+            },
+            {
+              "start": 10.423,
+              "end": 12.507,
+              "text": "图记忆负责实体关系。"
+            },
+            {
+              "start": 12.507,
+              "end": 15.217,
+              "text": "实操时最容易踩坑的是把所有"
+            },
+            {
+              "start": 15.217,
+              "end": 17.51,
+              "text": "信息都塞进当前上下文，"
+            },
+            {
+              "start": 17.51,
+              "end": 19.595,
+              "text": "这会让模型噪声上升。"
+            },
+            {
+              "start": 19.595,
+              "end": 21.68,
+              "text": "正确做法是按层回填，"
+            },
+            {
+              "start": 21.68,
+              "end": 24.39,
+              "text": "只加载当前问题真正需要的那"
+            },
+            {
+              "start": 24.39,
+              "end": 25.224,
+              "text": "一部分。"
+            }
+          ]
+        },
+        {
+          "id": "comparison_retrieval",
+          "type": "comparison",
+          "durationInFrames": 639,
+          "frame": {
+            "id": "comparison_retrieval",
+            "type": "comparison",
+            "style": "table",
+            "title": "关键词检索与向量检索的取舍",
+            "subtitle": "先向量召回候选，再关键词过滤，效果通常最稳。",
+            "script": "你文档明确指出：关键词检索像查字典，前提是你知道准确词；向量检索像按语义找相近内容，即使表达不同也能命中。实战里直接二选一效果都不够稳，建议混合检索，先用向量扩大召回，再用关键词和业务规则做排序收敛。",
+            "left": {
+              "label": "关键词检索",
+              "points": [
+                "精确命中快",
+                "依赖词面一致",
+                "对同义改写不友好"
+              ],
+              "color": "RED"
+            },
+            "right": {
+              "label": "向量检索",
+              "points": [
+                "语义泛化强",
+                "召回覆盖更高",
+                "需要额外排序约束"
+              ],
+              "color": "GREEN"
+            },
+            "insight": "混合检索是大多数Agent产品的默认解。"
+          },
+          "captionKeywords": [
+            "先用向量扩大召回",
+            "关键词检索像查字",
+            "再用关键词和业务",
+            "前提是你知道准确",
+            "即使表达不同也能",
+            "向量检索像按语义",
+            "实战里直接二选一",
+            "你文档明确指出"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/comparison_retrieval.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.7029999999999998,
+              "text": "你文档明确指出："
+            },
+            {
+              "start": 1.7029999999999998,
+              "end": 3.831,
+              "text": "关键词检索像查字典，"
+            },
+            {
+              "start": 3.831,
+              "end": 5.96,
+              "text": "前提是你知道准确词；"
+            },
+            {
+              "start": 5.96,
+              "end": 8.94,
+              "text": "向量检索像按语义找相近内容，"
+            },
+            {
+              "start": 8.94,
+              "end": 11.282,
+              "text": "即使表达不同也能命中。"
+            },
+            {
+              "start": 11.282,
+              "end": 14.475,
+              "text": "实战里直接二选一效果都不够稳，"
+            },
+            {
+              "start": 14.475,
+              "end": 15.966,
+              "text": "建议混合检索，"
+            },
+            {
+              "start": 15.966,
+              "end": 17.881,
+              "text": "先用向量扩大召回，"
+            },
+            {
+              "start": 17.881,
+              "end": 20.649,
+              "text": "再用关键词和业务规则做排序"
+            },
+            {
+              "start": 20.649,
+              "end": 21.288,
+              "text": "收敛。"
+            }
+          ]
+        },
+        {
+          "id": "cards_solution_matrix",
+          "type": "cards",
+          "durationInFrames": 655,
+          "frame": {
+            "id": "cards_solution_matrix",
+            "type": "cards",
+            "style": "timeline",
+            "title": "五种开源方案怎么选",
+            "subtitle": "先看自动化诉求，再看规范程度和隐私要求。",
+            "script": "这篇文档最实用的一段是选型对比。AgentMemory适合快速起步，MemPalace偏规范流程，AMP适合多Agent共享，Memento适合精细控制，OAMP适合隐私和可移植。你可以先用AgentMemory跑通最小闭环，再按团队约束升级。",
+            "cards": [
+              {
+                "title": "AgentMemory",
+                "desc": "自动化最强，安装简单，适合先跑通再优化",
+                "color": "WHITE"
+              },
+              {
+                "title": "MemPalace",
+                "desc": "协议规范完整，适合需要强治理和版本管理的团队",
+                "color": "CYAN"
+              },
+              {
+                "title": "AMP/Memento/OAMP",
+                "desc": "分别偏跨Agent共享、精细评分控制、隐私合规可移植",
+                "color": "ORANGE"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "AgentMemory",
+            "MemPalace",
+            "Memento",
+            "OAMP",
+            "AMP",
+            "再按团队约束升级",
+            "这篇文档最实用的",
+            "适合隐私和可移植"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/cards_solution_matrix.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.923,
+              "text": "这篇文档最实用的一段是选型"
+            },
+            {
+              "start": 2.923,
+              "end": 3.598,
+              "text": "对比。"
+            },
+            {
+              "start": 3.598,
+              "end": 6.409,
+              "text": "AgentMemory适合快速起步，"
+            },
+            {
+              "start": 6.409,
+              "end": 8.771,
+              "text": "MemPalace偏规范流程，"
+            },
+            {
+              "start": 8.771,
+              "end": 11.02,
+              "text": "AMP适合多Agent共享，"
+            },
+            {
+              "start": 11.02,
+              "end": 13.381,
+              "text": "Memento适合精细控制，"
+            },
+            {
+              "start": 13.381,
+              "end": 15.855,
+              "text": "OAMP适合隐私和可移植。"
+            },
+            {
+              "start": 15.855,
+              "end": 18.667,
+              "text": "你可以先用AgentMemory跑通"
+            },
+            {
+              "start": 18.667,
+              "end": 19.791,
+              "text": "最小闭环，"
+            },
+            {
+              "start": 19.791,
+              "end": 21.815,
+              "text": "再按团队约束升级。"
+            }
+          ]
+        },
+        {
+          "id": "quote_core",
+          "type": "quote",
+          "durationInFrames": 581,
+          "frame": {
+            "id": "quote_core",
+            "type": "quote",
+            "title": "这篇文章的核心工程观点",
+            "subtitle": "记忆管理不是功能点，而是完整的数据生命周期设计。",
+            "quote": "记忆管理不是存数据，而是存什么、怎么存、怎么查、怎么忘。",
+            "attribution": "AI-Agent记忆管理-从理论到实践",
+            "script": "这句引用的重点是“记忆管理不是只存数据，而是存什么、怎么存、怎么查、怎么忘”。如果只做存储层，不做检索和遗忘，系统很快会出现命中低、冲突多、成本高的问题。按这四步设计闭环，才是真正可运行的记忆工程。"
+          },
+          "captionKeywords": [
+            "才是真正可运行的",
+            "按这四步设计闭环",
+            "系统很快会出现命",
+            "记忆管理不是只存",
+            "这句引用的重点是",
+            "不做检索和遗忘",
+            "如果只做存储层",
+            "成本高的问题"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/quote_core.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.7189999999999999,
+              "text": "这句话非常关键，"
+            },
+            {
+              "start": 1.7189999999999999,
+              "end": 4.513,
+              "text": "它把记忆系统从功能实现拉回"
+            },
+            {
+              "start": 4.513,
+              "end": 5.803,
+              "text": "到工程设计。"
+            },
+            {
+              "start": 5.803,
+              "end": 8.167,
+              "text": "很多团队只做了存储层，"
+            },
+            {
+              "start": 8.167,
+              "end": 10.746,
+              "text": "结果查询混乱、过期失控、"
+            },
+            {
+              "start": 10.746,
+              "end": 11.821,
+              "text": "成本飙升。"
+            },
+            {
+              "start": 11.821,
+              "end": 14.83,
+              "text": "你这篇文档的价值在于把采集、"
+            },
+            {
+              "start": 14.83,
+              "end": 17.624,
+              "text": "存储、检索、遗忘串成闭环，"
+            },
+            {
+              "start": 17.624,
+              "end": 19.344,
+              "text": "能直接指导实现。"
+            }
+          ]
+        },
+        {
+          "id": "bullets_cursor_practice",
+          "type": "bullets",
+          "durationInFrames": 628,
+          "frame": {
+            "id": "bullets_cursor_practice",
+            "type": "bullets",
+            "title": "给Cursor助手落地记忆的四步法",
+            "subtitle": "先接MCP，再注入偏好，再做行为验证。",
+            "script": "你在实践篇给了非常清晰的落地步骤。先安装AgentMemory并接入Cursor MCP，然后把项目背景和编码偏好显式写入，再通过新任务验证模型是否按偏好输出。这样做的关键不是一次性写很多规则，而是每轮都验证“记住了什么、漏了什么”。",
+            "items": [
+              {
+                "title": "安装并接入",
+                "desc": "通过 npx 安装 AgentMemory，并在 Cursor 配置 MCP Server"
+              },
+              {
+                "title": "注入偏好",
+                "desc": "明确技术栈、命名风格、包管理器等可执行约束"
+              },
+              {
+                "title": "任务验证",
+                "desc": "用新文件生成任务检查是否按记忆策略产出代码"
+              },
+              {
+                "title": "持续调优",
+                "desc": "根据命中率与遗漏点迭代记忆采集和检索策略"
+              }
+            ]
+          },
+          "captionKeywords": [
+            "AgentMemory",
+            "Cursor",
+            "MCP",
+            "一次性写很多规则",
+            "你在实践篇给了非",
+            "再通过新任务验证",
+            "常清晰的落地步骤",
+            "模型是否按偏好输"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/bullets_cursor_practice.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.551,
+              "text": "你在实践篇给了非常清晰的落"
+            },
+            {
+              "start": 2.551,
+              "end": 3.336,
+              "text": "地步骤。"
+            },
+            {
+              "start": 3.336,
+              "end": 5.888,
+              "text": "先安装AgentMemory并接入Cur"
+            },
+            {
+              "start": 5.888,
+              "end": 6.771,
+              "text": "sor MCP，"
+            },
+            {
+              "start": 6.771,
+              "end": 9.323,
+              "text": "然后把项目背景和编码偏好显"
+            },
+            {
+              "start": 9.323,
+              "end": 10.108,
+              "text": "式写入，"
+            },
+            {
+              "start": 10.108,
+              "end": 12.66,
+              "text": "再通过新任务验证模型是否按"
+            },
+            {
+              "start": 12.66,
+              "end": 13.641,
+              "text": "偏好输出。"
+            },
+            {
+              "start": 13.641,
+              "end": 16.193,
+              "text": "这样做的关键不是一次性写很"
+            },
+            {
+              "start": 16.193,
+              "end": 16.978,
+              "text": "多规则，"
+            },
+            {
+              "start": 16.978,
+              "end": 19.726,
+              "text": "而是每轮都验证“记住了什么、"
+            },
+            {
+              "start": 19.726,
+              "end": 20.903,
+              "text": "漏了什么”。"
+            }
+          ]
+        },
+        {
+          "id": "kpi_operate",
+          "type": "kpi",
+          "durationInFrames": 642,
+          "frame": {
+            "id": "kpi_operate",
+            "type": "kpi",
+            "title": "记忆系统运行阶段建议观察指标",
+            "subtitle": "先监控命中与准确，再优化性能和成本。",
+            "script": "为了让记忆系统可运营，你至少要追三类指标：检索命中率、答案准确率、平均响应延迟。命中率低通常是采集或召回问题，准确率低通常是排序和事实冲突问题，延迟高则多是检索链路过重。用这三项先定位问题，优化效率最高。",
+            "kpis": [
+              {
+                "title": "记忆命中率",
+                "value": "78%",
+                "label": "被成功检索并使用"
+              },
+              {
+                "title": "回答准确率",
+                "value": "86%",
+                "label": "含事实类问答"
+              },
+              {
+                "title": "平均延迟",
+                "value": "1.6s",
+                "label": "检索+生成端到端"
+              }
+            ],
+            "footnote": "优先固定评测集，否则指标无法横向比较。"
+          },
+          "captionKeywords": [
+            "为了让记忆系统可",
+            "你至少要追三类指",
+            "准确率低通常是排",
+            "命中率低通常是采",
+            "序和事实冲突问题",
+            "延迟高则多是检索",
+            "用这三项先定位问",
+            "优化效率最高"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/kpi_operate.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.306,
+              "text": "为了让记忆系统可运营，"
+            },
+            {
+              "start": 2.306,
+              "end": 4.402,
+              "text": "你至少要追三类指标："
+            },
+            {
+              "start": 4.402,
+              "end": 6.918,
+              "text": "检索命中率、答案准确率、"
+            },
+            {
+              "start": 6.918,
+              "end": 8.385,
+              "text": "平均响应延迟。"
+            },
+            {
+              "start": 8.385,
+              "end": 11.53,
+              "text": "命中率低通常是采集或召回问题，"
+            },
+            {
+              "start": 11.53,
+              "end": 14.256,
+              "text": "准确率低通常是排序和事实冲"
+            },
+            {
+              "start": 14.256,
+              "end": 15.094,
+              "text": "突问题，"
+            },
+            {
+              "start": 15.094,
+              "end": 17.82,
+              "text": "延迟高则多是检索链路过重。"
+            },
+            {
+              "start": 17.82,
+              "end": 19.916,
+              "text": "用这三项先定位问题，"
+            },
+            {
+              "start": 19.916,
+              "end": 21.384,
+              "text": "优化效率最高。"
+            }
+          ]
+        },
+        {
+          "id": "comparison_security_perf",
+          "type": "comparison",
+          "durationInFrames": 591,
+          "frame": {
+            "id": "comparison_security_perf",
+            "type": "comparison",
+            "title": "性能优化与隐私安全要并行推进",
+            "subtitle": "只追速度不做治理，最终会被数据风险反噬。",
+            "script": "文档在踩坑部分给了很实用的双线建议。一条线做性能优化，比如懒加载、TTL、批量写入；另一条线做安全治理，比如敏感信息过滤、本地优先存储、必要加密。很多项目只做一条线，后期不是慢就是不合规。",
+            "left": {
+              "label": "性能侧动作",
+              "points": [
+                "按需加载记忆",
+                "设置TTL分层",
+                "批量写入提速"
+              ],
+              "color": "GOLD"
+            },
+            "right": {
+              "label": "安全侧动作",
+              "points": [
+                "敏感字段脱敏",
+                "本地向量库优先",
+                "关键数据加密"
+              ],
+              "color": "GREEN"
+            },
+            "insight": "性能与安全是同一条交付链路的两端。"
+          },
+          "captionKeywords": [
+            "TTL",
+            "一条线做性能优化",
+            "了很实用的双线建",
+            "另一条线做安全治",
+            "后期不是慢就是不",
+            "很多项目只做一条",
+            "文档在踩坑部分给",
+            "比如敏感信息过滤"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/comparison_security_perf.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 2.765,
+              "text": "文档在踩坑部分给了很实用的"
+            },
+            {
+              "start": 2.765,
+              "end": 3.8289999999999997,
+              "text": "双线建议。"
+            },
+            {
+              "start": 3.8289999999999997,
+              "end": 5.744,
+              "text": "一条线做性能优化，"
+            },
+            {
+              "start": 5.744,
+              "end": 7.552,
+              "text": "比如懒加载、TTL、"
+            },
+            {
+              "start": 7.552,
+              "end": 8.616,
+              "text": "批量写入；"
+            },
+            {
+              "start": 8.616,
+              "end": 10.744,
+              "text": "另一条线做安全治理，"
+            },
+            {
+              "start": 10.744,
+              "end": 12.659,
+              "text": "比如敏感信息过滤、"
+            },
+            {
+              "start": 12.659,
+              "end": 15.212,
+              "text": "本地优先存储、必要加密。"
+            },
+            {
+              "start": 15.212,
+              "end": 17.339,
+              "text": "很多项目只做一条线，"
+            },
+            {
+              "start": 17.339,
+              "end": 19.679,
+              "text": "后期不是慢就是不合规。"
+            }
+          ]
+        },
+        {
+          "id": "hook_close",
+          "type": "hook",
+          "durationInFrames": 613,
+          "frame": {
+            "id": "hook_close",
+            "type": "hook",
+            "style": "spotlight",
+            "title": "分层记忆闭环：让Agent从会聊到会做",
+            "subtitle": "先用开箱方案跑通，再按业务目标做分层治理。",
+            "script": "最后总结一下，你这篇文档给出的最佳路径是先从AgentMemory起步，快速验证价值，再逐步补齐检索、遗忘、安全和指标治理。记忆系统真正的目标不是让助手记得更多，而是让它在关键任务上更稳定、更可控、更可复用。",
+            "list": [
+              "先跑最小可用闭环",
+              "按四层记忆分治",
+              "混合检索提升稳定性",
+              "把安全与指标前置"
+            ]
+          },
+          "captionKeywords": [
+            "AgentMemory",
+            "你这篇文档给出的",
+            "标不是让助手记得",
+            "而是让它在关键任",
+            "记忆系统真正的目",
+            "再逐步补齐检索",
+            "安全和指标治理",
+            "最佳路径是先从"
+          ],
+          "audioSrc": "studio-audio/ai_agent_memory_md_frames/hook_close.mp3",
+          "captions": [
+            {
+              "start": 0.0,
+              "end": 1.451,
+              "text": "最后总结一下，"
+            },
+            {
+              "start": 1.451,
+              "end": 4.147,
+              "text": "你这篇文档给出的最佳路径是"
+            },
+            {
+              "start": 4.147,
+              "end": 6.324,
+              "text": "先从AgentMemory起步，"
+            },
+            {
+              "start": 6.324,
+              "end": 7.775,
+              "text": "快速验证价值，"
+            },
+            {
+              "start": 7.775,
+              "end": 10.056,
+              "text": "再逐步补齐检索、遗忘、"
+            },
+            {
+              "start": 10.056,
+              "end": 11.715,
+              "text": "安全和指标治理。"
+            },
+            {
+              "start": 11.715,
+              "end": 14.41,
+              "text": "记忆系统真正的目标不是让助"
+            },
+            {
+              "start": 14.41,
+              "end": 15.654,
+              "text": "手记得更多，"
+            },
+            {
+              "start": 15.654,
+              "end": 18.557,
+              "text": "而是让它在关键任务上更稳定、"
+            },
+            {
+              "start": 18.557,
+              "end": 20.423,
+              "text": "更可控、更可复用。"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

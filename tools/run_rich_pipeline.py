@@ -12,15 +12,28 @@ run_rich_pipeline.py
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import json
+import shlex
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Rich-first 渲染入口（先做信息密度门禁）")
     parser.add_argument("--frames", required=True, help="frames.json 路径")
+    parser.add_argument(
+        "--generate-cmd",
+        required=True,
+        help="用于生成新 frames JSON 的命令，使用 {output} 占位输出文件路径",
+    )
+    parser.add_argument(
+        "--source-doc",
+        default="",
+        help="可选：源文档路径（.md/.docx/.pdf），传给 agent_pipeline 进行来源一致性硬校验。",
+    )
     parser.add_argument("--theme", default="dark", help="主题（purple/ocean/dark/light）")
     parser.add_argument("--server", default="http://localhost:8765", help="渲染服务地址")
     parser.add_argument(
@@ -90,13 +103,18 @@ def main() -> int:
     args = parse_args()
     frames_path = Path(args.frames).expanduser().resolve()
 
+    generated_frames_path = frames_path.with_name(
+        f"{frames_path.stem}_rich_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}_{uuid.uuid4().hex[:6]}{frames_path.suffix}"
+    )
+    generate_cmd = args.generate_cmd.format(output=shlex.quote(str(generated_frames_path)))
     try:
-        data = load_json(frames_path)
+        run(["bash", "-lc", generate_cmd])
+        data = load_json(generated_frames_path)
         gate_richness(data, min_frames=args.min_frames, min_type_kinds=args.min_type_kinds)
     except Exception as e:
         return fail(str(e))
 
-    validate_cmd = ["python3", "validate_frames.py", str(frames_path)]
+    validate_cmd = ["python3", "validate_frames.py", str(generated_frames_path)]
     try:
         run(validate_cmd)
     except Exception as e:
@@ -107,6 +125,8 @@ def main() -> int:
         "tools/agent_pipeline.py",
         "--frames",
         str(frames_path),
+        "--generate-cmd",
+        args.generate_cmd,
         "--engine",
         args.engine,
         "--theme",
@@ -114,6 +134,8 @@ def main() -> int:
         "--server",
         args.server,
     ]
+    if args.source_doc:
+        pipeline_cmd.extend(["--source-doc", args.source_doc])
     if args.result_file:
         pipeline_cmd.extend(["--result-file", args.result_file])
 

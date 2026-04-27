@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
+import hashlib
 import json
+import re
 import select
+import shlex
+import subprocess
 import sys
 import time
 import urllib.error
 import urllib.request
+import uuid
 from pathlib import Path
 
 # 兼容从项目根目录或 tools 目录执行
@@ -19,17 +24,120 @@ from frame_style_policy import optimize_frame_styles
 from json_sanitize import sanitize_json_file
 from quality_check import analyze_frames, auto_fix_frames
 
+METRICS_FILE_PATH = PROJECT_ROOT / "metrics" / "runs.jsonl"
+PIPELINE_STARTED_AT = 0.0
+
 
 def with_timestamp_suffix(path_str: str) -> str:
     p = Path(path_str).expanduser().resolve()
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return str(p.with_name(f"{p.stem}_{ts}{p.suffix}"))
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    token = uuid.uuid4().hex[:6]
+    return str(p.with_name(f"{p.stem}_{ts}_{token}{p.suffix}"))
+
+
+def build_run_frames_path(source_path: Path) -> Path:
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    token = uuid.uuid4().hex[:6]
+    return source_path.with_name(f"{source_path.stem}_{ts}_{token}{source_path.suffix}")
+
+
+def _generate_fresh_frames(generate_cmd_template: str, output_path: Path) -> tuple[bool, str]:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    cmd = generate_cmd_template.format(output=shlex.quote(str(output_path)))
+    proc = subprocess.run(cmd, shell=True, text=True, capture_output=True)
+    if proc.stdout.strip():
+        print(proc.stdout.rstrip())
+    if proc.returncode != 0:
+        err_text = proc.stderr.strip() or "生成命令执行失败"
+        return False, err_text
+    return True, ""
+
+
+def _looks_like_copy_cmd(cmd: str) -> bool:
+    """
+    检测“复制 JSON 伪装生成”的命令形态。
+    典型示例: cp tmp/foo.json {output}
+    """
+    s = (cmd or "").strip().lower()
+    if not s:
+        return False
+    # 允许空白变体，统一压缩后匹配。
+    s = re.sub(r"\s+", " ", s)
+    return (" cp " in f" {s} " or s.startswith("cp ")) and "{output}" in s
+
+
+def _validate_source_doc_guard(source_doc: str, generate_cmd: str) -> tuple[bool, str]:
+    """
+    来源一致性硬校验：
+    - 提供了 source_doc 时，generate_cmd 必须显式引用该文档路径。
+    - 禁止使用 cp tmp/*.json {output} 之类旧样例复制命令。
+    """
+    source_doc = (source_doc or "").strip()
+    if not source_doc:
+        return True, ""
+
+    doc_path = Path(source_doc).expanduser().resolve()
+    if not doc_path.exists():
+        return False, f"source_doc 不存在: {doc_path}"
+    if doc_path.suffix.lower() not in {".md", ".docx", ".pdf"}:
+        return False, f"source_doc 扩展名不支持: {doc_path.suffix}（仅支持 .md/.docx/.pdf）"
+
+    cmd = (generate_cmd or "").strip()
+    if not cmd:
+        return False, "缺少 generate_cmd"
+    if _looks_like_copy_cmd(cmd):
+        return False, (
+            "检测到复制命令（cp ... {output}）。"
+            "禁止用复制 JSON 伪装生成，请改为基于 source_doc 的真实生成命令。"
+        )
+    # 要求命令中显式包含 source_doc 路径，避免“只传 output”的黑盒误用。
+    if str(doc_path) not in cmd:
+        return False, (
+            "generate_cmd 未显式引用 source_doc。"
+            "请将源文档路径作为输入参数传入生成命令。"
+        )
+    return True, str(doc_path)
+
+
+def _sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def _emit_result(result: dict, result_file: str = "") -> None:
     text = json.dumps(result, ensure_ascii=False, indent=2)
     if result_file:
         Path(result_file).expanduser().resolve().write_text(text + "\n", encoding="utf-8")
+    elapsed_ms = int((time.time() - PIPELINE_STARTED_AT) * 1000) if PIPELINE_STARTED_AT else 0
+    metrics_record = {
+        "ts": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "elapsed_ms": elapsed_ms,
+        "ok": result.get("ok"),
+        "stage": result.get("stage", ""),
+        "error_code": result.get("error_code", ""),
+        "job_id": result.get("job_id", ""),
+        "source_frames_path": result.get("source_frames_path", ""),
+        "frames_path": result.get("frames_path", ""),
+        "watch_url": result.get("watch_url", ""),
+        "download_url": result.get("download_url", ""),
+    }
+    last_status = result.get("last_status")
+    if isinstance(last_status, dict):
+        metrics_record["last_status"] = {
+            "status": last_status.get("status", ""),
+            "stage": last_status.get("stage", ""),
+            "stage_label": last_status.get("stage_label", ""),
+            "progress": last_status.get("progress", 0),
+        }
+    try:
+        METRICS_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with METRICS_FILE_PATH.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(metrics_record, ensure_ascii=False) + "\n")
+    except Exception as e:
+        print(f"[agent_pipeline] metrics write failed: {e}", file=sys.stderr)
     print(text)
 
 
@@ -121,16 +229,37 @@ def _validate(frames_path: Path) -> dict:
 
 
 def main() -> int:
+    global METRICS_FILE_PATH, PIPELINE_STARTED_AT
+    PIPELINE_STARTED_AT = time.time()
     parser = argparse.ArgumentParser(
         description="Agent 统一渲染入口：校验 -> 提交渲染 -> 轮询状态"
     )
-    parser.add_argument("--frames", required=True, help="frames.json 文件路径")
+    parser.add_argument(
+        "--frames",
+        default="",
+        help="兼容参数：等价于 --output（建议改用 --output）",
+    )
+    parser.add_argument(
+        "--output",
+        default="",
+        help="新建 frames.json 的输出路径模板（默认: ./tmp/generated_frames.json）",
+    )
+    parser.add_argument(
+        "--generate-cmd",
+        required=True,
+        help="用于生成新 frames JSON 的命令，使用 {output} 占位输出文件路径",
+    )
+    parser.add_argument(
+        "--source-doc",
+        default="",
+        help="可选：源文档路径（.md/.docx/.pdf）。提供后将启用来源一致性硬校验。",
+    )
     parser.add_argument("--server", default="http://localhost:8765", help="渲染服务地址")
     parser.add_argument(
         "--engine",
-        default="auto",
+        default="remotion",
         choices=["auto", "legacy", "remotion"],
-        help="渲染引擎选择：auto/legacy/remotion（默认 auto）",
+        help="渲染引擎选择：auto/legacy/remotion（默认 remotion；仅在明确要求时使用 legacy）",
     )
     parser.add_argument(
         "--theme",
@@ -150,6 +279,11 @@ def main() -> int:
     )
     parser.add_argument("--poll-interval", type=float, default=1.5, help="轮询间隔（秒）")
     parser.add_argument("--timeout", type=int, default=900, help="总超时（秒）")
+    parser.add_argument(
+        "--metrics-file",
+        default=str(PROJECT_ROOT / "metrics" / "runs.jsonl"),
+        help="指标输出文件路径（JSONL）",
+    )
     parser.add_argument("--result-file", default="", help="可选：将结果 JSON 写入文件")
     parser.add_argument(
         "--no-timestamp-suffix",
@@ -178,13 +312,20 @@ def main() -> int:
         help="只提交任务不轮询，立即返回 job_id/watch_url",
     )
     args = parser.parse_args()
+    METRICS_FILE_PATH = Path(args.metrics_file).expanduser().resolve()
     if (not args.no_timestamp_suffix) and args.result_file:
         args.result_file = with_timestamp_suffix(args.result_file)
 
-    frames_path = Path(args.frames).expanduser().resolve()
+    output_arg = (args.output or args.frames or "").strip()
+    if not output_arg:
+        output_arg = "./tmp/generated_frames.json"
+    requested_frames_path = Path(output_arg).expanduser().resolve()
+    frames_path = build_run_frames_path(requested_frames_path)
     result = {
         "ok": False,
         "stage": "",
+        "source_doc": "",
+        "source_frames_path": str(requested_frames_path),
         "frames_path": str(frames_path),
         "job_id": "",
         "watch_url": "",
@@ -196,14 +337,74 @@ def main() -> int:
         "quality_fixes": [],
     }
 
-    if not frames_path.exists():
+    guard_ok, guard_detail = _validate_source_doc_guard(args.source_doc, args.generate_cmd)
+    if not guard_ok:
         result.update(
-            stage="validate",
-            error_code="FILE_NOT_FOUND",
-            error_message=f"找不到文件: {frames_path}",
+            stage="generate",
+            error_code="SOURCE_DOC_MISMATCH",
+            error_message=guard_detail,
         )
         _emit_result(result, args.result_file)
-        return 2
+        return 1
+    if _looks_like_copy_cmd(args.generate_cmd):
+        result.update(
+            stage="generate",
+            error_code="GENERATE_CMD_COPY_BLOCKED",
+            error_message=(
+                "generate_cmd 使用了 cp ... {output}。"
+                "该操作已被禁用，请改为真实文档生成命令。"
+            ),
+        )
+        _emit_result(result, args.result_file)
+        return 1
+    if args.source_doc:
+        result["source_doc"] = guard_detail
+        print(
+            "[agent_pipeline] source mapping:"
+            f" source_doc={guard_detail}"
+            f" -> frames_json={frames_path}"
+        )
+
+    result["stage"] = "generate"
+    generated_ok, generate_error = _generate_fresh_frames(args.generate_cmd, frames_path)
+    if not generated_ok:
+        result.update(
+            error_code="GENERATE_FAILED",
+            error_message=f"新建 frames.json 失败: {generate_error}",
+        )
+        _emit_result(result, args.result_file)
+        return 1
+
+    if not frames_path.exists():
+        result.update(
+            error_code="GENERATE_FAILED",
+            error_message=f"生成命令执行后未产出文件: {frames_path}",
+        )
+        _emit_result(result, args.result_file)
+        return 1
+
+    # 防止“新文件名 + 旧内容拷贝”的伪生成，避免文档与 JSON 不匹配。
+    # 仅在用户显式传入旧 --frames（作为基准文件）时启用该检查。
+    legacy_frames_arg = (args.frames or "").strip()
+    if legacy_frames_arg:
+        legacy_frames_path = Path(legacy_frames_arg).expanduser().resolve()
+    else:
+        legacy_frames_path = None
+    if legacy_frames_path and legacy_frames_path.exists() and legacy_frames_path != frames_path:
+        try:
+            if _sha256_file(legacy_frames_path) == _sha256_file(frames_path):
+                result.update(
+                    stage="generate",
+                    error_code="GENERATE_STALE_COPY",
+                    error_message=(
+                        "检测到生成结果与旧 --frames 文件内容完全一致。"
+                        "请使用基于源文档的生成命令，而不是直接复制旧 JSON。"
+                    ),
+                )
+                _emit_result(result, args.result_file)
+                return 1
+        except Exception as e:
+            print(f"[agent_pipeline] stale-copy check skipped: {e}", file=sys.stderr)
 
     result["stage"] = "validate"
     validation = _validate(frames_path)

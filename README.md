@@ -46,20 +46,20 @@ uvicorn render_server:app --host 0.0.0.0 --port 8765
 - 状态：`GET /status/{job_id}`
 - 下载：`GET /download/{job_id}`
 
-### 3.3 渲染引擎选择（legacy / remotion / auto）
+### 3.3 渲染引擎选择（默认 Remotion Studio）
 
-服务支持双引擎路由：
+服务支持双引擎路由（含 `auto` 兼容模式），但当前默认工作流建议如下：
 
-- `legacy`：当前稳定链路（`vlog_audio.py -> vlog_render.py -> vlog_merge.py`）
-- `remotion`：Remotion 渲染链路（实验性）
-- `auto`：优先 Remotion（健康检查通过时），否则自动回退 legacy
+- 默认：`remotion`，并优先走 **Remotion Studio 预览**（先看时间线效果，再决定是否导出 MP4）。
+- `legacy`：仅在你明确要求“legacy 视频 / legacy 工作流”时使用（`vlog_audio.py -> vlog_render.py -> vlog_merge.py`）。
+- `auto`：历史兼容模式（优先 Remotion，异常时回退 legacy）。
 
-可通过环境变量控制：
+可通过环境变量控制（如需固定默认引擎，建议设置为 `remotion`）：
 
 ```bash
-export RENDER_ENGINE=auto
+export RENDER_ENGINE=remotion
 export REMOTION_ENABLED=true
-export REMOTION_FAILOVER_TO_LEGACY=true
+export REMOTION_FAILOVER_TO_LEGACY=false
 export REMOTION_PROJECT_DIR=/path/to/remotion-project
 export REMOTION_COMPOSITION_ID=SkillDemo
 ```
@@ -121,7 +121,13 @@ curl -X POST http://localhost:8765/render \
 python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json
 ```
 
-指定引擎：
+默认建议：不传 `--engine` 时按 **Remotion + Studio 预览优先** 执行。  
+仅在你明确要 legacy 时再显式指定 `--engine legacy`。
+
+默认且强制将每次执行结果追加到 `metrics/runs.jsonl`（JSONL）。  
+可通过 `--metrics-file` 指定输出位置。
+
+手动指定引擎：
 
 ```bash
 python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json --engine remotion
@@ -180,6 +186,12 @@ python3 tools/agent_pipeline.py --frames ./tmp/day7_frames.json --result-file ./
 - `download_url`：下载地址
 - `last_status`：轮询到的最新任务状态（含 `stage/progress/stage_label`）
 - `error_code/error_message/validation_errors`：失败原因与修复线索
+
+汇总埋点统计（成功率、平均耗时、P95、失败码 TopN）：
+
+```bash
+python3 tools/metrics_report.py
+```
 
 ## 5. 离线分步命令（不经过 HTTP）
 

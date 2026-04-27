@@ -142,6 +142,24 @@ python3 tools/agent_pipeline.py --frames <json_file_path>
 - 禁止手写多条零散 `curl` + 人工轮询作为默认流程；应优先使用统一入口脚本返回结构化结果。
 - 若入口脚本返回失败，需基于 `error_code/error_message/validation_errors` 给出下一步修复动作，不得直接宣称完成。
 
+## 来源一致性硬规则（强制）
+
+- 当用户明确提供“源文档路径”（如 `.md/.docx/.pdf`）并要求“自动执行生成视频链路”时，**禁止**直接复用任何历史 `tmp/*.json` 作为输入。
+- 必须先基于该源文档重新生成新的 `frames.json`，文件名需包含与源文档相关的标识，避免与历史样例混淆。
+- 在进入渲染前，必须回显本次链路映射：
+  - `source_doc = <用户给定文档路径>`
+  - `frames_json = <本次新生成路径>`
+  - `remotion_props = <本次输出路径>`
+- 若检测到生成命令实际读取的是旧样例 JSON（如 `cp tmp/*.json {output}`），应直接判定为不合规并中止执行，提示“来源不一致，需要基于源文档重生”。
+
+## 渲染引擎默认策略（强制）
+
+- 未被用户特别指定渲染引擎时，默认使用 **Remotion** 路线，不主动走 legacy。
+- 默认交付形态为 **Studio 预览**：先同步 `studio-active-props.json`，再在 `remotion-demo` 中启动 Studio 供用户直接预览时间线。
+- 在默认策略下，不要求首轮就生成 legacy 成片；优先保证 Remotion Studio 可预览、可迭代。
+- 仅当用户明确提出“legacy 视频 / 走 legacy 工作流 / 用 legacy 引擎”时，才切换到 legacy 链路执行。
+- 若用户表述含糊（未明确提 legacy），按 Remotion 默认执行，并在回显中说明“当前按 Remotion Studio 预览流程执行”。
+
 ## 交付附加输出（成功后必给）
 
 - 当且仅当 JSON 通过校验后，必须额外向用户返回两项文档信息：

@@ -11,6 +11,7 @@ import json
 import shlex
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 from frame_expander import expand_long_frames
 from frame_style_policy import optimize_frame_styles
@@ -65,8 +66,9 @@ def run_cmd(cmd: str) -> subprocess.CompletedProcess:
 
 
 def with_timestamp_suffix(path: Path) -> Path:
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return path.with_name(f"{path.stem}_{ts}{path.suffix}")
+    ts = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    token = uuid.uuid4().hex[:6]
+    return path.with_name(f"{path.stem}_{ts}_{token}{path.suffix}")
 
 
 def main() -> int:

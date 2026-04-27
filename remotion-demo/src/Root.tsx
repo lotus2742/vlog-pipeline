@@ -3,12 +3,21 @@ import type { CalculateMetadataFunction } from "remotion";
 import { Composition } from "remotion";
 import { MyComposition } from "./Composition";
 import studioActivePropsUntyped from "./studio-active-props.json";
+import studioCompositionsUntyped from "./studio-compositions.json";
 import {
   type VlogFramesProps,
   VlogFramesComposition,
 } from "./vlog/VlogFramesComposition";
 
 const studioActiveProps = studioActivePropsUntyped as VlogFramesProps;
+type StudioCompositionEntry = {
+  id: string;
+  label?: string;
+  props: VlogFramesProps;
+};
+const studioCompositions = (studioCompositionsUntyped as StudioCompositionEntry[]).filter(
+  (item) => item && typeof item.id === "string" && item.id.trim() && item.props,
+);
 
 const defaultVlogSlides: VlogFramesProps["slides"] = [
   {
@@ -94,6 +103,19 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={studioActiveProps}
         calculateMetadata={calculateVlogFramesMetadata}
       />
+      {studioCompositions.map((entry) => (
+        <Composition
+          key={entry.id}
+          id={entry.id}
+          component={VlogFramesComposition}
+          durationInFrames={300}
+          fps={30}
+          width={1280}
+          height={720}
+          defaultProps={entry.props}
+          calculateMetadata={calculateVlogFramesMetadata}
+        />
+      ))}
     </>
   );
 };

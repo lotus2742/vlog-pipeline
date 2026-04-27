@@ -1,967 +1,937 @@
 {
   "meta": {
-    "topic": "LLM进阶知识与实践",
-    "voice": "zh-CN-YunxiNeural",
+    "topic": "AI Agent记忆管理：从理论到实践",
+    "voice": "zh-CN-XiaoyiNeural",
     "rate": "+5%",
-    "theme": "dark",
-    "bgStyle": "cinematic"
+    "theme": "light"
   },
   "slides": [
     {
       "id": "hook_open",
       "type": "hook",
-      "durationInFrames": 585,
+      "durationInFrames": 671,
       "frame": {
         "id": "hook_open",
         "type": "hook",
-        "title": "参数检索架构协同提升稳定性",
-        "subtitle": "先定参数策略，再补检索与监控闭环。",
-        "script": "这篇文档真正的重点，不是单个技巧，而是一整套工程闭环：采样参数要按任务分层，检索链路要做融合与重排，Agent 要有状态与兜底，最后再用监控和成本策略持续收敛。你照这个顺序做，效果和稳定性会一起提升。"
-      },
-      "captionKeywords": [
-        "效果和稳定性会一",
-        "最后再用监控和成",
-        "检索链路要做融合",
-        "而是一整套工程闭",
-        "这篇文档真正的重",
-        "采样参数要按任务",
-        "你照这个顺序做",
-        "本策略持续收敛"
-      ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/hook_open.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.009,
-          "text": "这篇文档真正的重点，"
-        },
-        {
-          "start": 2.009,
-          "end": 3.415,
-          "text": "不是单个技巧，"
-        },
-        {
-          "start": 3.415,
-          "end": 5.424,
-          "text": "而是一整套工程闭环："
-        },
-        {
-          "start": 5.424,
-          "end": 7.634,
-          "text": "采样参数要按任务分层，"
-        },
-        {
-          "start": 7.634,
-          "end": 10.045,
-          "text": "检索链路要做融合与重排，"
-        },
-        {
-          "start": 10.045,
-          "end": 12.255,
-          "text": "Agent 要有状态与兜底，"
-        },
-        {
-          "start": 12.255,
-          "end": 14.867,
-          "text": "最后再用监控和成本策略持续"
-        },
-        {
-          "start": 14.867,
-          "end": 15.469,
-          "text": "收敛。"
-        },
-        {
-          "start": 15.469,
-          "end": 17.077,
-          "text": "你照这个顺序做，"
-        },
-        {
-          "start": 17.077,
-          "end": 19.487,
-          "text": "效果和稳定性会一起提升。"
-        }
-      ]
-    },
-    {
-      "id": "sampling_matrix",
-      "type": "cards",
-      "durationInFrames": 575,
-      "frame": {
-        "id": "sampling_matrix",
-        "type": "cards",
-        "title": "采样参数要成组管理",
-        "script": "很多人只改 temperature，结果同一问题每次风格都不一样。更稳的方案是把 temperature、top-p、top-k 作为一组配置，并按场景预设。代码生成、摘要和翻译要偏低随机；创意写作可以提高温度，但仍要设边界，避免跑题。",
-        "cards": [
-          {
-            "title": "代码生成",
-            "desc": "温度低，优先确定性；减少语法漂移与结构发散。",
-            "color": "CYAN"
-          },
-          {
-            "title": "客服对话",
-            "desc": "中低随机，兼顾自然表达与事实准确。",
-            "color": "GREEN"
-          },
-          {
-            "title": "创意场景",
-            "desc": "提高温度与候选范围，但保留格式约束。",
-            "color": "PURPLE_L"
-          },
-          {
-            "title": "摘要翻译",
-            "desc": "强调忠实原文，优先低温与低发散。",
-            "color": "GOLD"
-          }
-        ]
-      },
-      "captionKeywords": [
-        "temperature",
-        "top-k",
-        "top-p",
-        "创意写作可以提高",
-        "摘要和翻译要偏低",
-        "结果同一问题每次",
-        "更稳的方案是把",
-        "但仍要设边界"
-      ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/sampling_matrix.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.286,
-          "text": "很多人只改 temperature，"
-        },
-        {
-          "start": 2.286,
-          "end": 5.145,
-          "text": "结果同一问题每次风格都不一样。"
-        },
-        {
-          "start": 5.145,
-          "end": 7.813,
-          "text": "更稳的方案是把 temperature、"
-        },
-        {
-          "start": 7.813,
-          "end": 8.48,
-          "text": "top-p、"
-        },
-        {
-          "start": 8.48,
-          "end": 10.385,
-          "text": "top-k 作为一组配置，"
-        },
-        {
-          "start": 10.385,
-          "end": 11.719,
-          "text": "并按场景预设。"
-        },
-        {
-          "start": 11.719,
-          "end": 12.672,
-          "text": "代码生成、"
-        },
-        {
-          "start": 12.672,
-          "end": 14.768,
-          "text": "摘要和翻译要偏低随机；"
-        },
-        {
-          "start": 14.768,
-          "end": 16.865,
-          "text": "创意写作可以提高温度，"
-        },
-        {
-          "start": 16.865,
-          "end": 19.152,
-          "text": "但仍要设边界，避免跑题。"
-        }
-      ]
-    },
-    {
-      "id": "context_opt",
-      "type": "bullets",
-      "durationInFrames": 597,
-      "frame": {
-        "id": "context_opt",
-        "type": "bullets",
-        "title": "上下文窗口要做主动压缩",
-        "script": "大窗口不等于高质量。输入太长会抬高成本，还会稀释关键信号。文档里给的实操是三步：保留系统提示和核心规则，提炼最近轮次的用户意图，再压缩历史重复内容。RAG 场景只保留与问题相关的段落，别整篇塞进来。",
-        "items": [
-          {
-            "title": "保留硬约束",
-            "desc": "系统提示、输出格式、边界条件必须原样保留。"
-          },
-          {
-            "title": "提炼近期意图",
-            "desc": "优先保留最近对话中的任务目标与状态变化。"
-          },
-          {
-            "title": "压缩重复历史",
-            "desc": "合并同类内容，减少无效 token 占用。"
-          },
-          {
-            "title": "RAG按相关截取",
-            "desc": "只放相关段落，不把整份文档直接灌入上下文。"
-          }
-        ]
-      },
-      "captionKeywords": [
-        "RAG",
-        "保留系统提示和核",
-        "再压缩历史重复内",
-        "场景只保留与问题",
-        "大窗口不等于高质",
-        "提炼最近轮次的用",
-        "文档里给的实操是",
-        "输入太长会抬高成"
-      ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/context_opt.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.048,
-          "text": "大窗口不等于高质量。"
-        },
-        {
-          "start": 2.048,
-          "end": 4.097,
-          "text": "输入太长会抬高成本，"
-        },
-        {
-          "start": 4.097,
-          "end": 5.941,
-          "text": "还会稀释关键信号。"
-        },
-        {
-          "start": 5.941,
-          "end": 8.194,
-          "text": "文档里给的实操是三步："
-        },
-        {
-          "start": 8.194,
-          "end": 10.653,
-          "text": "保留系统提示和核心规则，"
-        },
-        {
-          "start": 10.653,
-          "end": 13.111,
-          "text": "提炼最近轮次的用户意图，"
-        },
-        {
-          "start": 13.111,
-          "end": 15.16,
-          "text": "再压缩历史重复内容。"
-        },
-        {
-          "start": 15.16,
-          "end": 17.823,
-          "text": "RAG 场景只保留与问题相关的"
-        },
-        {
-          "start": 17.823,
-          "end": 18.437,
-          "text": "段落，"
-        },
-        {
-          "start": 18.437,
-          "end": 19.871,
-          "text": "别整篇塞进来。"
-        }
-      ]
-    },
-    {
-      "id": "rag_upgrade",
-      "type": "comparison",
-      "durationInFrames": 544,
-      "frame": {
-        "id": "rag_upgrade",
-        "type": "comparison",
-        "title": "RAG进阶关键是检索质量",
-        "script": "基础 RAG 常见问题是召回不准。进阶做法是语义分块或递归分块，再把向量检索和关键词检索做融合，最后重排序。这样能减少答非所问，也能避免模型只抓到语义相近但业务无关的片段。",
-        "left": {
-          "label": "基础RAG",
-          "color": "ORANGE",
-          "points": [
-            "固定切块容易切断语义",
-            "仅向量检索，精确词命中弱",
-            "缺少重排，噪声片段上榜"
-          ]
-        },
-        "right": {
-          "label": "进阶RAG",
-          "color": "CYAN",
-          "points": [
-            "语义或递归分块保结构",
-            "向量+关键词混合召回",
-            "RRF融合后再重排序生成"
-          ]
-        },
-        "insight": "先把检索做准，再讨论生成文风。"
-      },
-      "captionKeywords": [
-        "RAG",
-        "也能避免模型只抓",
-        "再把向量检索和关",
-        "到语义相近但业务",
-        "常见问题是召回不",
-        "这样能减少答非所",
-        "进阶做法是语义分",
-        "键词检索做融合"
-      ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/rag_upgrade.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 3.146,
-          "text": "基础 RAG 常见问题是召回不准。"
-        },
-        {
-          "start": 3.146,
-          "end": 6.401,
-          "text": "进阶做法是语义分块或递归分块，"
-        },
-        {
-          "start": 6.401,
-          "end": 9.222,
-          "text": "再把向量检索和关键词检索做"
-        },
-        {
-          "start": 9.222,
-          "end": 9.873,
-          "text": "融合，"
-        },
-        {
-          "start": 9.873,
-          "end": 11.175,
-          "text": "最后重排序。"
-        },
-        {
-          "start": 11.175,
-          "end": 13.345,
-          "text": "这样能减少答非所问，"
-        },
-        {
-          "start": 13.345,
-          "end": 16.166,
-          "text": "也能避免模型只抓到语义相近"
-        },
-        {
-          "start": 16.166,
-          "end": 18.12,
-          "text": "但业务无关的片段。"
-        }
-      ]
-    },
-    {
-      "id": "function_calling",
-      "type": "cards",
-      "durationInFrames": 561,
-      "frame": {
-        "id": "function_calling",
-        "type": "cards",
-        "title": "工具调用设计决定可控性",
-        "script": "Function Calling 能力强不强，不在模型，而在你工具协议设计得是否清晰。参数要有枚举、默认值和边界，返回要标准化；同时要限制调用深度，防止嵌套死循环。工具选择可以先精确匹配，再做语义相似匹配。",
-        "cards": [
-          {
-            "title": "参数边界",
-            "desc": "字段类型、取值范围、默认值都要写清楚。",
-            "color": "CYAN"
-          },
-          {
-            "title": "结果标准化",
-            "desc": "统一 success/error 结构，方便链路回放和重试。",
-            "color": "GREEN"
-          },
-          {
-            "title": "深度限制",
-            "desc": "限制嵌套调用层级，避免工具反复互调卡死。",
-            "color": "RED"
-          }
-        ]
-      },
-      "captionKeywords": [
-        "Function",
-        "Calling",
-        "再做语义相似匹配",
-        "同时要限制调用深",
-        "工具选择可以先精",
-        "而在你工具协议设",
-        "防止嵌套死循环",
-        "参数要有枚举"
-      ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/function_calling.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.868,
-          "text": "Function Calling 能力强不强，"
-        },
-        {
-          "start": 2.868,
-          "end": 3.857,
-          "text": "不在模型，"
-        },
-        {
-          "start": 3.857,
-          "end": 6.825,
-          "text": "而在你工具协议设计得是否清晰。"
-        },
-        {
-          "start": 6.825,
-          "end": 8.21,
-          "text": "参数要有枚举、"
-        },
-        {
-          "start": 8.21,
-          "end": 9.595,
-          "text": "默认值和边界，"
-        },
-        {
-          "start": 9.595,
-          "end": 10.98,
-          "text": "返回要标准化；"
-        },
-        {
-          "start": 10.98,
-          "end": 12.958,
-          "text": "同时要限制调用深度，"
-        },
-        {
-          "start": 12.958,
-          "end": 14.541,
-          "text": "防止嵌套死循环。"
-        },
-        {
-          "start": 14.541,
-          "end": 16.915,
-          "text": "工具选择可以先精确匹配，"
-        },
-        {
-          "start": 16.915,
-          "end": 18.696,
-          "text": "再做语义相似匹配。"
-        }
-      ]
-    },
-    {
-      "id": "agent_architecture",
-      "type": "comparison",
-      "durationInFrames": 512,
-      "frame": {
-        "id": "agent_architecture",
-        "type": "comparison",
-        "title": "单Agent与多Agent如何取舍",
-        "script": "简单任务用单 Agent，链路短、延迟低。复杂任务用多 Agent 协同，由主管做任务拆解、分发与汇总。关键点是共享状态和统一回传协议，不然不同 Agent 会给出冲突结论，最后无法落地。",
-        "left": {
-          "label": "单Agent",
-          "color": "GREEN",
-          "points": [
-            "适合固定流程与简单问答",
-            "实现成本低，延迟更可控",
-            "维护简单，排障路径短"
-          ]
-        },
-        "right": {
-          "label": "多Agent",
-          "color": "PURPLE_L",
-          "points": [
-            "适合复杂拆解与并行处理",
-            "需主管协调与共享状态",
-            "更依赖协议与观测体系"
-          ]
-        },
-        "insight": "先单体跑稳，再按瓶颈扩成多Agent。"
-      },
-      "captionKeywords": [
-        "关键点是共享状态",
-        "由主管做任务拆解",
-        "会给出冲突结论",
-        "和统一回传协议",
-        "复杂任务用多",
-        "最后无法落地",
-        "简单任务用单",
-        "分发与汇总"
-      ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/agent_architecture.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.028,
-          "text": "简单任务用单 Agent，"
-        },
-        {
-          "start": 2.028,
-          "end": 3.651,
-          "text": "链路短、延迟低。"
-        },
-        {
-          "start": 3.651,
-          "end": 6.187,
-          "text": "复杂任务用多 Agent 协同，"
-        },
-        {
-          "start": 6.187,
-          "end": 8.012,
-          "text": "由主管做任务拆解、"
-        },
-        {
-          "start": 8.012,
-          "end": 9.23,
-          "text": "分发与汇总。"
-        },
-        {
-          "start": 9.23,
-          "end": 11.867,
-          "text": "关键点是共享状态和统一回传"
-        },
-        {
-          "start": 11.867,
-          "end": 12.475,
-          "text": "协议，"
-        },
-        {
-          "start": 12.475,
-          "end": 15.011,
-          "text": "不然不同 Agent 会给出冲突"
-        },
-        {
-          "start": 15.011,
-          "end": 15.619,
-          "text": "结论，"
-        },
-        {
-          "start": 15.619,
-          "end": 17.039,
-          "text": "最后无法落地。"
-        }
-      ]
-    },
-    {
-      "id": "state_memory",
-      "type": "bullets",
-      "durationInFrames": 582,
-      "frame": {
-        "id": "state_memory",
-        "type": "bullets",
-        "title": "状态管理是稳定性的底座",
-        "script": "文档强调会话状态和跨会话记忆都要做。会话内要定期快照，保留关键变量和最近消息；跨会话要抽取用户实体与偏好，用向量检索回填上下文。这样用户下次回来，系统不会像第一次见面那样重头开始。",
-        "items": [
-          {
-            "title": "会话快照",
-            "desc": "长对话定期保存，防止中断后状态丢失。"
-          },
-          {
-            "title": "增量更新",
-            "desc": "仅追加新消息，避免全量重写导致性能抖动。"
-          },
-          {
-            "title": "跨会话记忆",
-            "desc": "抽取用户偏好与历史实体，按查询相关回填。"
-          },
-          {
-            "title": "历史压缩",
-            "desc": "老消息摘要化，保留决策线索与近期上下文。"
-          }
-        ]
-      },
-      "captionKeywords": [
-        "会话内要定期快照",
-        "保留关键变量和最",
-        "和跨会话记忆都要",
-        "文档强调会话状态",
-        "用向量检索回填上",
-        "系统不会像第一次",
-        "见面那样重头开始",
-        "跨会话要抽取用户"
-      ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/state_memory.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.801,
-          "text": "文档强调会话状态和跨会话记"
-        },
-        {
-          "start": 2.801,
-          "end": 3.878,
-          "text": "忆都要做。"
-        },
-        {
-          "start": 3.878,
-          "end": 5.817,
-          "text": "会话内要定期快照，"
-        },
-        {
-          "start": 5.817,
-          "end": 8.403,
-          "text": "保留关键变量和最近消息；"
-        },
-        {
-          "start": 8.403,
-          "end": 11.419,
-          "text": "跨会话要抽取用户实体与偏好，"
-        },
-        {
-          "start": 11.419,
-          "end": 13.789,
-          "text": "用向量检索回填上下文。"
-        },
-        {
-          "start": 13.789,
-          "end": 15.729,
-          "text": "这样用户下次回来，"
-        },
-        {
-          "start": 15.729,
-          "end": 18.53,
-          "text": "系统不会像第一次见面那样重"
-        },
-        {
-          "start": 18.53,
-          "end": 19.391,
-          "text": "头开始。"
-        }
-      ]
-    },
-    {
-      "id": "risk_control",
-      "type": "quote",
-      "durationInFrames": 628,
-      "frame": {
-        "id": "risk_control",
-        "type": "quote",
-        "title": "高风险操作必须人机协作",
-        "quote": "在关键场景下，完全依赖AI可能存在风险，这时就需要人机协作。",
-        "attribution": "《LLM进阶知识与实践》人机协作章节",
-        "script": "文档原话是“在关键场景下，完全依赖AI可能存在风险，这时就需要人机协作”。落到执行层面，就是删用户、退款、敏感数据访问、系统配置修改都必须人工复核。再加置信度阈值，低于0.7自动转人工，能提前拦住事故成本。"
+        "style": "spotlight",
+        "title": "记忆分层机制：突破上下文窗口上限",
+        "subtitle": "先做四层记忆分工，再接检索与遗忘策略。",
+        "script": "先说结论，AI 助手记不住事，不是模型笨，而是上下文窗口天生有限。你这篇文档给出的核心做法是记忆分层：工作记忆负责当前对话，短期记忆保留最近任务，长期记忆和图记忆负责沉淀事实与关系。把这套机制落地后，助手才能跨会话连续工作。"
       },
       "captionKeywords": [
         "AI",
-        "系统配置修改都必",
-        "能提前拦住事故成",
-        "这时就需要人机协",
-        "再加置信度阈值",
-        "可能存在风险",
-        "在关键场景下",
-        "敏感数据访问"
+        "你这篇文档给出的",
+        "助手才能跨会话连",
+        "工作记忆负责当前",
+        "把这套机制落地后",
+        "核心做法是记忆分",
+        "短期记忆保留最近",
+        "而是上下文窗口天"
       ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/risk_control.mp3",
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/hook_open.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.703,
-          "text": "文档原话是“在关键场景下，"
+          "end": 1.011,
+          "text": "先说结论，"
         },
         {
-          "start": 2.703,
-          "end": 5.199,
-          "text": "完全依赖AI可能存在风险，"
+          "start": 1.011,
+          "end": 2.729,
+          "text": "AI 助手记不住事，"
         },
         {
-          "start": 5.199,
-          "end": 7.487,
-          "text": "这时就需要人机协作”。"
+          "start": 2.729,
+          "end": 3.943,
+          "text": "不是模型笨，"
         },
         {
-          "start": 7.487,
-          "end": 10.192,
-          "text": "落到执行层面，就是删用户、"
+          "start": 3.943,
+          "end": 6.369,
+          "text": "而是上下文窗口天生有限。"
         },
         {
-          "start": 10.192,
-          "end": 12.272,
-          "text": "退款、敏感数据访问、"
+          "start": 6.369,
+          "end": 8.998,
+          "text": "你这篇文档给出的核心做法是"
         },
         {
-          "start": 12.272,
-          "end": 15.184,
-          "text": "系统配置修改都必须人工复核。"
+          "start": 8.998,
+          "end": 10.009,
+          "text": "记忆分层："
         },
         {
-          "start": 15.184,
-          "end": 16.848,
-          "text": "再加置信度阈值，"
+          "start": 10.009,
+          "end": 12.233,
+          "text": "工作记忆负责当前对话，"
         },
         {
-          "start": 16.848,
-          "end": 18.824,
-          "text": "低于0.7自动转人工，"
+          "start": 12.233,
+          "end": 14.457,
+          "text": "短期记忆保留最近任务，"
         },
         {
-          "start": 18.824,
-          "end": 20.903,
-          "text": "能提前拦住事故成本。"
+          "start": 14.457,
+          "end": 17.086,
+          "text": "长期记忆和图记忆负责沉淀事"
+        },
+        {
+          "start": 17.086,
+          "end": 18.097,
+          "text": "实与关系。"
+        },
+        {
+          "start": 18.097,
+          "end": 19.917,
+          "text": "把这套机制落地后，"
+        },
+        {
+          "start": 19.917,
+          "end": 22.344,
+          "text": "助手才能跨会话连续工作。"
         }
       ]
     },
     {
-      "id": "perf_cost",
-      "type": "kpi",
-      "durationInFrames": 514,
-      "frame": {
-        "id": "perf_cost",
-        "type": "kpi",
-        "title": "性能成本优化要量化执行",
-        "script": "文档给的是可量化策略，不是口号。先做 Prompt 压缩和输出长度控制，再做模型路由和缓存命中，最后看延迟指标和日成本阈值触发自动降级。你只要把这些指标接上告警，成本失控会明显减少。",
-        "kpis": [
-          {
-            "title": "Prompt压缩",
-            "value": "15-30%",
-            "label": "节省区间",
-            "unit": "token"
-          },
-          {
-            "title": "输出长度控制",
-            "value": "20-40%",
-            "label": "节省区间",
-            "unit": "cost"
-          },
-          {
-            "title": "模型降级",
-            "value": "50-80%",
-            "label": "简单任务节省",
-            "unit": "cost"
-          },
-          {
-            "title": "缓存命中",
-            "value": "30-60%",
-            "label": "重复请求收益",
-            "unit": "cost"
-          }
-        ],
-        "trend_title": "优化优先级",
-        "trend_points": [
-          "先压缩",
-          "再路由",
-          "后缓存",
-          "接告警闭环"
-        ]
-      },
-      "captionKeywords": [
-        "Prompt",
-        "你只要把这些指标",
-        "再做模型路由和缓",
-        "压缩和输出长度控",
-        "成本失控会明显减",
-        "文档给的是可量化",
-        "日成本阈值触发自",
-        "最后看延迟指标和"
-      ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/perf_cost.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.163,
-          "text": "文档给的是可量化策略，"
-        },
-        {
-          "start": 2.163,
-          "end": 3.147,
-          "text": "不是口号。"
-        },
-        {
-          "start": 3.147,
-          "end": 5.704,
-          "text": "先做 Prompt 压缩和输出长度"
-        },
-        {
-          "start": 5.704,
-          "end": 6.294,
-          "text": "控制，"
-        },
-        {
-          "start": 6.294,
-          "end": 8.654,
-          "text": "再做模型路由和缓存命中，"
-        },
-        {
-          "start": 8.654,
-          "end": 11.211,
-          "text": "最后看延迟指标和日成本阈值"
-        },
-        {
-          "start": 11.211,
-          "end": 12.588,
-          "text": "触发自动降级。"
-        },
-        {
-          "start": 12.588,
-          "end": 15.145,
-          "text": "你只要把这些指标接上告警，"
-        },
-        {
-          "start": 15.145,
-          "end": 17.111,
-          "text": "成本失控会明显减少。"
-        }
-      ]
-    },
-    {
-      "id": "pitfalls",
+      "id": "cards_core_questions",
       "type": "cards",
-      "durationInFrames": 546,
+      "durationInFrames": 592,
       "frame": {
-        "id": "pitfalls",
+        "id": "cards_core_questions",
         "type": "cards",
-        "title": "踩坑清单与修复动作",
-        "script": "最后这一段最值钱：上下文稀释、Prompt 注入、函数调用死循环、检索不准、输出格式错误、成本失控，这些坑都给了修复思路。你可以把它直接变成上线前检查单，每次发版逐条过，稳定性会明显提升。",
+        "style": "grid",
+        "title": "记忆系统的四个设计问题",
+        "subtitle": "先定义边界，再做实现，避免只存数据不解决问题。",
+        "script": "文档把复杂问题拆成四个工程问题：记什么、怎么存、怎么查、怎么忘。你可以按这个顺序实现，先定义采集规则，再选存储结构，再定检索策略，最后补遗忘策略。这样做的好处是每一层都可独立迭代，不会一改全崩。",
         "cards": [
           {
-            "title": "上下文稀释",
-            "desc": "定期总结会话，注入关键状态，必要时重置长对话。",
-            "color": "ORANGE"
+            "title": "记什么",
+            "desc": "采集主动偏好、被动事实、以及记忆管理本身的元信息",
+            "color": "CYAN"
           },
           {
-            "title": "Prompt注入",
-            "desc": "做输入验证、指令隔离和权限分层，避免被劫持。",
-            "color": "RED"
+            "title": "怎么存",
+            "desc": "文本、结构化关系、向量三种存储并用，兼顾灵活与检索",
+            "color": "GOLD"
           },
           {
-            "title": "调用死循环",
-            "desc": "限制调用深度并缓存结果，增加前置条件检查。",
+            "title": "怎么查",
+            "desc": "精确检索与语义检索混合，先召回再排序提升准确性",
             "color": "PURPLE_L"
           },
           {
-            "title": "格式不稳定",
-            "desc": "强制结构化输出并在后处理阶段做解析校验。",
-            "color": "CYAN"
+            "title": "怎么忘",
+            "desc": "结合TTL、LRU和重要性评分，让记忆可控而不是无限膨胀",
+            "color": "GREEN"
           }
         ]
       },
       "captionKeywords": [
-        "Prompt",
-        "你可以把它直接变",
-        "最后这一段最值钱",
-        "稳定性会明显提升",
-        "这些坑都给了修复",
-        "函数调用死循环",
-        "成上线前检查单",
-        "每次发版逐条过"
+        "一层都可独立迭代",
+        "你可以按这个顺序",
+        "文档把复杂问题拆",
+        "这样做的好处是每",
+        "先定义采集规则",
+        "成四个工程问题",
+        "最后补遗忘策略",
+        "不会一改全崩"
       ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/pitfalls.mp3",
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/cards_core_questions.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 1.8090000000000002,
-          "text": "最后这一段最值钱："
+          "end": 2.643,
+          "text": "文档把复杂问题拆成四个工程"
         },
         {
-          "start": 1.8090000000000002,
-          "end": 4.321,
-          "text": "上下文稀释、Prompt 注入、"
+          "start": 2.643,
+          "end": 3.254,
+          "text": "问题："
         },
         {
-          "start": 4.321,
-          "end": 6.9350000000000005,
-          "text": "函数调用死循环、检索不准、"
+          "start": 3.254,
+          "end": 5.694,
+          "text": "记什么、怎么存、怎么查、"
         },
         {
-          "start": 6.9350000000000005,
-          "end": 9.347,
-          "text": "输出格式错误、成本失控，"
+          "start": 5.694,
+          "end": 6.508,
+          "text": "怎么忘。"
         },
         {
-          "start": 9.347,
-          "end": 11.558,
-          "text": "这些坑都给了修复思路。"
+          "start": 6.508,
+          "end": 8.745,
+          "text": "你可以按这个顺序实现，"
         },
         {
-          "start": 11.558,
-          "end": 14.171,
-          "text": "你可以把它直接变成上线前检"
+          "start": 8.745,
+          "end": 10.372,
+          "text": "先定义采集规则，"
         },
         {
-          "start": 14.171,
-          "end": 14.774000000000001,
-          "text": "查单，"
+          "start": 10.372,
+          "end": 11.796,
+          "text": "再选存储结构，"
         },
         {
-          "start": 14.774000000000001,
-          "end": 16.382,
-          "text": "每次发版逐条过，"
+          "start": 11.796,
+          "end": 13.219,
+          "text": "再定检索策略，"
         },
         {
-          "start": 16.382,
-          "end": 18.192,
-          "text": "稳定性会明显提升。"
+          "start": 13.219,
+          "end": 14.846,
+          "text": "最后补遗忘策略。"
+        },
+        {
+          "start": 14.846,
+          "end": 17.49,
+          "text": "这样做的好处是每一层都可独"
+        },
+        {
+          "start": 17.49,
+          "end": 18.304,
+          "text": "立迭代，"
+        },
+        {
+          "start": 18.304,
+          "end": 19.728,
+          "text": "不会一改全崩。"
+        }
+      ]
+    },
+    {
+      "id": "bullets_memory_levels",
+      "type": "bullets",
+      "durationInFrames": 757,
+      "frame": {
+        "id": "bullets_memory_levels",
+        "type": "bullets",
+        "title": "四层记忆如何各司其职",
+        "subtitle": "按生命周期分层，能明显降低上下文塞满导致的失真。",
+        "script": "你文档里的四层记忆其实非常工程化。工作记忆只管当前任务，短期记忆保存最近事件，长期记忆沉淀稳定事实，图记忆负责实体关系。实操时最容易踩坑的是把所有信息都塞进当前上下文，这会让模型噪声上升。正确做法是按层回填，只加载当前问题真正需要的那一部分。",
+        "items": [
+          {
+            "title": "工作记忆",
+            "desc": "只保留当前会话必须信息，任务结束立即释放"
+          },
+          {
+            "title": "短期记忆",
+            "desc": "保存近一周关键事件，支持近期偏好和状态延续"
+          },
+          {
+            "title": "长期记忆",
+            "desc": "沉淀稳定事实与技能，作为长期知识底座"
+          },
+          {
+            "title": "图记忆",
+            "desc": "维护人、项目、组织关系，支持复杂关联查询"
+          }
+        ]
+      },
+      "captionKeywords": [
+        "你文档里的四层记",
+        "只加载当前问题真",
+        "图记忆负责实体关",
+        "实操时最容易踩坑",
+        "工作记忆只管当前",
+        "忆其实非常工程化",
+        "正确做法是按层回",
+        "正需要的那一部分"
+      ],
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/bullets_memory_levels.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.71,
+          "text": "你文档里的四层记忆其实非常"
+        },
+        {
+          "start": 2.71,
+          "end": 3.543,
+          "text": "工程化。"
+        },
+        {
+          "start": 3.543,
+          "end": 5.836,
+          "text": "工作记忆只管当前任务，"
+        },
+        {
+          "start": 5.836,
+          "end": 8.13,
+          "text": "短期记忆保存最近事件，"
+        },
+        {
+          "start": 8.13,
+          "end": 10.423,
+          "text": "长期记忆沉淀稳定事实，"
+        },
+        {
+          "start": 10.423,
+          "end": 12.507,
+          "text": "图记忆负责实体关系。"
+        },
+        {
+          "start": 12.507,
+          "end": 15.217,
+          "text": "实操时最容易踩坑的是把所有"
+        },
+        {
+          "start": 15.217,
+          "end": 17.51,
+          "text": "信息都塞进当前上下文，"
+        },
+        {
+          "start": 17.51,
+          "end": 19.595,
+          "text": "这会让模型噪声上升。"
+        },
+        {
+          "start": 19.595,
+          "end": 21.68,
+          "text": "正确做法是按层回填，"
+        },
+        {
+          "start": 21.68,
+          "end": 24.39,
+          "text": "只加载当前问题真正需要的那"
+        },
+        {
+          "start": 24.39,
+          "end": 25.224,
+          "text": "一部分。"
+        }
+      ]
+    },
+    {
+      "id": "comparison_retrieval",
+      "type": "comparison",
+      "durationInFrames": 639,
+      "frame": {
+        "id": "comparison_retrieval",
+        "type": "comparison",
+        "style": "table",
+        "title": "关键词检索与向量检索的取舍",
+        "subtitle": "先向量召回候选，再关键词过滤，效果通常最稳。",
+        "script": "你文档明确指出：关键词检索像查字典，前提是你知道准确词；向量检索像按语义找相近内容，即使表达不同也能命中。实战里直接二选一效果都不够稳，建议混合检索，先用向量扩大召回，再用关键词和业务规则做排序收敛。",
+        "left": {
+          "label": "关键词检索",
+          "points": [
+            "精确命中快",
+            "依赖词面一致",
+            "对同义改写不友好"
+          ],
+          "color": "RED"
+        },
+        "right": {
+          "label": "向量检索",
+          "points": [
+            "语义泛化强",
+            "召回覆盖更高",
+            "需要额外排序约束"
+          ],
+          "color": "GREEN"
+        },
+        "insight": "混合检索是大多数Agent产品的默认解。"
+      },
+      "captionKeywords": [
+        "先用向量扩大召回",
+        "关键词检索像查字",
+        "再用关键词和业务",
+        "前提是你知道准确",
+        "即使表达不同也能",
+        "向量检索像按语义",
+        "实战里直接二选一",
+        "你文档明确指出"
+      ],
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/comparison_retrieval.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.7029999999999998,
+          "text": "你文档明确指出："
+        },
+        {
+          "start": 1.7029999999999998,
+          "end": 3.831,
+          "text": "关键词检索像查字典，"
+        },
+        {
+          "start": 3.831,
+          "end": 5.96,
+          "text": "前提是你知道准确词；"
+        },
+        {
+          "start": 5.96,
+          "end": 8.94,
+          "text": "向量检索像按语义找相近内容，"
+        },
+        {
+          "start": 8.94,
+          "end": 11.282,
+          "text": "即使表达不同也能命中。"
+        },
+        {
+          "start": 11.282,
+          "end": 14.475,
+          "text": "实战里直接二选一效果都不够稳，"
+        },
+        {
+          "start": 14.475,
+          "end": 15.966,
+          "text": "建议混合检索，"
+        },
+        {
+          "start": 15.966,
+          "end": 17.881,
+          "text": "先用向量扩大召回，"
+        },
+        {
+          "start": 17.881,
+          "end": 20.649,
+          "text": "再用关键词和业务规则做排序"
+        },
+        {
+          "start": 20.649,
+          "end": 21.288,
+          "text": "收敛。"
+        }
+      ]
+    },
+    {
+      "id": "cards_solution_matrix",
+      "type": "cards",
+      "durationInFrames": 655,
+      "frame": {
+        "id": "cards_solution_matrix",
+        "type": "cards",
+        "style": "timeline",
+        "title": "五种开源方案怎么选",
+        "subtitle": "先看自动化诉求，再看规范程度和隐私要求。",
+        "script": "这篇文档最实用的一段是选型对比。AgentMemory适合快速起步，MemPalace偏规范流程，AMP适合多Agent共享，Memento适合精细控制，OAMP适合隐私和可移植。你可以先用AgentMemory跑通最小闭环，再按团队约束升级。",
+        "cards": [
+          {
+            "title": "AgentMemory",
+            "desc": "自动化最强，安装简单，适合先跑通再优化",
+            "color": "WHITE"
+          },
+          {
+            "title": "MemPalace",
+            "desc": "协议规范完整，适合需要强治理和版本管理的团队",
+            "color": "CYAN"
+          },
+          {
+            "title": "AMP/Memento/OAMP",
+            "desc": "分别偏跨Agent共享、精细评分控制、隐私合规可移植",
+            "color": "ORANGE"
+          }
+        ]
+      },
+      "captionKeywords": [
+        "AgentMemory",
+        "MemPalace",
+        "Memento",
+        "OAMP",
+        "AMP",
+        "再按团队约束升级",
+        "这篇文档最实用的",
+        "适合隐私和可移植"
+      ],
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/cards_solution_matrix.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.923,
+          "text": "这篇文档最实用的一段是选型"
+        },
+        {
+          "start": 2.923,
+          "end": 3.598,
+          "text": "对比。"
+        },
+        {
+          "start": 3.598,
+          "end": 6.409,
+          "text": "AgentMemory适合快速起步，"
+        },
+        {
+          "start": 6.409,
+          "end": 8.771,
+          "text": "MemPalace偏规范流程，"
+        },
+        {
+          "start": 8.771,
+          "end": 11.02,
+          "text": "AMP适合多Agent共享，"
+        },
+        {
+          "start": 11.02,
+          "end": 13.381,
+          "text": "Memento适合精细控制，"
+        },
+        {
+          "start": 13.381,
+          "end": 15.855,
+          "text": "OAMP适合隐私和可移植。"
+        },
+        {
+          "start": 15.855,
+          "end": 18.667,
+          "text": "你可以先用AgentMemory跑通"
+        },
+        {
+          "start": 18.667,
+          "end": 19.791,
+          "text": "最小闭环，"
+        },
+        {
+          "start": 19.791,
+          "end": 21.815,
+          "text": "再按团队约束升级。"
+        }
+      ]
+    },
+    {
+      "id": "quote_core",
+      "type": "quote",
+      "durationInFrames": 581,
+      "frame": {
+        "id": "quote_core",
+        "type": "quote",
+        "title": "这篇文章的核心工程观点",
+        "subtitle": "记忆管理不是功能点，而是完整的数据生命周期设计。",
+        "quote": "记忆管理不是存数据，而是存什么、怎么存、怎么查、怎么忘。",
+        "attribution": "AI-Agent记忆管理-从理论到实践",
+        "script": "这句引用的重点是“记忆管理不是只存数据，而是存什么、怎么存、怎么查、怎么忘”。如果只做存储层，不做检索和遗忘，系统很快会出现命中低、冲突多、成本高的问题。按这四步设计闭环，才是真正可运行的记忆工程。"
+      },
+      "captionKeywords": [
+        "才是真正可运行的",
+        "按这四步设计闭环",
+        "系统很快会出现命",
+        "记忆管理不是只存",
+        "这句引用的重点是",
+        "不做检索和遗忘",
+        "如果只做存储层",
+        "成本高的问题"
+      ],
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/quote_core.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.7189999999999999,
+          "text": "这句话非常关键，"
+        },
+        {
+          "start": 1.7189999999999999,
+          "end": 4.513,
+          "text": "它把记忆系统从功能实现拉回"
+        },
+        {
+          "start": 4.513,
+          "end": 5.803,
+          "text": "到工程设计。"
+        },
+        {
+          "start": 5.803,
+          "end": 8.167,
+          "text": "很多团队只做了存储层，"
+        },
+        {
+          "start": 8.167,
+          "end": 10.746,
+          "text": "结果查询混乱、过期失控、"
+        },
+        {
+          "start": 10.746,
+          "end": 11.821,
+          "text": "成本飙升。"
+        },
+        {
+          "start": 11.821,
+          "end": 14.83,
+          "text": "你这篇文档的价值在于把采集、"
+        },
+        {
+          "start": 14.83,
+          "end": 17.624,
+          "text": "存储、检索、遗忘串成闭环，"
+        },
+        {
+          "start": 17.624,
+          "end": 19.344,
+          "text": "能直接指导实现。"
+        }
+      ]
+    },
+    {
+      "id": "bullets_cursor_practice",
+      "type": "bullets",
+      "durationInFrames": 628,
+      "frame": {
+        "id": "bullets_cursor_practice",
+        "type": "bullets",
+        "title": "给Cursor助手落地记忆的四步法",
+        "subtitle": "先接MCP，再注入偏好，再做行为验证。",
+        "script": "你在实践篇给了非常清晰的落地步骤。先安装AgentMemory并接入Cursor MCP，然后把项目背景和编码偏好显式写入，再通过新任务验证模型是否按偏好输出。这样做的关键不是一次性写很多规则，而是每轮都验证“记住了什么、漏了什么”。",
+        "items": [
+          {
+            "title": "安装并接入",
+            "desc": "通过 npx 安装 AgentMemory，并在 Cursor 配置 MCP Server"
+          },
+          {
+            "title": "注入偏好",
+            "desc": "明确技术栈、命名风格、包管理器等可执行约束"
+          },
+          {
+            "title": "任务验证",
+            "desc": "用新文件生成任务检查是否按记忆策略产出代码"
+          },
+          {
+            "title": "持续调优",
+            "desc": "根据命中率与遗漏点迭代记忆采集和检索策略"
+          }
+        ]
+      },
+      "captionKeywords": [
+        "AgentMemory",
+        "Cursor",
+        "MCP",
+        "一次性写很多规则",
+        "你在实践篇给了非",
+        "再通过新任务验证",
+        "常清晰的落地步骤",
+        "模型是否按偏好输"
+      ],
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/bullets_cursor_practice.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.551,
+          "text": "你在实践篇给了非常清晰的落"
+        },
+        {
+          "start": 2.551,
+          "end": 3.336,
+          "text": "地步骤。"
+        },
+        {
+          "start": 3.336,
+          "end": 5.888,
+          "text": "先安装AgentMemory并接入Cur"
+        },
+        {
+          "start": 5.888,
+          "end": 6.771,
+          "text": "sor MCP，"
+        },
+        {
+          "start": 6.771,
+          "end": 9.323,
+          "text": "然后把项目背景和编码偏好显"
+        },
+        {
+          "start": 9.323,
+          "end": 10.108,
+          "text": "式写入，"
+        },
+        {
+          "start": 10.108,
+          "end": 12.66,
+          "text": "再通过新任务验证模型是否按"
+        },
+        {
+          "start": 12.66,
+          "end": 13.641,
+          "text": "偏好输出。"
+        },
+        {
+          "start": 13.641,
+          "end": 16.193,
+          "text": "这样做的关键不是一次性写很"
+        },
+        {
+          "start": 16.193,
+          "end": 16.978,
+          "text": "多规则，"
+        },
+        {
+          "start": 16.978,
+          "end": 19.726,
+          "text": "而是每轮都验证“记住了什么、"
+        },
+        {
+          "start": 19.726,
+          "end": 20.903,
+          "text": "漏了什么”。"
+        }
+      ]
+    },
+    {
+      "id": "kpi_operate",
+      "type": "kpi",
+      "durationInFrames": 642,
+      "frame": {
+        "id": "kpi_operate",
+        "type": "kpi",
+        "title": "记忆系统运行阶段建议观察指标",
+        "subtitle": "先监控命中与准确，再优化性能和成本。",
+        "script": "为了让记忆系统可运营，你至少要追三类指标：检索命中率、答案准确率、平均响应延迟。命中率低通常是采集或召回问题，准确率低通常是排序和事实冲突问题，延迟高则多是检索链路过重。用这三项先定位问题，优化效率最高。",
+        "kpis": [
+          {
+            "title": "记忆命中率",
+            "value": "78%",
+            "label": "被成功检索并使用"
+          },
+          {
+            "title": "回答准确率",
+            "value": "86%",
+            "label": "含事实类问答"
+          },
+          {
+            "title": "平均延迟",
+            "value": "1.6s",
+            "label": "检索+生成端到端"
+          }
+        ],
+        "footnote": "优先固定评测集，否则指标无法横向比较。"
+      },
+      "captionKeywords": [
+        "为了让记忆系统可",
+        "你至少要追三类指",
+        "准确率低通常是排",
+        "命中率低通常是采",
+        "序和事实冲突问题",
+        "延迟高则多是检索",
+        "用这三项先定位问",
+        "优化效率最高"
+      ],
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/kpi_operate.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.306,
+          "text": "为了让记忆系统可运营，"
+        },
+        {
+          "start": 2.306,
+          "end": 4.402,
+          "text": "你至少要追三类指标："
+        },
+        {
+          "start": 4.402,
+          "end": 6.918,
+          "text": "检索命中率、答案准确率、"
+        },
+        {
+          "start": 6.918,
+          "end": 8.385,
+          "text": "平均响应延迟。"
+        },
+        {
+          "start": 8.385,
+          "end": 11.53,
+          "text": "命中率低通常是采集或召回问题，"
+        },
+        {
+          "start": 11.53,
+          "end": 14.256,
+          "text": "准确率低通常是排序和事实冲"
+        },
+        {
+          "start": 14.256,
+          "end": 15.094,
+          "text": "突问题，"
+        },
+        {
+          "start": 15.094,
+          "end": 17.82,
+          "text": "延迟高则多是检索链路过重。"
+        },
+        {
+          "start": 17.82,
+          "end": 19.916,
+          "text": "用这三项先定位问题，"
+        },
+        {
+          "start": 19.916,
+          "end": 21.384,
+          "text": "优化效率最高。"
+        }
+      ]
+    },
+    {
+      "id": "comparison_security_perf",
+      "type": "comparison",
+      "durationInFrames": 591,
+      "frame": {
+        "id": "comparison_security_perf",
+        "type": "comparison",
+        "title": "性能优化与隐私安全要并行推进",
+        "subtitle": "只追速度不做治理，最终会被数据风险反噬。",
+        "script": "文档在踩坑部分给了很实用的双线建议。一条线做性能优化，比如懒加载、TTL、批量写入；另一条线做安全治理，比如敏感信息过滤、本地优先存储、必要加密。很多项目只做一条线，后期不是慢就是不合规。",
+        "left": {
+          "label": "性能侧动作",
+          "points": [
+            "按需加载记忆",
+            "设置TTL分层",
+            "批量写入提速"
+          ],
+          "color": "GOLD"
+        },
+        "right": {
+          "label": "安全侧动作",
+          "points": [
+            "敏感字段脱敏",
+            "本地向量库优先",
+            "关键数据加密"
+          ],
+          "color": "GREEN"
+        },
+        "insight": "性能与安全是同一条交付链路的两端。"
+      },
+      "captionKeywords": [
+        "TTL",
+        "一条线做性能优化",
+        "了很实用的双线建",
+        "另一条线做安全治",
+        "后期不是慢就是不",
+        "很多项目只做一条",
+        "文档在踩坑部分给",
+        "比如敏感信息过滤"
+      ],
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/comparison_security_perf.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.765,
+          "text": "文档在踩坑部分给了很实用的"
+        },
+        {
+          "start": 2.765,
+          "end": 3.8289999999999997,
+          "text": "双线建议。"
+        },
+        {
+          "start": 3.8289999999999997,
+          "end": 5.744,
+          "text": "一条线做性能优化，"
+        },
+        {
+          "start": 5.744,
+          "end": 7.552,
+          "text": "比如懒加载、TTL、"
+        },
+        {
+          "start": 7.552,
+          "end": 8.616,
+          "text": "批量写入；"
+        },
+        {
+          "start": 8.616,
+          "end": 10.744,
+          "text": "另一条线做安全治理，"
+        },
+        {
+          "start": 10.744,
+          "end": 12.659,
+          "text": "比如敏感信息过滤、"
+        },
+        {
+          "start": 12.659,
+          "end": 15.212,
+          "text": "本地优先存储、必要加密。"
+        },
+        {
+          "start": 15.212,
+          "end": 17.339,
+          "text": "很多项目只做一条线，"
+        },
+        {
+          "start": 17.339,
+          "end": 19.679,
+          "text": "后期不是慢就是不合规。"
         }
       ]
     },
     {
       "id": "hook_close",
       "type": "hook",
-      "durationInFrames": 578,
+      "durationInFrames": 613,
       "frame": {
         "id": "hook_close",
         "type": "hook",
         "style": "spotlight",
-        "title": "从可用到可生产的进阶路径",
-        "subtitle": "先跑通链路，再做稳定性和成本优化。",
-        "script": "你可以直接照这个路线落地：第一步把参数与模板固化，保证可复现；第二步把 RAG 召回和重排做准，减少幻觉；第三步补状态管理和人工兜底，拦住高风险操作；第四步接入监控告警与自动降级，形成长期可运营的生产闭环。",
+        "title": "分层记忆闭环：让Agent从会聊到会做",
+        "subtitle": "先用开箱方案跑通，再按业务目标做分层治理。",
+        "script": "最后总结一下，你这篇文档给出的最佳路径是先从AgentMemory起步，快速验证价值，再逐步补齐检索、遗忘、安全和指标治理。记忆系统真正的目标不是让助手记得更多，而是让它在关键任务上更稳定、更可控、更可复用。",
         "list": [
-          "参数模板先标准化",
-          "检索重排优先做准",
-          "状态持久化加人工兜底",
-          "监控告警驱动自动降级"
+          "先跑最小可用闭环",
+          "按四层记忆分治",
+          "混合检索提升稳定性",
+          "把安全与指标前置"
         ]
       },
       "captionKeywords": [
-        "RAG",
-        "你可以直接照这个",
-        "形成长期可运营的",
-        "第一步把参数与模",
-        "第三步补状态管理",
-        "第四步接入监控告",
-        "召回和重排做准",
-        "拦住高风险操作"
+        "AgentMemory",
+        "你这篇文档给出的",
+        "标不是让助手记得",
+        "而是让它在关键任",
+        "记忆系统真正的目",
+        "再逐步补齐检索",
+        "安全和指标治理",
+        "最佳路径是先从"
       ],
-      "audioSrc": "studio-audio/llm_advanced_dark_rich_frames/hook_close.mp3",
+      "audioSrc": "studio-audio/ai_agent_memory_md_frames/hook_close.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.489,
-          "text": "你可以直接照这个路线落地："
+          "end": 1.451,
+          "text": "最后总结一下，"
         },
         {
-          "start": 2.489,
-          "end": 4.788,
-          "text": "第一步把参数与模板固化，"
+          "start": 1.451,
+          "end": 4.147,
+          "text": "你这篇文档给出的最佳路径是"
         },
         {
-          "start": 4.788,
-          "end": 5.937,
-          "text": "保证可复现；"
+          "start": 4.147,
+          "end": 6.324,
+          "text": "先从AgentMemory起步，"
         },
         {
-          "start": 5.937,
-          "end": 8.714,
-          "text": "第二步把 RAG 召回和重排做准，"
+          "start": 6.324,
+          "end": 7.775,
+          "text": "快速验证价值，"
         },
         {
-          "start": 8.714,
-          "end": 9.671,
-          "text": "减少幻觉；"
+          "start": 7.775,
+          "end": 10.056,
+          "text": "再逐步补齐检索、遗忘、"
         },
         {
-          "start": 9.671,
-          "end": 12.353,
-          "text": "第三步补状态管理和人工兜底，"
+          "start": 10.056,
+          "end": 11.715,
+          "text": "安全和指标治理。"
         },
         {
-          "start": 12.353,
-          "end": 13.885,
-          "text": "拦住高风险操作；"
+          "start": 11.715,
+          "end": 14.41,
+          "text": "记忆系统真正的目标不是让助"
         },
         {
-          "start": 13.885,
-          "end": 16.758,
-          "text": "第四步接入监控告警与自动降级，"
+          "start": 14.41,
+          "end": 15.654,
+          "text": "手记得更多，"
         },
         {
-          "start": 16.758,
-          "end": 19.248,
-          "text": "形成长期可运营的生产闭环。"
+          "start": 15.654,
+          "end": 18.557,
+          "text": "而是让它在关键任务上更稳定、"
+        },
+        {
+          "start": 18.557,
+          "end": 20.423,
+          "text": "更可控、更可复用。"
         }
       ]
     }

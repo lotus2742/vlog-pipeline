@@ -11,6 +11,7 @@
 """
 
 import argparse
+from datetime import datetime
 import json
 import re
 import shutil
@@ -57,6 +58,72 @@ EN_STOPWORDS = {
     "you",
     "agent",
 }
+
+
+def _safe_comp_id(stem: str) -> str:
+    cleaned = re.sub(r"[^A-Za-z0-9\-]+", "-", stem).strip("-")
+    if not cleaned:
+        cleaned = "Preview"
+    if not cleaned[0].isalpha():
+        cleaned = f"P-{cleaned}"
+    ts = datetime.now().strftime("%Y%m%d-%H%M%S")
+    return f"VlogFrames-{cleaned}-{ts}"
+
+
+def _normalize_comp_id(raw: str) -> str:
+    s = str(raw or "").strip()
+    if not s:
+        return ""
+    s = re.sub(r"[^A-Za-z0-9\-\u4e00-\u9fff]+", "-", s).strip("-")
+    if not s:
+        return ""
+    if not re.match(r"[A-Za-z\u4e00-\u9fff]", s[0]):
+        s = f"P-{s}"
+    return s
+
+
+def _append_studio_composition(remotion_dir: Path, comp_id: str, label: str, props: dict) -> None:
+    registry_path = remotion_dir / "src" / "studio-compositions.json"
+    comp_id = _normalize_comp_id(comp_id)
+    if not comp_id:
+        comp_id = _safe_comp_id("Preview")
+    try:
+        current = []
+        if registry_path.exists():
+            loaded = json.loads(registry_path.read_text(encoding="utf-8"))
+            if isinstance(loaded, list):
+                current = loaded
+    except Exception:
+        current = []
+
+    normalized = []
+    for item in current:
+        if not isinstance(item, dict):
+            continue
+        old_id = _normalize_comp_id(item.get("id", ""))
+        if not old_id:
+            continue
+        if old_id == comp_id:
+            continue
+        normalized.append(
+            {
+                "id": old_id,
+                "label": item.get("label", ""),
+                "props": item.get("props", {}),
+            }
+        )
+    current = normalized
+    current.append(
+        {
+            "id": comp_id,
+            "label": label,
+            "props": props,
+        }
+    )
+    # 限制历史数量，避免 Studio 启动过慢。
+    if len(current) > 20:
+        current = current[-20:]
+    registry_path.write_text(json.dumps(current, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def _extract_caption_keywords(frame: dict, limit: int = 8) -> list[str]:
@@ -254,11 +321,20 @@ def main() -> int:
         action="store_true",
         help="只生成 props JSON，不调用 Remotion CLI（适合本机无法 headless 渲染时）",
     )
-    parser.add_argument(
+    studio_group = parser.add_mutually_exclusive_group()
+    studio_group.add_argument(
         "--studio",
+        dest="studio",
         action="store_true",
-        help="同步 props 到 remotion-demo/src/studio-active-props.json，便于有界面 Studio 预览（不渲 MP4）",
+        help="同步 props 到 remotion-demo/src/studio-active-props.json，便于有界面 Studio 预览（默认开启，不渲 MP4）",
     )
+    studio_group.add_argument(
+        "--no-studio",
+        dest="studio",
+        action="store_false",
+        help="关闭 Studio 预览同步，改走 Remotion CLI 渲染 MP4（除非 --props-only）",
+    )
+    parser.set_defaults(studio=True)
     parser.add_argument(
         "--out-dir",
         type=Path,
@@ -318,6 +394,8 @@ def main() -> int:
 
     if args.studio:
         remotion_dir = PROJECT_ROOT / "remotion-demo"
+        studio_comp_id = _safe_comp_id(stem)
+        studio_comp_label = f"{stem} ({datetime.now().strftime('%m-%d %H:%M')})"
         studio_audio_dir = remotion_dir / "public" / "studio-audio" / stem
         studio_audio_dir.mkdir(parents=True, exist_ok=True)
         audio_dir = job_dir / "audio"
@@ -353,8 +431,19 @@ def main() -> int:
         studio_dest = remotion_dir / "src" / "studio-active-props.json"
         shutil.copy(props_path, studio_dest)
         print(f"[remotion_from_frames] 已同步 Studio 预览数据 -> {studio_dest}")
+        _append_studio_composition(
+            remotion_dir=remotion_dir,
+            comp_id=studio_comp_id,
+            label=studio_comp_label,
+            props=props,
+        )
         print(
-            "[remotion_from_frames] 下一步: cd remotion-demo && npm run dev ，左侧选择 **VlogFramesStudio**（含配音），"
+            "[remotion_from_frames] 已新增 Studio 预览条目 -> "
+            f"id={studio_comp_id}"
+        )
+        print(
+            "[remotion_from_frames] 下一步: cd remotion-demo && npm run dev ，左侧可选择 "
+            f"**{studio_comp_id}**（或 VlogFramesStudio），"
             "若 Studio 已在运行请重启以加载新 JSON。"
         )
 
