@@ -8,6 +8,7 @@ VALID_VOICES = {
     "zh-CN-XiaoyiNeural",
     "zh-CN-YunxiNeural",
     "zh-CN-YunyangNeural",
+    "zh-CN-YunjianNeural",
     "zh-CN-XiaochenNeural",
 }
 
@@ -26,7 +27,22 @@ VALID_COLORS = {
 }
 
 VALID_FRAME_TYPES = frozenset(
-    {"hook", "cards", "comparison", "bullets", "kpi", "quote"}
+    {
+        "hook",
+        "cards",
+        "comparison",
+        "bullets",
+        "kpi",
+        "quote",
+        "hotlist-cover",
+        "hotlist-project",
+        "hotlist-outro",
+        "hotlist-table",
+    }
+)
+
+HOTLIST_LEGACY_STYLES = frozenset(
+    {"hotlist-cover", "hotlist-project", "hotlist-outro", "hotlist-table"}
 )
 
 BANNED_CHARS = "✅✓❌✗⭐★☆→←↑↓①②③④⑤⚠⚡🎯🔥💡🚀😊"
@@ -321,11 +337,25 @@ async def main(args: dict) -> dict:
         if len(frames) > 20:
             errors.append(f"frames 数量 {len(frames)} 过多，最多 20 帧")
 
-        # 首尾 hook 检查
-        if frames[0].get("type") != "hook":
-            errors.append("第一帧 type 必须是 hook")
-        if frames[-1].get("type") != "hook":
-            errors.append("最后一帧 type 必须是 hook")
+        meta_vt = str((data.get("meta") or {}).get("videoType", "")).strip().lower()
+        is_hotlist = meta_vt == "hotlist" or any(
+            str(f.get("type", "")).startswith("hotlist-")
+            or str(f.get("style", "")).lower() in HOTLIST_LEGACY_STYLES
+            for f in frames
+        )
+        if is_hotlist:
+            first_t = str(frames[0].get("type", ""))
+            last_t = str(frames[-1].get("type", ""))
+            if first_t not in ("hotlist-cover", "hook"):
+                errors.append("榜单视频第一帧 type 应为 hotlist-cover")
+            if last_t not in ("hotlist-table", "hook"):
+                errors.append("榜单视频最后一帧 type 应为 hotlist-table")
+        else:
+            # 首尾 hook 检查（常规 vlog）
+            if frames[0].get("type") != "hook":
+                errors.append("第一帧 type 必须是 hook")
+            if frames[-1].get("type") != "hook":
+                errors.append("最后一帧 type 必须是 hook")
 
         # id 唯一性
         ids = []
@@ -487,7 +517,27 @@ async def main(args: dict) -> dict:
                         if color and color not in VALID_COLORS:
                             errors.append(f"{prefix}.{side}.color '{color}' 无效")
 
-                # 渲染内容防空：至少有一侧 points，或提供 insight
+                # 渲染内容防空：compareRows（多行对照）或 left/right.points，或 insight
+                compare_rows = frame.get("compareRows")
+                matrix_rows_valid = False
+                if isinstance(compare_rows, list):
+                    if len(compare_rows) > 8:
+                        errors.append(f"{prefix}.compareRows 超过上限 8 行")
+                    elif len(compare_rows) >= 2:
+                        matrix_rows_valid = True
+                        for j, row in enumerate(compare_rows):
+                            rp = f"{prefix}.compareRows[{j}]"
+                            if not isinstance(row, dict):
+                                errors.append(f"{rp} 必须为对象")
+                                matrix_rows_valid = False
+                                continue
+                            if not str(row.get("left", "")).strip():
+                                errors.append(f"{rp}.left 不能为空")
+                                matrix_rows_valid = False
+                            if not str(row.get("right", "")).strip():
+                                errors.append(f"{rp}.right 不能为空")
+                                matrix_rows_valid = False
+
                 left = frame.get("left", {}) if isinstance(frame.get("left"), dict) else {}
                 right = frame.get("right", {}) if isinstance(frame.get("right"), dict) else {}
                 l_points = left.get("points", [])
@@ -495,43 +545,93 @@ async def main(args: dict) -> dict:
                 has_l = isinstance(l_points, list) and len(l_points) > 0
                 has_r = isinstance(r_points, list) and len(r_points) > 0
                 has_insight = bool(str(frame.get("insight", "")).strip())
-                if not (has_l or has_r or has_insight):
+                if not (matrix_rows_valid or has_l or has_r or has_insight):
                     errors.append(
-                        f"{prefix} comparison 内容为空：请至少提供 left.points/right.points 其一，"
-                        f"或提供 insight"
+                        f"{prefix} comparison 内容为空：请提供 compareRows（至少 2 行且 left/right 齐全）、"
+                        f"或 left.points/right.points 其一，或 insight"
                     )
 
             # ── bullets 类型专项（M1）──
             if ftype == "bullets":
-                raw_items = frame.get("items", [])
-                if not isinstance(raw_items, list):
-                    errors.append(f"{prefix}.items 必须是数组")
-                elif len(raw_items) < 2:
-                    errors.append(f"{prefix}.items 至少需要 2 条要点")
-                elif len(raw_items) > 8:
-                    errors.append(f"{prefix}.items 超过上限 8 条")
-                else:
-                    for j, it in enumerate(raw_items):
-                        ip = f"{prefix}.items[{j}]"
-                        if not isinstance(it, dict):
-                            errors.append(f"{ip} 必须为对象，且包含 title 与 desc")
+                tiered = frame.get("tieredBullets")
+                if isinstance(tiered, dict) and tiered:
+                    conc = tiered.get("conclusion") if isinstance(tiered.get("conclusion"), dict) else {}
+                    defin = tiered.get("definition") if isinstance(tiered.get("definition"), dict) else {}
+                    c_desc = str(conc.get("desc", "")).strip()
+                    d_desc = str(defin.get("desc", "")).strip()
+                    if not c_desc:
+                        errors.append(f"{prefix}.tieredBullets.conclusion.desc 不能为空")
+                    elif len(c_desc) > MAX_BULLET_ITEM_LEN:
+                        errors.append(f"{prefix}.tieredBullets.conclusion.desc 过长(>{MAX_BULLET_ITEM_LEN}字)")
+                    if not d_desc:
+                        errors.append(f"{prefix}.tieredBullets.definition.desc 不能为空")
+                    elif len(d_desc) > MAX_BULLET_ITEM_LEN:
+                        errors.append(f"{prefix}.tieredBullets.definition.desc 过长(>{MAX_BULLET_ITEM_LEN}字)")
+                    for blob, bp in ((c_desc, f"{prefix}.tieredBullets.conclusion.desc"), (d_desc, f"{prefix}.tieredBullets.definition.desc")):
+                        if not blob:
                             continue
-                        title = str(it.get("title", "")).strip()
-                        desc = str(it.get("desc", "")).strip()
-                        if not title:
-                            errors.append(f"{ip}.title 不能为空（由 LLM 总结右列要点）")
-                        if not desc:
-                            errors.append(f"{ip}.desc 不能为空（正文解释内容）")
-                        if title and len(title) > MAX_BULLET_TITLE_LEN:
-                            errors.append(f"{ip}.title 过长(>{MAX_BULLET_TITLE_LEN}字)")
-                        if desc and len(desc) > MAX_BULLET_ITEM_LEN:
-                            errors.append(f"{ip}.desc 过长(>{MAX_BULLET_ITEM_LEN}字)")
-                        for field_name, blob in (("title", title), ("desc", desc)):
-                            if not blob:
+                        for ch in BANNED_CHARS:
+                            if ch in blob:
+                                errors.append(f"{bp} 含禁止字符 '{ch}'")
+                    traits = tiered.get("traits", [])
+                    if not isinstance(traits, list):
+                        errors.append(f"{prefix}.tieredBullets.traits 必须是数组")
+                    elif len(traits) < 2:
+                        errors.append(f"{prefix}.tieredBullets.traits 至少需要 2 条")
+                    elif len(traits) > 8:
+                        errors.append(f"{prefix}.tieredBullets.traits 超过上限 8 条")
+                    else:
+                        for j, it in enumerate(traits):
+                            ip = f"{prefix}.tieredBullets.traits[{j}]"
+                            if not isinstance(it, dict):
+                                errors.append(f"{ip} 必须为对象，且包含 title 与 desc")
                                 continue
-                            for ch in BANNED_CHARS:
-                                if ch in blob:
-                                    errors.append(f"{ip}.{field_name} 含禁止字符 '{ch}'")
+                            title = str(it.get("title", "")).strip()
+                            desc = str(it.get("desc", "")).strip()
+                            if not title:
+                                errors.append(f"{ip}.title 不能为空")
+                            if not desc:
+                                errors.append(f"{ip}.desc 不能为空")
+                            if title and len(title) > MAX_BULLET_TITLE_LEN:
+                                errors.append(f"{ip}.title 过长(>{MAX_BULLET_TITLE_LEN}字)")
+                            if desc and len(desc) > MAX_BULLET_ITEM_LEN:
+                                errors.append(f"{ip}.desc 过长(>{MAX_BULLET_ITEM_LEN}字)")
+                            for field_name, blob in (("title", title), ("desc", desc)):
+                                if not blob:
+                                    continue
+                                for ch in BANNED_CHARS:
+                                    if ch in blob:
+                                        errors.append(f"{ip}.{field_name} 含禁止字符 '{ch}'")
+                else:
+                    raw_items = frame.get("items", [])
+                    if not isinstance(raw_items, list):
+                        errors.append(f"{prefix}.items 必须是数组")
+                    elif len(raw_items) < 2:
+                        errors.append(f"{prefix}.items 至少需要 2 条要点（或使用 tieredBullets）")
+                    elif len(raw_items) > 8:
+                        errors.append(f"{prefix}.items 超过上限 8 条")
+                    else:
+                        for j, it in enumerate(raw_items):
+                            ip = f"{prefix}.items[{j}]"
+                            if not isinstance(it, dict):
+                                errors.append(f"{ip} 必须为对象，且包含 title 与 desc")
+                                continue
+                            title = str(it.get("title", "")).strip()
+                            desc = str(it.get("desc", "")).strip()
+                            if not title:
+                                errors.append(f"{ip}.title 不能为空（由 LLM 总结右列要点）")
+                            if not desc:
+                                errors.append(f"{ip}.desc 不能为空（正文解释内容）")
+                            if title and len(title) > MAX_BULLET_TITLE_LEN:
+                                errors.append(f"{ip}.title 过长(>{MAX_BULLET_TITLE_LEN}字)")
+                            if desc and len(desc) > MAX_BULLET_ITEM_LEN:
+                                errors.append(f"{ip}.desc 过长(>{MAX_BULLET_ITEM_LEN}字)")
+                            for field_name, blob in (("title", title), ("desc", desc)):
+                                if not blob:
+                                    continue
+                                for ch in BANNED_CHARS:
+                                    if ch in blob:
+                                        errors.append(f"{ip}.{field_name} 含禁止字符 '{ch}'")
 
             # ── kpi 类型专项（M1）──
             if ftype == "kpi":

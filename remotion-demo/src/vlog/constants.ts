@@ -58,7 +58,7 @@ export const STAR_NOISE_POINTS = Array.from({ length: 42 }, (_, i) => {
   return { x: 40 + nx * 1200, y: 36 + ny * 648, r: 0.55 + ns * 1.05, a: 0.035 + na * 0.08, phase: i * 11 };
 });
 
-export const NOISY_HEAVY_TYPES = new Set(["comparison", "kpi", "bullets"]);
+export const NOISY_HEAVY_TYPES = new Set(["comparison", "kpi", "bullets", "timeline"]);
 
 export const TOPIC_TOKEN_MAP: Array<{ pattern: RegExp; label: string }> = [
   { pattern: /llm|大模型|语言模型/i, label: "LLM" },

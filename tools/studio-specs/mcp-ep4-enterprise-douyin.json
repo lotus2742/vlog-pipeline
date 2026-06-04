@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "topic": "MCP系列 · 第4期：MCP 企业真实落地（抖音版）",
+    "videoType": "vlog",
+    "theme": "ocean",
+    "bgStyle": "cinematic",
+    "seriesPart": 4,
+    "seriesTotal": 6,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": true
+  },
+  "videoType": "vlog",
+  "output": "remotion-demo/public/studio-preview/latest.json",
+  "bundle": "mcp-ep4-enterprise-douyin",
+  "idPrefix": "mcp4",
+  "fps": 30,
+  "copyToLatest": true,
+  "segSec": [5, 18, 18, 15, 18, 15, 22, 15, 14],
+  "slides": [
+    {
+      "slug": "hook",
+      "type": "hook",
+      "durationSec": 5,
+      "voiceScript": "上期有个测试说MCP贵得离谱，结果企业反而疯狂上？Bloomberg效率直接飙100倍，Block省了75%时间——到底谁在说谎啊？",
+      "frame": {
+        "style": "spotlight",
+        "kicker": "MCP 系列 · 第 4 期",
+        "hookContrast": {
+          "highLabel": "上期测试：",
+          "highValue": "贵 17 倍",
+          "lowLabel": "企业却在",
+          "lowValue": "疯狂上",
+          "ratio": "❓"
+        },
+        "title": "到底谁在吹牛？",
+        "subtitle": "Bloomberg 效率狂飙 100 倍 · Block 省掉 75% 时间",
+        "list": [
+          "MCP 贵 17 倍？企业却抢着上？"
+        ]
+      }
+    },
+    {
+      "slug": "bloomberg",
+      "type": "comparison",
+      "voiceScript": "就说Bloomberg这家金融巨头吧。之前每接一个新的AI工具，工程师得从头写一套连接器，系统越多越麻烦。\n\n现在用MCP标准化接入，新工具集成从几天变成几分钟。效率提升大概100倍——这不是夸张，是他们9千多工程师真真实实跑出来的数据。",
+      "frame": {
+        "style": "split",
+        "title": "Bloomberg · 效率 ≈ 100 倍",
+        "subtitle": "金融圈顶流 · 9,000+ 工程师实测",
+        "left": {
+          "label": "之前",
+          "title": "接个新 AI 工具",
+          "color": "#f87171",
+          "points": [
+            "得重写一整套连接器代码",
+            "系统越多越崩溃",
+            "集成周期：数天级"
+          ]
+        },
+        "right": {
+          "label": "现在 · MCP",
+          "title": "一键标准化接入",
+          "color": "#34d399",
+          "points": [
+            "新工具集成：几天 → 几分钟",
+            "效率提升 ≈ 100 倍",
+            "不是夸张，是真实跑出来的数据"
+          ]
+        },
+        "insight": "MCP 把「接工具」从工程灾难变成标准化流程"
+      }
+    },
+    {
+      "slug": "block",
+      "type": "cards",
+      "voiceScript": "再看Block，就是那个做支付的公司。他们内部有个AI助手叫Goose，连着GitHub、Jira、Snowflake一堆系统，几千员工每天在用，日常任务直接省掉一半到四分之三的时间。\n\n我跟一些工程师聊过，他们说用了之后真的回不去了。",
+      "frame": {
+        "style": "stack",
+        "title": "Block（Square）· Goose 内部 AI 代理",
+        "subtitle": "MCP 统一管理多系统连接",
+        "cards": [
+          {
+            "title": "连接",
+            "desc": "GitHub · Jira · Snowflake · 内部系统",
+            "color": "#22d3ee"
+          },
+          {
+            "title": "覆盖",
+            "desc": "数千员工每天用",
+            "color": "#34d399"
+          },
+          {
+            "title": "省时",
+            "desc": "日常任务省 50%–75%",
+            "color": "#fbbf24"
+          },
+          {
+            "title": "架构",
+            "desc": "MCP 统一管理 · 工程师说「回不去了」",
+            "color": "#a78bfa"
+          }
+        ],
+        "insight": "大规模落地：不是试点，是日常生产力基础设施"
+      }
+    },
+    {
+      "slug": "ecosystem",
+      "type": "kpi",
+      "voiceScript": "再看一组硬数据。月SDK下载9700万次，活跃公共Server超过1万个，社区注册一万七千多个。\n\n但！这些数字到底有没有水分？大厂实际动作怎么样？往下看——",
+      "frame": {
+        "style": "strip",
+        "title": "2026 年 5 月 · 行业数据",
+        "subtitle": "生态在涨，但数字靠谱吗？",
+        "kpis": [
+          {"title": "月 SDK 下载", "value": "9700", "unit": "万+", "label": "持续增长"},
+          {"title": "公共 Server", "value": "10,000", "unit": "+", "label": "活跃生态"},
+          {"title": "社区注册", "value": "17,468", "unit": "个", "label": "开发者参与"}
+        ],
+        "insight": "但！这些数字到底有没有水分？大厂实际动作怎么样？"
+      }
+    },
+    {
+      "slug": "big_five",
+      "type": "bullets",
+      "voiceScript": "大厂支持我就不一个个念了——Anthropic、OpenAI、Google、微软、AWS，五巨头全部就位。\n\n最关键的一个信号：OpenAI今年8月要彻底关掉Assistants API，全面转MCP。连它都倒戈了，风向够明确了吧？",
+      "frame": {
+        "style": "checklist",
+        "title": "五巨头全部站队 MCP",
+        "subtitle": "不是某一家押注，是行业共识",
+        "items": [
+          {"title": "Anthropic", "desc": "Claude 原生 MCP"},
+          {"title": "OpenAI", "desc": "ChatGPT 全面支持 MCP"},
+          {"title": "Google", "desc": "Gemini 原生集成"},
+          {"title": "Microsoft", "desc": "Copilot + VS Code"},
+          {"title": "AWS", "desc": "Bedrock Agents"}
+        ],
+        "insight": "重磅：OpenAI 2026 年 8 月废弃 Assistants API，全力转 MCP"
+      }
+    },
+    {
+      "slug": "linux_foundation",
+      "type": "comparison",
+      "voiceScript": "但真正让企业敢大手笔投入的，是这件事——去年12月Anthropic把MCP捐给了Linux Foundation。AWS、Google、微软、Cloudflare、Bloomberg都是铂金会员。\n\n之前是企业担心：\"这是人家私有的，万一哪天改了怎么办？\"捐出去之后变成行业公共财产了，心态完全不同。",
+      "frame": {
+        "style": "split",
+        "title": "Linux Foundation · 信任转折",
+        "subtitle": "2025 年 12 月 · Anthropic 捐赠 MCP",
+        "left": {
+          "label": "之前",
+          "title": "厂商私有协议",
+          "color": "#f87171",
+          "points": [
+            "「万一改了怎么办？」",
+            "企业不敢大手笔投入",
+            "担心被单一厂商绑定"
+          ]
+        },
+        "right": {
+          "label": "之后",
+          "title": "行业公共财产",
+          "color": "#34d399",
+          "points": [
+            "AWS / Google / Microsoft",
+            "Cloudflare / Bloomberg 铂金会员",
+            "心态：放心用！"
+          ]
+        },
+        "insight": "从「私有协议」到「行业标准」——企业敢投了"
+      }
+    },
+    {
+      "slug": "barriers",
+      "type": "failure-modes",
+      "voiceScript": "但是！ROI是真的，坑也是真的。\n\n认证碎片化——每个MCP Server各搞各的OAuth，用户体验很乱。\n\n安全审计——之前OX Security爆出过漏洞，虽然不是MCP本身的问题，但企业心里肯定有顾虑。\n\n运维复杂度——每个Server得独立部署、监控、升级。数量少了还行，十几个以上真得有专人盯着。",
+      "frame": {
+        "title": "ROI 是真的 · 门槛也是真的",
+        "subtitle": "企业落地三大真实门槛",
+        "value": "⚠️",
+        "label": "别装看不见",
+        "failureModes": [
+          {
+            "rank": 1,
+            "title": "认证乱",
+            "desc": "每个 Server 各搞各的 OAuth，体验割裂",
+            "frequency": "high"
+          },
+          {
+            "rank": 2,
+            "title": "安全顾虑",
+            "desc": "OX Security 曾爆出漏洞，企业心里有数",
+            "frequency": "medium"
+          },
+          {
+            "rank": 3,
+            "title": "运维成本",
+            "desc": "独立部署 / 监控 / 升级，十几个以上要专人",
+            "frequency": "high"
+          }
+        ],
+        "insight": "不是装个 SDK 就完事——要组织级治理"
+      }
+    },
+    {
+      "slug": "conclusion",
+      "type": "cards",
+      "voiceScript": "所以结论是什么？MCP在企业场景的ROI是真实的，五巨头背书，生态也在涨。但是认证、安全、运维这三大门槛还没完全解决——需要的是整套组织级投入和治理体系，不是说装个SDK就完事了。",
+      "frame": {
+        "style": "verdict",
+        "title": "MCP 企业落地真相",
+        "subtitle": "利好真实 · 门槛也真实",
+        "cards": [
+          {
+            "title": "✅ 利好",
+            "label": "ROI 真实",
+            "desc": "五巨头背书 + 生态强劲增长",
+            "color": "#34d399"
+          },
+          {
+            "title": "⚠️ 现实",
+            "label": "三大门槛",
+            "desc": "认证 / 安全 / 运维 — 需组织级投入与治理",
+            "color": "#fbbf24"
+          }
+        ],
+        "insight": "不是装个 SDK 就完事 · 要整套治理体系"
+      }
+    },
+    {
+      "slug": "next_ep",
+      "type": "hook",
+      "voiceScript": "刚才提到的那个OX Security漏洞，MCP安全到底有多坑？下期我们深扒一下，漏洞原理、影响范围、企业怎么防护。关注收藏，下期见！",
+      "frame": {
+        "style": "split",
+        "title": "OX Security 漏洞",
+        "subtitle": "MCP 安全到底有多「坑」？",
+        "list": [
+          "① 漏洞原理是什么",
+          "② 影响范围有多大",
+          "③ 企业怎么防护",
+          "💾 收藏系列 · 下期见"
+        ],
+        "hookLine": "下期深扒 MCP 安全"
+      }
+    }
+  ]
+}

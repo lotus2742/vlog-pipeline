@@ -1,0 +1,273 @@
+{
+  "meta": {
+    "topic": "MCP系列 · 第6期：未来趋势与路线图——MCP的未来不是单打独斗",
+    "videoType": "vlog",
+    "theme": "ocean",
+    "bgStyle": "cinematic",
+    "seriesPart": 6,
+    "seriesTotal": 6,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": true
+  },
+  "videoType": "vlog",
+  "output": "remotion-demo/public/studio-preview/latest.json",
+  "bundle": "mcp-ep6-future-trends-v3",
+  "idPrefix": "mcp6",
+  "fps": 30,
+  "copyToLatest": true,
+  "segSec": [8, 20, 15, 28, 12, 18, 15, 22, 18],
+  "slides": [
+    {
+      "slug": "hook",
+      "type": "hook",
+      "durationSec": 8,
+      "voiceScript": "MCP到底烂不烂？做了6期，我今天终于敢给答案了。",
+      "frame": {
+        "style": "spotlight",
+        "kicker": "MCP 系列 · 第 6 期（收官）",
+        "title": "MCP 烂透了？",
+        "hookLine": "做了 6 期，我终于敢给答案了",
+        "hookContrast": {
+          "highLabel": "第 1 期抛出的问题",
+          "highValue": "MCP 烂透了？",
+          "lowLabel": "6 期调研之后",
+          "lowValue": "今天给答案",
+          "ratio": "→"
+        },
+        "list": [
+          "结论倒挂 · 悬念 + 权威感"
+        ]
+      }
+    },
+    {
+      "slug": "poison",
+      "type": "kpi",
+      "durationSec": 20,
+      "voiceScript": "先说个吓人的啊——11个MCP注册中心，9个被成功\"投毒\"。啥意思呢？你搜一个MCP Server，下载到的可能是伪造的，里面藏着恶意代码。11个里面9个，你品品这个比例。\n\n所以MCP Registry这事儿真不是小事——官方认证体系、安全评分、企业级SLA，就是冲着这个问题来的。路子走对了，但关键还是执行力——能不能真的把那9个投毒的口子堵上。",
+      "frame": {
+        "style": "strip",
+        "title": "先说个吓人的",
+        "subtitle": "你搜到的 MCP Server，可能是伪造的 · 藏着恶意代码 💀",
+        "kpis": [
+          {
+            "title": "MCP 注册中心",
+            "value": "11",
+            "unit": "个",
+            "label": "被测试"
+          },
+          {
+            "title": "被成功「投毒」",
+            "value": "9",
+            "unit": "个",
+            "label": "11 个里 9 个",
+            "highlight": true
+          },
+          {
+            "title": "投毒成功率",
+            "value": "82",
+            "unit": "%",
+            "label": "你品品这个比例"
+          }
+        ],
+        "insight": "Registry 必须搞：官方认证 + 安全评分 + SLA · 关键看执行力能不能堵上口子"
+      }
+    },
+    {
+      "slug": "roadmap",
+      "type": "timeline",
+      "durationSec": 15,
+      "voiceScript": "那怎么解决呢？2026路线图盯住两条就够了——A2A互操作规范预计Q3出来，MCP Registry和企业就绪也在推进。其他都是铺垫，这两条才是主菜。",
+      "frame": {
+        "title": "2026 路线图 · 盯住两条就够了",
+        "subtitle": "优先级驱动 · 其他都是铺垫",
+        "milestones": [
+          {
+            "label": "主菜 ①",
+            "title": "A2A 互操作规范",
+            "desc": "预计 Q3 · MCP 和 A2A 打通"
+          },
+          {
+            "label": "主菜 ②",
+            "title": "MCP Registry + 企业就绪",
+            "desc": "官方认证 + 安全评分 + SLA"
+          }
+        ],
+        "insight": "投毒出了事 → 路线图就是解法 · 这两条才是主菜"
+      }
+    },
+    {
+      "slug": "mcp_a2a",
+      "type": "comparison",
+      "durationSec": 28,
+      "voiceScript": "这期最核心的一个判断来了——MCP的未来不是单打独斗，它得跟A2A组队。\n\n怎么理解呢？MCP管的是Agent跟工具的连接，垂直方向，就像神经末梢，你的手碰到火感受到烫。A2A管的是Agent跟Agent之间的协作，水平方向，就像神经纤维，手告诉大脑\"烫\"，大脑指挥手缩回来。一个负责感受，一个负责传递和协调，少了哪个都不完整。\n\nGoogle 2025年4月发布了A2A，6月就捐给了Linux基金会，12月AAIF成立，MCP成了创始项目，A2A也在同一个Linux基金会生态下面。说白了，单独一个Agent再强也就是一个\"聪明人\"，Agent协作才是\"组织力\"。",
+      "frame": {
+        "style": "split",
+        "title": "MCP + A2A · 核心洞察",
+        "subtitle": "工具调用 + Agent 协作 · 未来不是单打独斗",
+        "left": {
+          "label": "MCP · 垂直",
+          "title": "Agent ↔ 工具",
+          "color": "#22d3ee",
+          "points": [
+            "神经末梢（感受器）",
+            "负责「感受」与工具连接",
+            "2025.12 AAIF 成立 · MCP 为创始项目"
+          ],
+          "example": "手碰到火 → 感受到烫 🔥"
+        },
+        "right": {
+          "label": "A2A · 水平",
+          "title": "Agent ↔ Agent",
+          "color": "#a78bfa",
+          "points": [
+            "神经纤维（信息传递）",
+            "负责「传递」与协作协调",
+            "2025.4 Google 发布 · 6 月捐 Linux 基金会"
+          ],
+          "example": "手告诉大脑「烫」→ 大脑指挥缩手 🧠→🤚"
+        },
+        "insight": "同 Linux 基金会生态 · 单独 Agent =「聪明人」· Agent 协作 =「组织力」"
+      }
+    },
+    {
+      "slug": "evolution",
+      "type": "comparison",
+      "durationSec": 12,
+      "voiceScript": "看下演进方向。现在是一个Agent连一堆工具，未来是多个Agent各自带工具、互相协作。MCP负责连工具，A2A负责连Agent。说白了，一个管干活，一个管协同。",
+      "frame": {
+        "style": "split",
+        "title": "演进方向",
+        "subtitle": "从「单兵作战」到「组织协作」",
+        "left": {
+          "label": "当前",
+          "title": "一个 Agent 连一堆工具",
+          "color": "#94a3b8",
+          "points": [
+            "Agent ←→ [Tool][Tool][Tool]",
+            "单点能力再强也有上限",
+            "工具多了，协调成本暴涨"
+          ]
+        },
+        "right": {
+          "label": "演进",
+          "title": "多 Agent 各自带工具、互相协作",
+          "color": "#34d399",
+          "points": [
+            "Agent A ←→ Agent B",
+            "各自连 Tool，协作完成复杂任务",
+            "分工明确 · 互补协同"
+          ]
+        },
+        "insight": "MCP 管干活 · A2A 管协同"
+      }
+    },
+    {
+      "slug": "remote_server",
+      "type": "cards",
+      "durationSec": 18,
+      "voiceScript": "再看一个数据啊——去年5月以来，远程MCP Server部署增长了4倍。Stripe、Figma、Notion这些官方远程Server越来越多，托管平台也冒出来了。\n\n这说明啥？MCP正在从\"开发者的玩具\"变成\"企业基础设施\"。我之前做过前端基建，太知道从\"玩具\"到\"基础设施\"这一步意味着啥了，一旦迈过去就回不去了。",
+      "frame": {
+        "style": "stack",
+        "title": "远程 MCP Server 爆发 📈",
+        "subtitle": "2025.5 以来 · 部署增长 4 倍",
+        "cards": [
+          {
+            "title": "增长",
+            "label": "4 倍",
+            "desc": "远程 MCP Server 部署持续飙升",
+            "color": "#22d3ee"
+          },
+          {
+            "title": "官方 Remote",
+            "label": "大厂入场",
+            "desc": "Stripe · Figma · Notion 官方 Server 越来越多",
+            "color": "#34d399"
+          },
+          {
+            "title": "托管平台",
+            "label": "生态成熟",
+            "desc": "CData · Composio · Arcade 等平台冒头",
+            "color": "#fbbf24"
+          },
+          {
+            "title": "定位跃迁",
+            "label": "不可逆",
+            "desc": "从「开发者玩具」→「企业基础设施」",
+            "color": "#a78bfa"
+          }
+        ],
+        "insight": "迈过「玩具→基建」这一步，就回不去了"
+      }
+    },
+    {
+      "slug": "security_std",
+      "type": "bullets",
+      "durationSec": 15,
+      "voiceScript": "安全标准化是MCP能不能真正规模化的前提。审计日志、RBAC、数据脱敏、SLA保障，这些没到位，金融、医疗、政府，一个都进不去。\n\n我自己的判断是啥呢——OX Security那个漏洞虽然吓人，但它反而把企业对MCP安全的重视给逼上来了。有时候不出事，大家就装看不见，出了事反而动得快。",
+      "frame": {
+        "style": "checklist",
+        "title": "安全标准化 = 规模化前提",
+        "subtitle": "企业要什么？缺一项，金融 / 医疗 / 政府都进不去",
+        "items": [
+          {"title": "审计日志", "desc": "谁在什么时候调用了什么"},
+          {"title": "RBAC", "desc": "角色权限 · 最小授权"},
+          {"title": "数据脱敏", "desc": "敏感字段不出域"},
+          {"title": "SLA 保障", "desc": "企业级可用性与责任边界"}
+        ],
+        "insight": "OX Security 漏洞吓人，但逼出了重视——不出事装看不见，出了事反而动得快"
+      }
+    },
+    {
+      "slug": "finale",
+      "type": "comparison",
+      "durationSec": 22,
+      "voiceScript": "回扣一下第1期那个问题——MCP烂透了？\n\n我的答案是：不完美，但正在成为标准。争议是真的，数据是真的，安全风险也是真的。但路线图也是真的，A2A协作也是真的，从玩具到基础设施也是真的。\n\nMCP的未来不是单打独斗，而是和A2A一起定义Agent时代的协作标准。这不是PR话术啊，这是我做了6期调研之后的真心话。当然，路线图能不能兑现，得走着看，我不画饼。",
+      "frame": {
+        "style": "split",
+        "title": "回扣第 1 期：MCP 烂透了？",
+        "subtitle": "我的答案：不完美，但正在成为标准",
+        "left": {
+          "label": "问题也是真的",
+          "title": "不能回避",
+          "color": "#f87171",
+          "points": [
+            "争议是真的 ✅",
+            "数据是真的 ✅",
+            "安全风险也是真的 ✅"
+          ]
+        },
+        "right": {
+          "label": "方向也是真的",
+          "title": "值得跟进行动",
+          "color": "#34d399",
+          "points": [
+            "路线图也是真的 ✅",
+            "A2A 协作也是真的 ✅",
+            "玩具→基础设施也是真的 ✅"
+          ]
+        },
+        "insight": "MCP 未来不是单打独斗 · 和 A2A 一起定义 Agent 时代协作标准 · 6 期调研真心话 · 路线图得走着看，我不画饼"
+      }
+    },
+    {
+      "slug": "cta",
+      "type": "hook",
+      "durationSec": 18,
+      "voiceScript": "三件事，现在就做：第一，今晚打开你的mcp.json，把command开头的全改成http；第二，关注Linux基金会AAIF的GitHub，有更新第一时间看；第三，装MCP Server之前先查有没有官方认证，没认证的别碰。\n\n收藏这条就是收藏整个系列。下个系列我聊用MCP和A2A从0搭一个能跑的Agent系统——关注我，别错过。",
+      "frame": {
+        "style": "split",
+        "title": "3 件事，现在就做",
+        "subtitle": "6 期收官 · 行动 + 收藏 + 关注",
+        "hookLine": "用 MCP + A2A 从 0 搭能跑的 Agent 系统",
+        "list": [
+          "① 今晚打开 mcp.json · command 全改 http",
+          "② 关注 Linux 基金会 AAIF 的 GitHub",
+          "③ 装 Server 前查官方认证 · 没认证别碰",
+          "🔖 收藏这条 = 收藏整个系列",
+          "🚀 关注我 · 下个系列别错过"
+        ]
+      }
+    }
+  ]
+}

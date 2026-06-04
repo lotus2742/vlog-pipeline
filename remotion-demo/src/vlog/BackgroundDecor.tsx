@@ -1,35 +1,105 @@
-import { AbsoluteFill, interpolate } from "remotion";
+import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
 import { BIG_DIPPER_STARS, GEMINI_STARS, LIBRA_STARS, STAR_NOISE_POINTS } from "./constants";
+import { TopicWatermark } from "./VlogTopicWatermark";
 
 type Props = {
   frame: number;
   isLight: boolean;
   cinematic: boolean;
+  /** 防摩尔纹：大色块光晕 + 暗角，无网格/扫描线/细星点 */
+  safe?: boolean;
   accent: string;
   noiseFactor: number;
   lowNoiseMode: boolean;
-  bgWordA: string;
-  bgWordB: string;
   topic?: string;
 };
 
-export const BackgroundDecor: React.FC<Props> = ({
-  frame,
-  isLight,
-  cinematic,
+const CornerFrameAndTopic: React.FC<{ accent: string; topic?: string; frame: number }> = ({
   accent,
-  noiseFactor,
-  lowNoiseMode,
-  bgWordA,
-  bgWordB,
   topic,
-}) => {
+  frame,
+}) => (
+  <>
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <div style={{ position: "absolute", left: 20, top: 20, width: 108, height: 108, borderLeft: `2px solid ${accent}`, borderTop: `2px solid ${accent}`, borderTopLeftRadius: 16 }} />
+      <div style={{ position: "absolute", right: 20, top: 20, width: 108, height: 108, borderRight: `2px solid ${accent}`, borderTop: `2px solid ${accent}`, borderTopRightRadius: 16 }} />
+      <div style={{ position: "absolute", left: 20, bottom: 20, width: 108, height: 108, borderLeft: `2px solid ${accent}`, borderBottom: `2px solid ${accent}`, borderBottomLeftRadius: 16 }} />
+      <div style={{ position: "absolute", right: 20, bottom: 20, width: 108, height: 108, borderRight: `2px solid ${accent}`, borderBottom: `2px solid ${accent}`, borderBottomRightRadius: 16 }} />
+    </AbsoluteFill>
+    <AbsoluteFill style={{ padding: "18px 36px", height: 64, justifyContent: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          fontSize: 18,
+          opacity: 0.82,
+          borderBottom: `1px solid ${accent}`,
+          height: 40,
+          transform: `scale(${0.998 + Math.sin(frame / 45) * 0.002})`,
+        }}
+      >
+        <span style={{ fontStyle: "italic", fontWeight: 600, letterSpacing: 0.4 }}>{topic || "vlog-pipeline"}</span>
+      </div>
+    </AbsoluteFill>
+  </>
+);
+
+/** 大尺度光晕 + 暗角，避免细网格/星点/扫描线在抖音二次压缩后出现摩尔纹 */
+const SafeCinematicBackground: React.FC<Props> = ({ frame, isLight, accent, topic }) => {
+  const glowShift = interpolate(frame % 360, [0, 180, 359], [0, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  return (
+    <>
+      <AbsoluteFill
+        style={{
+          background: isLight
+            ? `radial-gradient(ellipse 90% 70% at 15% 12%, rgba(56,189,248,0.14), transparent 72%),
+               radial-gradient(ellipse 85% 65% at 90% 85%, rgba(99,102,241,0.12), transparent 70%)`
+            : `radial-gradient(ellipse 90% 70% at 14% 16%, rgba(56,189,248,0.26), transparent 72%),
+               radial-gradient(ellipse 85% 68% at 86% 80%, rgba(168,85,247,0.24), transparent 70%),
+               radial-gradient(ellipse 60% 50% at 50% 108%, rgba(52,211,153,0.10), transparent 68%)`,
+          transform: `translate3d(${glowShift * 10}px, ${-glowShift * 6}px, 0)`,
+        }}
+      />
+      <AbsoluteFill
+        style={{
+          pointerEvents: "none",
+          background: isLight
+            ? "radial-gradient(ellipse at center, transparent 50%, rgba(15,23,42,0.18) 100%)"
+            : "radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,0.42) 100%)",
+        }}
+      />
+      <TopicWatermark topic={topic} layout="vlog" isLight={isLight} />
+      <CornerFrameAndTopic accent={accent} topic={topic} frame={frame} />
+    </>
+  );
+};
+
+export const BackgroundDecor: React.FC<Props> = (props) => {
+  if (props.safe) {
+    return <SafeCinematicBackground {...props} />;
+  }
+
+  const {
+    frame,
+    isLight,
+    cinematic,
+    accent,
+    noiseFactor,
+    lowNoiseMode,
+    topic,
+  } = props;
+  const { height: vh } = useVideoConfig();
   const glowShift = interpolate(frame % 240, [0, 120, 239], [0, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const motifShiftX = Math.sin(frame / 90) * 9;
   const motifShiftY = Math.cos(frame / 110) * 6;
   const gridShift = Math.sin(frame / 180) * 8;
   const nodePulse = interpolate(frame % 80, [0, 40, 79], [0.7, 1, 0.7], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const scanlineY = (frame * 2.2) % 720;
+  const scanlineY = (frame * 2.2) % Math.max(1, vh);
   const starNoisePulse = 0.82 + 0.18 * Math.sin(frame / 70);
   const robotBobY = Math.sin(frame / 48) * 2.4;
   const robotNodDeg = Math.sin(frame / 64) * 2.2;
@@ -49,9 +119,6 @@ export const BackgroundDecor: React.FC<Props> = ({
               <stop offset="100%" stopColor="rgba(167,139,250,0.5)" />
             </linearGradient>
           </defs>
-          <text x="80" y="170" fill={cinematic ? "rgba(148,163,184,0.2)" : "rgba(148,163,184,0.28)"} fontSize={cinematic ? 84 : 92} fontWeight="800" letterSpacing={cinematic ? 2.5 : 0}>{bgWordA}</text>
-          <text x="880" y="620" fill={cinematic ? "rgba(148,163,184,0.16)" : "rgba(148,163,184,0.2)"} fontSize={cinematic ? 64 : 74} fontWeight="800" letterSpacing={cinematic ? 2 : 0}>{bgWordB}</text>
-
           <g transform={`translate(0 ${robotBobY.toFixed(2)}) rotate(${robotNodDeg.toFixed(2)} 1057 213)`}>
             <rect x="962" y="128" width="190" height="170" rx="28" fill="none" stroke="url(#aiStroke)" strokeWidth="2.8" />
             <ellipse cx="1008" cy="185" rx="14" ry={Math.max(4.2, 14 * eyeScaleY)} fill={`rgba(186,230,253,${eyeGlow * 0.28})`} stroke="url(#aiStroke)" strokeWidth="2.6" />
@@ -122,18 +189,8 @@ export const BackgroundDecor: React.FC<Props> = ({
         </>
       ) : null}
 
-      <AbsoluteFill style={{ pointerEvents: "none" }}>
-        <div style={{ position: "absolute", left: 20, top: 20, width: 108, height: 108, borderLeft: `2px solid ${accent}`, borderTop: `2px solid ${accent}`, borderTopLeftRadius: 16 }} />
-        <div style={{ position: "absolute", right: 20, top: 20, width: 108, height: 108, borderRight: `2px solid ${accent}`, borderTop: `2px solid ${accent}`, borderTopRightRadius: 16 }} />
-        <div style={{ position: "absolute", left: 20, bottom: 20, width: 108, height: 108, borderLeft: `2px solid ${accent}`, borderBottom: `2px solid ${accent}`, borderBottomLeftRadius: 16 }} />
-        <div style={{ position: "absolute", right: 20, bottom: 20, width: 108, height: 108, borderRight: `2px solid ${accent}`, borderBottom: `2px solid ${accent}`, borderBottomRightRadius: 16 }} />
-      </AbsoluteFill>
-
-      <AbsoluteFill style={{ padding: "18px 36px", height: 64, justifyContent: "center" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 18, opacity: 0.82, borderBottom: `1px solid ${accent}`, height: 40, transform: `scale(${0.998 + Math.sin(frame / 45) * 0.002})` }}>
-          <span style={{ fontStyle: "italic", fontWeight: 600, letterSpacing: 0.4 }}>{topic || "vlog-pipeline"}</span>
-        </div>
-      </AbsoluteFill>
+      <TopicWatermark topic={topic} layout="vlog" isLight={isLight} />
+      <CornerFrameAndTopic accent={accent} topic={topic} frame={frame} />
     </>
   );
 };

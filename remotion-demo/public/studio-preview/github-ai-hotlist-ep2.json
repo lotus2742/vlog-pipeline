@@ -1,0 +1,964 @@
+{
+  "meta": {
+    "topic": "GitHub AI 项目周 Star 增速 Top 10 · 第 2 期",
+    "videoType": "hotlist",
+    "theme": "light",
+    "bgStyle": "classic",
+    "aspectRatio": "16:9",
+    "seriesPart": 2,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": false,
+    "hideCaptions": false
+  },
+  "videoType": "hotlist",
+  "slides": [
+    {
+      "id": "ghhot2_lens01_cover",
+      "type": "hotlist-cover",
+      "durationInFrames": 367,
+      "frame": {
+        "title": "GitHub AI 项目周 Star 增速 Top 10",
+        "subtitle": "第 2 期",
+        "label": "统计周期：2026年5月15日 – 5月21日（第21周）",
+        "insight": "核心主题：Agent Skills 持续霸榜 + Claude 插件生态新入局",
+        "footnote": "Top 10 入围门槛：周新增 300+ Stars · 累计新增约 8,343",
+        "hook_line": "数据来源：star-history.com Weekly + GitHub API 实时查询（2026-05-25）",
+        "voiceScript": "第2期 GitHub AI 周榜来了。统计周期是5月15日到21日。本周主题是 Agent Skills 持续霸榜，Claude 官方插件生态也开始下场。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens01_cover.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.695,
+          "text": "第2期 GitHub AI 周榜来了。"
+        },
+        {
+          "start": 2.695,
+          "end": 5.286,
+          "text": "统计周期是5月15日到21日。"
+        },
+        {
+          "start": 5.286,
+          "end": 8.188,
+          "text": "本周主题是 Agent Skills 持续"
+        },
+        {
+          "start": 8.188,
+          "end": 8.81,
+          "text": "霸榜，"
+        },
+        {
+          "start": 8.81,
+          "end": 12.023,
+          "text": "Claude 官方插件生态也开始下场。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens02_rank01",
+      "type": "hotlist-project",
+      "durationInFrames": 362,
+      "frame": {
+        "subtitle": "1",
+        "title": "multica-ai/andrej-karpathy-skills",
+        "label": "multica-ai（社区开发者）",
+        "insight": "灵感来自 Andrej Karpathy 对 LLM 编程陷阱的洞察。一个 CLAUDE.md 即可改善 Claude Code：编码前先思考、简洁优先、精准修改、验证目标结果。",
+        "list": [
+          "AI编程规范",
+          "Karpathy",
+          "最佳实践",
+          "Claude Code"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "138,046"
+          },
+          {
+            "title": "语言",
+            "value": "Markdown"
+          },
+          {
+            "title": "本周新增",
+            "value": "1,400"
+          }
+        ],
+        "weeklyGrowth": 1400,
+        "weeklyGrowthMax": 1400,
+        "isGrowthKing": true,
+        "voiceScript": "冠军 multica-ai 的 andrej-karpathy-skills，本周加一千四百星。一个 CLAUDE 文件就能改善 Claude Code 行为，编码前先思考、简洁优先、精准修改。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens02_rank01.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.569,
+          "text": "冠军 multica-ai 的"
+        },
+        {
+          "start": 1.569,
+          "end": 3.661,
+          "text": "andrej-karpathy-skills，"
+        },
+        {
+          "start": 3.661,
+          "end": 5.23,
+          "text": "本周加一千四百星。"
+        },
+        {
+          "start": 5.23,
+          "end": 7.322,
+          "text": "一个 CLAUDE 文件就能改善"
+        },
+        {
+          "start": 7.322,
+          "end": 8.892,
+          "text": "Claude Code 行为，"
+        },
+        {
+          "start": 8.892,
+          "end": 10.984,
+          "text": "编码前先思考、简洁优先、"
+        },
+        {
+          "start": 10.984,
+          "end": 11.855,
+          "text": "精准修改。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens03_rank02",
+      "type": "hotlist-project",
+      "durationInFrames": 357,
+      "frame": {
+        "subtitle": "2",
+        "title": "mattpocock/skills",
+        "label": "Matt Pocock（TypeScript 布道者）",
+        "insight": "将日常 .claude 目录中的 Skills 配置包公开，覆盖代码审查、TDD、Debug、文档撰写等真实工作流。定位为 Real Engineering, Not Vibe Coding。",
+        "list": [
+          "Claude Skills",
+          "代码审查",
+          "TDD",
+          "AI编程"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "100,976"
+          },
+          {
+            "title": "语言",
+            "value": "Shell"
+          },
+          {
+            "title": "本周新增",
+            "value": "1,100"
+          }
+        ],
+        "weeklyGrowth": 1100,
+        "weeklyGrowthMax": 1400,
+        "voiceScript": "亚军 mattpocock 的 skills，本周加一千一百星。他把日常 .claude 目录里的 Skills 配置公开，覆盖代码审查、TDD、Debug，主打 Real Engineering。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens03_rank02.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.32,
+          "text": "亚军 mattpocock 的 skills，"
+        },
+        {
+          "start": 2.32,
+          "end": 3.867,
+          "text": "本周加一千一百星。"
+        },
+        {
+          "start": 3.867,
+          "end": 6.015,
+          "text": "他把日常 .claude 目录里的"
+        },
+        {
+          "start": 6.015,
+          "end": 7.476,
+          "text": "Skills 配置公开，"
+        },
+        {
+          "start": 7.476,
+          "end": 9.711,
+          "text": "覆盖代码审查、TDD、Debug，"
+        },
+        {
+          "start": 9.711,
+          "end": 11.688,
+          "text": "主打 Real Engineering。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens04_rank03",
+      "type": "hotlist-project",
+      "durationInFrames": 365,
+      "frame": {
+        "subtitle": "3",
+        "title": "tinyhumansai/openhuman",
+        "label": "tinyhumansai",
+        "insight": "开源个人 AI 超级智能体，口号 Private. Simple. Extremely Powerful. 本地优先、数据不上云，桌面应用、个人记忆与语音交互一体化。",
+        "list": [
+          "个人AI助手",
+          "本地优先",
+          "隐私保护"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "26,417"
+          },
+          {
+            "title": "语言",
+            "value": "Rust / TS"
+          },
+          {
+            "title": "本周新增",
+            "value": "1,100"
+          }
+        ],
+        "weeklyGrowth": 1100,
+        "weeklyGrowthMax": 1400,
+        "voiceScript": "季军 tinyhumansai 的 openhuman，本周同样加一千一百星。开源个人 AI 超级智能体，本地优先、数据不上云，桌面加记忆加语音一体化。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens04_rank03.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.943,
+          "text": "季军 tinyhumansai 的"
+        },
+        {
+          "start": 1.943,
+          "end": 3.012,
+          "text": "openhuman，"
+        },
+        {
+          "start": 3.012,
+          "end": 5.15,
+          "text": "本周同样加一千一百星。"
+        },
+        {
+          "start": 5.15,
+          "end": 7.482,
+          "text": "开源个人 AI 超级智能体，"
+        },
+        {
+          "start": 7.482,
+          "end": 9.619,
+          "text": "本地优先、数据不上云，"
+        },
+        {
+          "start": 9.619,
+          "end": 11.952,
+          "text": "桌面加记忆加语音一体化。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens05_rank04",
+      "type": "hotlist-project",
+      "durationInFrames": 386,
+      "frame": {
+        "subtitle": "4",
+        "title": "NousResearch/hermes-agent",
+        "label": "Nous Research（开源 LLM 组织）",
+        "insight": "自我进化的开源 AI Agent：The agent that grows with you。从每次任务自动提炼可复用技能，事实/对话/技能三层记忆，支持几乎任何 LLM 后端。",
+        "list": [
+          "AI Agent",
+          "自我进化",
+          "技能学习",
+          "记忆系统"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "163,109"
+          },
+          {
+            "title": "语言",
+            "value": "Python"
+          },
+          {
+            "title": "本周新增",
+            "value": "869"
+          }
+        ],
+        "weeklyGrowth": 869,
+        "weeklyGrowthMax": 1400,
+        "voiceScript": "第四名 NousResearch 的 hermes-agent，本周加八百六十九星。自我进化的开源 Agent，从任务经验提炼技能，三层记忆，几乎兼容任何 LLM 后端。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens05_rank04.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.124,
+          "text": "第四名 NousResearch 的"
+        },
+        {
+          "start": 2.124,
+          "end": 3.475,
+          "text": "hermes-agent，"
+        },
+        {
+          "start": 3.475,
+          "end": 5.406,
+          "text": "本周加八百六十九星。"
+        },
+        {
+          "start": 5.406,
+          "end": 7.53,
+          "text": "自我进化的开源 Agent，"
+        },
+        {
+          "start": 7.53,
+          "end": 9.461,
+          "text": "从任务经验提炼技能，"
+        },
+        {
+          "start": 9.461,
+          "end": 10.427,
+          "text": "三层记忆，"
+        },
+        {
+          "start": 10.427,
+          "end": 12.647,
+          "text": "几乎兼容任何 LLM 后端。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens06_rank05",
+      "type": "hotlist-project",
+      "durationInFrames": 405,
+      "frame": {
+        "subtitle": "5",
+        "title": "obra/superpowers",
+        "label": "Jesse Vincent（obra）",
+        "insight": "面向 AI 编程代理的完整软件开发方法论框架。可组合技能与初始化指令，确保 Agent 遵循严格工程原则，强调角色分离与方法论。",
+        "list": [
+          "AI技能框架",
+          "方法论",
+          "工作流自动化"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "202,868"
+          },
+          {
+            "title": "语言",
+            "value": "Shell / JS"
+          },
+          {
+            "title": "本周新增",
+            "value": "779"
+          }
+        ],
+        "weeklyGrowth": 779,
+        "weeklyGrowthMax": 1400,
+        "voiceScript": "第五名 obra 的 superpowers，本周加七百七十九星。面向 AI 编程代理的完整软件开发方法论，可组合技能加初始化指令，角色分离、方法论导向。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens06_rank05.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.815,
+          "text": "第五名 obra 的 superpowers，"
+        },
+        {
+          "start": 2.815,
+          "end": 4.826,
+          "text": "本周加七百七十九星。"
+        },
+        {
+          "start": 4.826,
+          "end": 7.641,
+          "text": "面向 AI 编程代理的完整软件开"
+        },
+        {
+          "start": 7.641,
+          "end": 8.646,
+          "text": "发方法论，"
+        },
+        {
+          "start": 8.646,
+          "end": 11.06,
+          "text": "可组合技能加初始化指令，"
+        },
+        {
+          "start": 11.06,
+          "end": 13.272,
+          "text": "角色分离、方法论导向。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens07_rank06",
+      "type": "hotlist-project",
+      "durationInFrames": 363,
+      "frame": {
+        "subtitle": "6",
+        "title": "anthropics/claude-plugins-official",
+        "label": "Anthropic（官方）",
+        "insight": "Anthropic 官方管理的高质量 Claude Code 插件目录。首次以官方身份运营 Claude 生态插件，标志 Claude Code 从社区驱动进入官方主导阶段。",
+        "list": [
+          "Claude插件",
+          "Anthropic官方",
+          "生态建设"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "24,884"
+          },
+          {
+            "title": "语言",
+            "value": "Python / TS"
+          },
+          {
+            "title": "本周新增",
+            "value": "620"
+          }
+        ],
+        "weeklyGrowth": 620,
+        "weeklyGrowthMax": 1400,
+        "isNew": true,
+        "voiceScript": "第六名 Anthropic 官方的 claude-plugins-official，本周新入榜，加六百二十星。官方高质量 Claude Code 插件目录，生态从社区驱动进入官方主导。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens07_rank06.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.024,
+          "text": "第六名 Anthropic 官方的"
+        },
+        {
+          "start": 2.024,
+          "end": 4.224,
+          "text": "claude-plugins-official，"
+        },
+        {
+          "start": 4.224,
+          "end": 6.5120000000000005,
+          "text": "本周新入榜，加六百二十星。"
+        },
+        {
+          "start": 6.5120000000000005,
+          "end": 8.888,
+          "text": "官方高质量 Claude Code 插件"
+        },
+        {
+          "start": 8.888,
+          "end": 9.416,
+          "text": "目录，"
+        },
+        {
+          "start": 9.416,
+          "end": 11.88,
+          "text": "生态从社区驱动进入官方主导。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens08_rank07",
+      "type": "hotlist-project",
+      "durationInFrames": 398,
+      "frame": {
+        "subtitle": "7",
+        "title": "farion1231/cc-switch",
+        "label": "farion1231（社区开发者）",
+        "insight": "跨平台桌面 All-in-One 助手，支持 Claude Code、Codex、OpenCode、OpenClaw、Gemini CLI 和 Hermes Agent 一键切换，内置 50+ 服务商预设。",
+        "list": [
+          "模型切换",
+          "多服务商",
+          "桌面工具"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "79,913"
+          },
+          {
+            "title": "语言",
+            "value": "Rust / TS"
+          },
+          {
+            "title": "本周新增",
+            "value": "505"
+          }
+        ],
+        "weeklyGrowth": 505,
+        "weeklyGrowthMax": 1400,
+        "voiceScript": "第七名 farion1231 的 cc-switch，本周加五百零五星。跨平台 All-in-One 助手，Claude Code、Codex、Gemini CLI 等一键切换，内置五十多家服务商预设。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens08_rank07.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.865,
+          "text": "第七名 farion1231 的"
+        },
+        {
+          "start": 1.865,
+          "end": 2.89,
+          "text": "cc-switch，"
+        },
+        {
+          "start": 2.89,
+          "end": 4.569,
+          "text": "本周加五百零五星。"
+        },
+        {
+          "start": 4.569,
+          "end": 6.807,
+          "text": "跨平台 All-in-One 助手，"
+        },
+        {
+          "start": 6.807,
+          "end": 8.672,
+          "text": "Claude Code、Codex、"
+        },
+        {
+          "start": 8.672,
+          "end": 10.817,
+          "text": "Gemini CLI 等一键切换，"
+        },
+        {
+          "start": 10.817,
+          "end": 13.055,
+          "text": "内置五十多家服务商预设。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens09_rank08",
+      "type": "hotlist-project",
+      "durationInFrames": 418,
+      "frame": {
+        "subtitle": "8",
+        "title": "rohitg00/agentmemory",
+        "label": "Rohit（个人开发者）",
+        "insight": "AI Coding Agent 跨会话持久化记忆方案，支持 Claude、Cursor、Copilot、Codex 等多客户端。真实基准下任务完成率从 38% 提升至 71%。",
+        "list": [
+          "Agent记忆",
+          "跨客户端",
+          "持久化"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "16,403"
+          },
+          {
+            "title": "语言",
+            "value": "TypeScript"
+          },
+          {
+            "title": "本周新增",
+            "value": "501"
+          }
+        ],
+        "weeklyGrowth": 501,
+        "weeklyGrowthMax": 1400,
+        "voiceScript": "第八名 rohitg00 的 agentmemory，本周加五百零一星。AI Coding Agent 跨会话持久记忆，支持 Claude、Cursor、Copilot，基准测试完成率从38%提到71%。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens09_rank08.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.774,
+          "text": "第八名 rohitg00 的"
+        },
+        {
+          "start": 1.774,
+          "end": 3.056,
+          "text": "agentmemory，"
+        },
+        {
+          "start": 3.056,
+          "end": 4.83,
+          "text": "本周加五百零一星。"
+        },
+        {
+          "start": 4.83,
+          "end": 7.985,
+          "text": "AI Coding Agent 跨会话持久记忆，"
+        },
+        {
+          "start": 7.985,
+          "end": 10.056,
+          "text": "支持 Claude、Cursor、"
+        },
+        {
+          "start": 10.056,
+          "end": 10.943,
+          "text": "Copilot，"
+        },
+        {
+          "start": 10.943,
+          "end": 13.704,
+          "text": "基准测试完成率从38%提到71%。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens10_rank09",
+      "type": "hotlist-project",
+      "durationInFrames": 402,
+      "frame": {
+        "subtitle": "9",
+        "title": "Hmbown/DeepSeek-TUI",
+        "label": "Hmbown（个人开发者）",
+        "insight": "终端中的 DeepSeek 编程 Agent，Rust 编写。支持 100 万 token 上下文、最多 16 个并行子代理，被视为 Claude Code 的 DeepSeek 平替，成本约为 Claude 的 1/4。",
+        "list": [
+          "终端工具",
+          "DeepSeek",
+          "编程助手",
+          "Rust"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "31,845"
+          },
+          {
+            "title": "语言",
+            "value": "Rust"
+          },
+          {
+            "title": "本周新增",
+            "value": "302"
+          }
+        ],
+        "weeklyGrowth": 302,
+        "weeklyGrowthMax": 1400,
+        "voiceScript": "第九名 Hmbown 的 DeepSeek-TUI，本周加三百零二星。终端里的 DeepSeek 编程 Agent，Rust 编写，百万 token 上下文，最多十六个并行子代理，成本约为 Claude 的四分之一。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens10_rank09.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.334,
+          "text": "第九名 Hmbown 的"
+        },
+        {
+          "start": 1.334,
+          "end": 2.501,
+          "text": "DeepSeek-TUI，"
+        },
+        {
+          "start": 2.501,
+          "end": 4.002,
+          "text": "本周加三百零二星。"
+        },
+        {
+          "start": 4.002,
+          "end": 6.504,
+          "text": "终端里的 DeepSeek 编程 Agent，"
+        },
+        {
+          "start": 6.504,
+          "end": 7.421,
+          "text": "Rust 编写，"
+        },
+        {
+          "start": 7.421,
+          "end": 9.006,
+          "text": "百万 token 上下文，"
+        },
+        {
+          "start": 9.006,
+          "end": 10.841,
+          "text": "最多十六个并行子代理，"
+        },
+        {
+          "start": 10.841,
+          "end": 13.176,
+          "text": "成本约为 Claude 的四分之一。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens11_rank10",
+      "type": "hotlist-project",
+      "durationInFrames": 465,
+      "frame": {
+        "subtitle": "10",
+        "title": "msitarzewski/agency-agents",
+        "label": "Michael Sitarzewski（个人开发者）",
+        "insight": "完整的 AI 代理机构集合，包含 144+ 专业 AI agents，覆盖工程、设计、营销、销售、游戏开发等 17 个领域。每个 agent 都有独特人格、工作流程和可衡量交付成果，支持 Claude Code、Cursor、Aider 等多工具集成。",
+        "list": [
+          "多Agent编排",
+          "专业化分工",
+          "跨工具支持",
+          "Agent协作"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "101,545"
+          },
+          {
+            "title": "语言",
+            "value": "Shell"
+          },
+          {
+            "title": "本周新增",
+            "value": "457"
+          }
+        ],
+        "weeklyGrowth": 457,
+        "weeklyGrowthMax": 1400,
+        "isNew": true,
+        "voiceScript": "第十名 Michael Sitarzewski 的 agency-agents，本周新入榜，加四百五十七星。一百四十四个专业 AI Agent，覆盖工程、设计、营销等十七个领域，支持 Claude Code、Cursor、Aider 等多工具集成。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens11_rank10.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.22,
+          "text": "第十名 Michael Sitarzewski"
+        },
+        {
+          "start": 2.22,
+          "end": 3.757,
+          "text": "的 agency-agents，"
+        },
+        {
+          "start": 3.757,
+          "end": 6.149,
+          "text": "本周新入榜，加四百五十七星。"
+        },
+        {
+          "start": 6.149,
+          "end": 8.455,
+          "text": "一百四十四个专业 AI Agent，"
+        },
+        {
+          "start": 8.455,
+          "end": 9.821,
+          "text": "覆盖工程、设计、"
+        },
+        {
+          "start": 9.821,
+          "end": 11.359,
+          "text": "营销等十七个领域，"
+        },
+        {
+          "start": 11.359,
+          "end": 13.579,
+          "text": "支持 Claude Code、Cursor、"
+        },
+        {
+          "start": 13.579,
+          "end": 15.288,
+          "text": "Aider 等多工具集成。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens12_trends",
+      "type": "hotlist-outro",
+      "durationInFrames": 436,
+      "frame": {
+        "title": "本周趋势分析",
+        "subtitle": "关键词：Skills 持续霸榜 + Claude 插件生态",
+        "cards": [
+          {
+            "title": "Skills 模式持续爆发",
+            "desc": "andrej-karpathy-skills 连续两周前列，Karpathy 的 AI 编程规范理念持续影响社区。"
+          },
+          {
+            "title": "Claude 官方生态加速",
+            "desc": "claude-plugins-official 新入榜，Anthropic 开始官方化运营 Claude Code 插件生态。"
+          },
+          {
+            "title": "多 Agent 编排升温",
+            "desc": "agency-agents 新入榜，叠加 hermes-agent 高位，多 Agent 协作方向热度不减。"
+          }
+        ],
+        "insight": "与第1期对比：claude-plugins-official、agency-agents 新入榜；andrej-karpathy-skills 从第4升至第1；financial-services、spec-kit、everything-claude-code 跌出 Top 10。",
+        "voiceScript": "本周五个项目直接跟 Agent Skills 或配置体系有关。Anthropic 官方插件目录新入榜，Claude 生态开始官方化。Skills 爆发、官方生态、多 Agent 编排，是这周三条主线。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens12_trends.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.232,
+          "text": "本周五个项目直接跟 Agent"
+        },
+        {
+          "start": 2.232,
+          "end": 4.372,
+          "text": "Skills 或配置体系有关。"
+        },
+        {
+          "start": 4.372,
+          "end": 7.163,
+          "text": "Anthropic 官方插件目录新入榜，"
+        },
+        {
+          "start": 7.163,
+          "end": 9.303,
+          "text": "Claude 生态开始官方化。"
+        },
+        {
+          "start": 9.303,
+          "end": 11.443,
+          "text": "Skills 爆发、官方生态、"
+        },
+        {
+          "start": 11.443,
+          "end": 12.839,
+          "text": "多 Agent 编排，"
+        },
+        {
+          "start": 12.839,
+          "end": 14.327,
+          "text": "是这周三条主线。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot2_lens13_table",
+      "type": "hotlist-table",
+      "durationInFrames": 319,
+      "frame": {
+        "title": "GitHub AI 周 Star 增速 Top 10",
+        "subtitle": "第 2 期 · 2026-05-15 至 2026-05-21",
+        "footnote": "周增量来自 star-history.com；总 Star / 语言 / 描述来自 GitHub API 实时查询",
+        "hotlistRows": [
+          {
+            "rank": "1",
+            "name": "andrej-karpathy-skills",
+            "weekly": "+1,400",
+            "total": "138,046",
+            "lang": "Markdown",
+            "weeklyGrowth": 1400,
+            "weeklyGrowthMax": 1400
+          },
+          {
+            "rank": "2",
+            "name": "skills",
+            "weekly": "+1,100",
+            "total": "100,976",
+            "lang": "Shell",
+            "weeklyGrowth": 1100,
+            "weeklyGrowthMax": 1400
+          },
+          {
+            "rank": "3",
+            "name": "openhuman",
+            "weekly": "+1,100",
+            "total": "26,417",
+            "lang": "Rust/TS",
+            "weeklyGrowth": 1100,
+            "weeklyGrowthMax": 1400
+          },
+          {
+            "rank": "4",
+            "name": "hermes-agent",
+            "weekly": "+869",
+            "total": "163,109",
+            "lang": "Python",
+            "weeklyGrowth": 869,
+            "weeklyGrowthMax": 1400
+          },
+          {
+            "rank": "5",
+            "name": "superpowers",
+            "weekly": "+779",
+            "total": "202,868",
+            "lang": "Shell/JS",
+            "weeklyGrowth": 779,
+            "weeklyGrowthMax": 1400
+          },
+          {
+            "rank": "6",
+            "name": "claude-plugins-official",
+            "weekly": "+620",
+            "total": "24,884",
+            "lang": "Py/TS",
+            "weeklyGrowth": 620,
+            "weeklyGrowthMax": 1400,
+            "isNew": true
+          },
+          {
+            "rank": "7",
+            "name": "cc-switch",
+            "weekly": "+505",
+            "total": "79,913",
+            "lang": "Rust/TS",
+            "weeklyGrowth": 505,
+            "weeklyGrowthMax": 1400
+          },
+          {
+            "rank": "8",
+            "name": "agentmemory",
+            "weekly": "+501",
+            "total": "16,403",
+            "lang": "TypeScript",
+            "weeklyGrowth": 501,
+            "weeklyGrowthMax": 1400
+          },
+          {
+            "rank": "9",
+            "name": "DeepSeek-TUI",
+            "weekly": "+302",
+            "total": "31,845",
+            "lang": "Rust",
+            "weeklyGrowth": 302,
+            "weeklyGrowthMax": 1400
+          },
+          {
+            "rank": "10",
+            "name": "agency-agents",
+            "weekly": "+457",
+            "total": "101,545",
+            "lang": "Shell",
+            "weeklyGrowth": 457,
+            "weeklyGrowthMax": 1400,
+            "isNew": true
+          }
+        ],
+        "voiceScript": "完整 Top 10 一览在屏幕上。数据来源 star-history 周榜加 GitHub 实测，报告生成时间 2026 年 5 月 25 日，我们下期见。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep2/ghhot2_lens13_table.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.439,
+          "text": "完整 Top 10 一览在屏幕上。"
+        },
+        {
+          "start": 2.439,
+          "end": 5.067,
+          "text": "数据来源 star-history 周榜加"
+        },
+        {
+          "start": 5.067,
+          "end": 6.287,
+          "text": "GitHub 实测，"
+        },
+        {
+          "start": 6.287,
+          "end": 9.289,
+          "text": "报告生成时间 2026 年 5 月 25日，"
+        },
+        {
+          "start": 9.289,
+          "end": 10.416,
+          "text": "我们下期见。"
+        }
+      ]
+    }
+  ],
+  "aspectRatio": "16:9"
+}

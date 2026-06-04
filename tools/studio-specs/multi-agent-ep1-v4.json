@@ -1,0 +1,187 @@
+{
+  "meta": {
+    "topic": "多Agent协作 · 第1讲：单Agent三个天花板",
+    "videoType": "vlog",
+    "theme": "purple",
+    "bgStyle": "cinematic-safe",
+    "aspectRatio": "16:9",
+    "seriesPart": 1,
+    "seriesTotal": 6,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": true,
+    "hideCaptions": false
+  },
+  "videoType": "vlog",
+  "output": "remotion-demo/public/studio-preview/multi-agent-ep1-v4.json",
+  "bundle": "multi-agent-ep1-v4",
+  "idPrefix": "ma1",
+  "fps": 30,
+  "copyToLatest": true,
+  "segSec": [10, 22, 16, 18, 18, 16, 14, 12],
+  "slides": [
+    {
+      "slug": "hook",
+      "type": "hook",
+      "durationSec": 10,
+      "voiceScript": "让 Agent 干复杂活，是不是总差点意思？不是模型菜，是你让它一个人干了一个团队的活。今天说单 Agent 三个天花板，第三个很多人没意识到。",
+      "frame": {
+        "style": "spotlight",
+        "kicker": "多Agent协作 · 第1讲",
+        "title": "让 Agent 干复杂活，总差点意思？",
+        "hookLine": "不是模型菜，是架构不对",
+        "list": [
+          "今天：单 Agent 三个天花板",
+          "第三个最隐蔽"
+        ]
+      }
+    },
+    {
+      "slug": "pain1",
+      "type": "cards",
+      "durationSec": 22,
+      "voiceScript": "第一个，复杂任务拆不动。让 Agent 写调研报告，搜索、整理、写稿、排版一条线干下来——搜的凑合、写的凑合、排版也凑合，啥都干了，啥都差点意思。就像一个 Agent 前后端加运维全包，忙是忙了，哪头都顾不上。",
+      "frame": {
+        "style": "flowchart",
+        "title": "【痛点 1/3】能力瓶颈",
+        "subtitle": "调研报告一条线：搜索 → 整理 → 写稿 → 排版",
+        "sectionProgress": { "label": "痛点", "current": 1, "total": 3 },
+        "cards": [
+          { "title": "Step 1", "label": "搜索", "desc": "找资料" },
+          { "title": "Step 2", "label": "整理", "desc": "归纳要点" },
+          { "title": "Step 3", "label": "写稿", "desc": "成文输出" },
+          { "title": "Step 4", "label": "排版", "desc": "视觉呈现" }
+        ],
+        "insight": "啥都干 → 啥都差点意思 · 单Agent = 一人全包 · 多Agent = 专人专岗"
+      }
+    },
+    {
+      "slug": "analogy",
+      "type": "comparison",
+      "durationSec": 16,
+      "voiceScript": "做过全栈的都懂——一个人啥都干，啥都 80 分；团队分工，各自 95 分。单 Agent 就是 solo，多 Agent 就是专业团队。不是说 solo 不行，是一个人精力有限，专业的事交给专业的人。",
+      "frame": {
+        "title": "全栈 solo vs 团队分工",
+        "compareRows": [
+          { "left": "全栈 solo", "center": "→", "right": "啥都干 → 啥都 80 分" },
+          { "left": "团队分工", "center": "→", "right": "前端 95 · 后端 95 · 运维 95" },
+          { "left": "单 Agent", "center": "=", "right": "solo" },
+          { "left": "多 Agent", "center": "=", "right": "专业团队" }
+        ],
+        "insight": "不是说 solo 不行，是一个人精力有限，专业的事交给专业的人"
+      }
+    },
+    {
+      "slug": "pain2",
+      "type": "comparison",
+      "durationSec": 18,
+      "voiceScript": "第二个更隐蔽——角色冲突。同一个 Agent 又搜索又审核：搜索要多找，审核要严格筛。你写一个 Prompt，又让它多找又让它严筛，它到底听谁的？一个 Agent 又当运动员又当裁判，两头不讨好。",
+      "frame": {
+        "style": "tension",
+        "title": "【痛点 2/3】方向矛盾",
+        "subtitle": "同一 Agent：又搜索又审核",
+        "sectionProgress": { "label": "痛点", "current": 2, "total": 3 },
+        "left": {
+          "label": "🔍 搜索",
+          "title": "多找点",
+          "color": "#22d3ee",
+          "points": ["结果 A", "结果 B", "结果 C", "结果 D", "结果 E", "结果 F"]
+        },
+        "right": {
+          "label": "✂️ 审核",
+          "title": "严格筛",
+          "color": "#fb7185",
+          "points": ["精选 ✓"]
+        },
+        "insight": "左手放大 右手缩小 · 运动员又当裁判 → 两头不讨好"
+      }
+    },
+    {
+      "slug": "pain3",
+      "type": "comparison",
+      "durationSec": 18,
+      "voiceScript": "第三个，串行太慢。还是那份报告，5 个行业各搜一轮——单 Agent 一个一个来，50 秒；多 Agent 五路同时搜，15 秒搞定。批量任务里，一下午缩到 40 分钟不稀奇。注意，并行主要省的是等待时间，不等于一定省 Token。",
+      "frame": {
+        "style": "pipeline",
+        "title": "【痛点 3/3】效率瓶颈",
+        "subtitle": "5 个行业各搜一轮",
+        "sectionProgress": { "label": "痛点", "current": 3, "total": 3 },
+        "left": {
+          "label": "单 Agent",
+          "title": "串行 A→B→C→D→E",
+          "color": "#94a3b8",
+          "points": ["⏱ 50 秒"]
+        },
+        "right": {
+          "label": "多 Agent",
+          "title": "5 路并行 + 汇总",
+          "color": "#34d399",
+          "points": ["⏱ 15 秒"]
+        },
+        "insight": "⏱ 并行省等待时间 ≠ 一定省 Token"
+      }
+    },
+    {
+      "slug": "data",
+      "type": "kpi",
+      "durationSec": 16,
+      "voiceScript": "看一组研究数据——高负载下，单 Agent 准确率可以从 73% 掉到 17%；多 Agent 加调度，负载低时 90% 以上，压上来也能稳住。但 Agent 多了容易聊着聊着跑偏，所以得分工，还得有个调度盯全局。",
+      "frame": {
+        "style": "strip",
+        "title": "有研究测过（临床批量任务）",
+        "subtitle": "来源：npj Health Systems, 2026",
+        "kpis": [
+          {
+            "title": "单 Agent",
+            "value": "73→17",
+            "unit": "%",
+            "label": "高负载 📉",
+            "highlight": true
+          },
+          {
+            "title": "多 Agent + 调度",
+            "value": "65~90+",
+            "unit": "%",
+            "label": "压负载也能稳住 📈"
+          }
+        ],
+        "insight": "也有坑：意图漂移 😵 · 解法：分工 + 调度盯全局"
+      }
+    },
+    {
+      "slug": "summary",
+      "type": "bullets",
+      "durationSec": 14,
+      "voiceScript": "总结：拆不动、角色冲突、串行慢——三大天花板。一个 Agent 再强只是聪明人，多 Agent 协作才是组织力。聪明人能干活，组织能干大事。",
+      "frame": {
+        "style": "checklist",
+        "title": "单 Agent 三大天花板",
+        "items": [
+          { "title": "① 拆不动", "desc": "复杂任务拆不动" },
+          { "title": "② 角色冲突", "desc": "又搜又审，方向打架" },
+          { "title": "③ 串行慢", "desc": "批量任务效率瓶颈" }
+        ],
+        "insight": "一个 Agent 再强 = 聪明人 · 多 Agent 协作 = 组织力"
+      }
+    },
+    {
+      "slug": "cta",
+      "type": "hook",
+      "durationSec": 12,
+      "voiceScript": "三个坑你踩过哪个？评论区打 1、2 还是 3。下期讲多 Agent 怎么搭——主从式、对等式、层级式，不同场景选不同的。关注我，下一讲见。",
+      "frame": {
+        "style": "split",
+        "kicker": "合集：多Agent协作",
+        "title": "三个坑你踩过哪个？",
+        "subtitle": "评论区打 1 / 2 / 3",
+        "hookLine": "下期：三大架构模式 · 主从式 · 对等式 · 层级式",
+        "list": [
+          "① 拆不动",
+          "② 角色冲突",
+          "③ 串行慢",
+          "关注我，下一讲见 👋"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "topic": "MCP系列 · 第2期：ScaleKit 基准测试深度解读",
+    "videoType": "vlog",
+    "theme": "ocean",
+    "bgStyle": "cinematic",
+    "seriesPart": 2,
+    "seriesTotal": 6,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": true
+  },
+  "videoType": "vlog",
+  "output": "remotion-demo/public/studio-preview/latest.json",
+  "bundle": "mcp-scalekit-ep2",
+  "idPrefix": "mcp2",
+  "fps": 30,
+  "segSec": [3, 15, 22, 18, 18, 12, 20, 15],
+  "slides": [
+    {
+      "slug": "hook",
+      "type": "hook",
+      "voiceScript": "说真的，MCP比CLI贵17倍这个说法，到底是怎么算出来的？今天我们就来扒一扒ScaleKit这份实测报告。",
+      "frame": {
+        "style": "spotlight",
+        "title": "ScaleKit 实测数据",
+        "subtitle": "MCP 比 CLI 贵 17 倍 · 成功率低 28 个百分点",
+        "list": ["说真的假的？"]
+      }
+    },
+    {
+      "slug": "method",
+      "type": "bullets",
+      "voiceScript": "先说下这个测试怎么做的。ScaleKit跑了75次基准测试，用的是同一个Claude模型，发的是同一个prompt，唯一变的只有工具接口的方式。测试任务就是GitHub查询，管PR和Issue这些。\n\n控制变量做得挺严格的，所以这个数据有参考价值。",
+      "frame": {
+        "style": "checklist",
+        "title": "ScaleKit 基准测试",
+        "subtitle": "测试任务：GitHub 查询（PR / Issue 管理）",
+        "items": [
+          {"title": "测试次数", "desc": "75 次"},
+          {"title": "测试工具", "desc": "同一 Claude 模型 · 同一 prompt"},
+          {"title": "唯一变量", "desc": "工具接口方式（CLI / +Skills / MCP）"}
+        ],
+        "insight": "控制变量严格，数据有参考价值"
+      }
+    },
+    {
+      "slug": "benchmark_data",
+      "type": "benchmark",
+      "voiceScript": "好，重点来了，看这组数据。\n\nToken消耗，CLI只要1365个token，MCP要44026个，差了整整32倍。换算成月成本，1万次调用的话，CLI只要3块2，MCP要55块2，贵了17倍。\n\n成功率呢？CLI是100%，MCP只有72%，差了28个百分点。翻译成人话就是，每4次调用大概有1次会失败。\n\n说真的，我第一次看到这组数据的时候也挺意外的。",
+      "frame": {
+        "title": "实测数据对比",
+        "subtitle": "月成本按 1 万次调用测算",
+        "benchmarkRows": [
+          {"scheme": "CLI", "token": "1,365", "monthlyCost": "$3.20", "successRate": "100%"},
+          {"scheme": "+Skills", "token": "4,724", "monthlyCost": "$4.50", "successRate": "100%"},
+          {"scheme": "MCP", "token": "44,026", "monthlyCost": "$55.20", "successRate": "72%", "highlight": true}
+        ],
+        "insight": "MCP 贵 17 倍 · Token 差 32 倍 · 成功率低 28 个百分点 · 每 4 次约有 1 次失败"
+      }
+    },
+    {
+      "slug": "failure_modes",
+      "type": "failure-modes",
+      "voiceScript": "为什么成功率只有72%？典型失败场景有几种。\n\n最常见的是Schema解析错误，工具描述和实际行为对不上。第二是上下文超限，工具列表膨胀之后被截断了。第三是认证失效，OAuth token过期了没刷新。",
+      "frame": {
+        "title": "为什么成功率只有 72%？",
+        "subtitle": "典型失败场景（按出现频率排序）",
+        "value": "72%",
+        "label": "MCP 成功率",
+        "footnote": "每 4 次约有 1 次失败",
+        "failureModes": [
+          {"rank": 1, "title": "Schema 解析错误", "desc": "工具描述与实际行为对不上", "frequency": "high"},
+          {"rank": 2, "title": "上下文超限", "desc": "工具列表膨胀导致截断", "frequency": "medium"},
+          {"rank": 3, "title": "认证失效", "desc": "OAuth token 过期未刷新", "frequency": "medium"}
+        ]
+      }
+    },
+    {
+      "slug": "context_bloat",
+      "type": "kpi",
+      "voiceScript": "说真的，上下文膨胀这个问题被吐槽得最狠。ScaleKit实测了一下，光连接3个常见服务——GitHub、Slack、Sentry，大概40个工具，光描述这些工具的schema就吃掉了55000个token。\n\n55000个token啊，Claude的上下文是20万，这意味什么？将近28%还没开始干活呢，就被塞满了。",
+      "frame": {
+        "title": "上下文膨胀有多严重？",
+        "subtitle": "GitHub + Slack + Sentry · 约 40 个工具",
+        "kpis": [
+          {"title": "Schema 消耗", "value": "55,000", "unit": "token"},
+          {"title": "占 Claude 200K", "value": "27.5", "unit": "%"},
+          {"title": "还没干活", "value": "≈28", "unit": "% 被吃掉"}
+        ],
+        "trend_title": "ScaleKit 实测",
+        "trend_points": ["光连接 3 个常见服务", "仅工具描述就占近三成上下文"]
+      }
+    },
+    {
+      "slug": "extreme_case",
+      "type": "kpi",
+      "voiceScript": "但是，这还不算最狠的。更极端的案例来了——某团队接了3个MCP Server，直接消耗了143000个token，占了200K上下文的72%。\n\nCloudflare那边的分析更绝，说MCP工具调用最高可以浪费81%的上下文窗口。",
+      "frame": {
+        "title": "更极端的案例",
+        "subtitle": "3 个 MCP Server · Claude 200K 上下文",
+        "kpis": [
+          {"title": "消耗", "value": "143K", "unit": "token"},
+          {"title": "上下文占用", "value": "72", "unit": "%"},
+          {"title": "留给推理", "value": "28", "unit": "%"}
+        ],
+        "footnote": "Cloudflare：MCP 工具调用最高浪费 81% 上下文窗口"
+      }
+    },
+    {
+      "slug": "rebuttal",
+      "type": "bullets",
+      "voiceScript": "但是，这里有个但是啊。\n\nScaleKit这个测试做的是简单任务，就是单步的GitHub查询。MCP那边说了，复杂多步骤场景，MCP的标准化schema和工具发现机制其实是有优势的。还有企业场景，审计、权限、SSO这些需求，CLI根本搞不定。\n\n不过说真的，我之前在项目里也踩过这个坑——简单任务用MCP确实有点杀鸡用牛刀。但复杂场景那边，目前确实没有等量级的对比数据，这是个遗憾。",
+      "frame": {
+        "title": "但是——测试场景有局限",
+        "subtitle": "ScaleKit 测的是简单任务（单步 GitHub 查询）",
+        "tieredBullets": {
+          "conclusion": {
+            "label": "MCP 阵营反驳",
+            "desc": "复杂任务：标准化 schema 有优势；企业场景：审计 / 权限 / SSO，CLI 搞不定"
+          },
+          "definition": {
+            "label": "个人经验",
+            "desc": "简单任务用 MCP 有点杀鸡用牛刀"
+          },
+          "traitsHeading": "待验证",
+          "traits": [
+            {"title": "简单任务", "desc": "CLI 确实更快更便宜（本测已验证）"},
+            {"title": "复杂任务", "desc": "MCP 优势可能体现，缺等量对比数据"},
+            {"title": "遗憾", "desc": "MCP 阵营至今未拿出复杂场景对比"}
+          ]
+        }
+      }
+    },
+    {
+      "slug": "conclusion",
+      "type": "cards",
+      "voiceScript": "好，总结一下。ScaleKit的实测数据很明确，简单任务场景，CLI确实更便宜更快，成功率还高。\n\n但是，复杂场景和企业场景那边MCP有没有优势，现在还说不准。所以结论就是：不踩一捧一，让数据说话。\n\n下一期我们会把MCP、CLI、Skills三种方案横向对比一下，收藏不迷路。",
+      "frame": {
+        "style": "verdict",
+        "title": "不踩一捧一，数据说话",
+        "subtitle": "按场景选方案，不强行二选一",
+        "cards": [
+          {"title": "简单任务", "label": "CLI 完胜", "desc": "更便宜 · 更快 · 成功率更高", "color": "#34d399"},
+          {"title": "复杂 / 企业场景", "label": "MCP 待验证", "desc": "审计 · 权限 · SSO — 缺等量对比数据", "color": "#fbbf24"}
+        ],
+        "insight": "收藏系列，下期 MCP vs CLI vs Skills 全面对比"
+      }
+    }
+  ]
+}

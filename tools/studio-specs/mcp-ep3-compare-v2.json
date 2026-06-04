@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "topic": "MCP系列 · 第3期：MCP vs CLI vs Skills 全面对比",
+    "videoType": "vlog",
+    "theme": "ocean",
+    "bgStyle": "cinematic",
+    "seriesPart": 3,
+    "seriesTotal": 6,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": true
+  },
+  "videoType": "vlog",
+  "output": "remotion-demo/public/studio-preview/latest.json",
+  "bundle": "mcp-ep3-compare-v2",
+  "idPrefix": "mcp3",
+  "fps": 30,
+  "segSec": [4, 16, 20, 16, 22, 18, 24, 16],
+  "slides": [
+    {
+      "slug": "hook",
+      "type": "hook",
+      "voiceScript": "说实话，我之前是MCP的死忠粉，直到我看到这组数据——有人花55块干了件3块2就能干的事。今天我把MCP、CLI、Skills三家拉到一起正面刚，看完你就知道该站哪边了。",
+      "frame": {
+        "style": "spotlight",
+        "kicker": "MCP 系列 · 第 3 期",
+        "hookContrast": {
+          "highLabel": "有人花了",
+          "highValue": "55 块",
+          "lowLabel": "其实只要",
+          "lowValue": "3 块 2",
+          "ratio": "17×"
+        },
+        "title": "同一件简单任务，价差 17 倍",
+        "subtitle": "你猜他用的是 MCP、CLI 还是 Skills？",
+        "list": ["MCP vs CLI vs Skills 正面刚"]
+      }
+    },
+    {
+      "slug": "factions",
+      "type": "comparison",
+      "voiceScript": "先快速认识一下三方阵营。\n\nMCP就像iPhone Pro Max——贵，但企业级功能最全，权限管理、审计日志、统一登录这些都有。CLI就像安卓旗舰——便宜又快，AI天生就会用。Skills就像功能机——开箱即用，但只能干简单活。\n\n三个路线，三种思路，但看完数据你可能会有自己的判断。",
+      "frame": {
+        "style": "triple",
+        "title": "三款「手机」，三种工具路线",
+        "subtitle": "三栏认阵营 · 下一镜用数据表正面刚",
+        "pillars": [
+          {
+            "title": "MCP",
+            "foot": "iPhone Pro Max",
+            "lines": ["贵 · 企业功能最全", "权限 / 审计 / SSO", "适合要合规、要审计的团队"]
+          },
+          {
+            "title": "CLI",
+            "foot": "安卓旗舰",
+            "highlight": true,
+            "highlightLabel": "开发者主线",
+            "lines": ["便宜又快 · 零部署", "AI 天生就会用", "适合开发者日常自动化"]
+          },
+          {
+            "title": "Skills",
+            "foot": "功能机",
+            "lines": ["开箱即用", "只能干简单活", "适合快速上手、懒人专属"]
+          }
+        ],
+        "insight": "三种思路 · 后面用成本和稳定性数据帮你定胜负"
+      }
+    },
+    {
+      "slug": "cost_pk",
+      "type": "benchmark",
+      "voiceScript": "好，先看大家最关心的成本。\n\n简单任务场景，CLI只要1365个token，月成本3块2。Skills稍微高一点，4块5。MCP直接飙到44026个token，55块2——差了整整17倍。\n\n我当时看到这个数字也懵了。MCP社区的人说，简单任务比成本是耍流氓。你觉得呢？",
+      "frame": {
+        "title": "1 万次调用月成本对比",
+        "subtitle": "简单任务场景",
+        "benchmarkTag": "COST BENCHMARK",
+        "benchmarkColumns": [
+          {"key": "scheme", "label": "方案", "w": "0.72fr"},
+          {"key": "token", "label": "Token 消耗", "w": "1.25fr"},
+          {"key": "monthlyCost", "label": "月成本", "w": "0.78fr"},
+          {"key": "valueRating", "label": "性价比", "w": "0.82fr"}
+        ],
+        "benchmarkRows": [
+          {"scheme": "CLI", "token": "1,365", "monthlyCost": "$3.20", "valueRating": "极高"},
+          {"scheme": "Skills", "token": "4,724", "monthlyCost": "$4.50", "valueRating": "较高"},
+          {"scheme": "MCP", "token": "44,026", "monthlyCost": "$55.20", "valueRating": "偏低", "highlight": true}
+        ],
+        "insight": "简单任务 CLI 完胜 · MCP 贵 17 倍 · Token 差 32 倍"
+      }
+    },
+    {
+      "slug": "stability",
+      "type": "kpi",
+      "voiceScript": "稳定性这块更扎心。CLI本地执行，成功率100%。Skills跑在Claude官方云端，98%左右。MCP因为要走网络，成功率只有72%——每4次就有1次失败。\n\n说白了，本地执行的天然比远程调用的稳，这是物理规律，跟技术无关。",
+      "frame": {
+        "style": "rows",
+        "title": "实测成功率对比",
+        "subtitle": "本地执行 vs 远程调用 · 越高越稳",
+        "kpis": [
+          {"title": "CLI", "value": "100", "unit": "%", "label": "本地执行", "note": "几乎无"},
+          {"title": "Skills", "value": "98", "unit": "%", "label": "官方云端", "note": "云端资源限制"},
+          {"title": "MCP", "value": "72", "unit": "%", "label": "远程调用", "highlight": true, "note": "网络超时 / 解析错误"}
+        ],
+        "trend_title": "典型失败原因",
+        "insight": "MCP 每 4 次约有 1 次失败 · 本地比远程稳是物理规律"
+      }
+    },
+    {
+      "slug": "pitfall_story",
+      "type": "timeline",
+      "voiceScript": "说真的，我之前在一个项目里踩过这个坑。当时选了MCP，觉得标准化很香。结果第一周配置环境，端口冲突搞了三天。第二周Token账单吓到我，成本超预算十倍。第三周网络抖动导致任务失败，被老板骂了一顿。\n\n最后换了CLI，两小时搞定。从那以后，简单任务我再也不碰MCP了。",
+      "frame": {
+        "title": "我的踩坑实录",
+        "subtitle": "内部工具自动化 · 选了 MCP，觉得「标准化」很香",
+        "milestones": [
+          {"label": "背景", "title": "项目选型", "desc": "内部工具自动化，押注 MCP 标准化"},
+          {"label": "Week 1", "desc": "配置环境，端口冲突搞了 3 天"},
+          {"label": "Week 2", "desc": "Token 账单吓到，成本超预算 10 倍"},
+          {"label": "Week 3", "desc": "网络抖动导致任务失败，被老板骂"},
+          {"label": "结局", "desc": "换了 CLI，2 小时搞定"}
+        ]
+      }
+    },
+    {
+      "slug": "enterprise",
+      "type": "benchmark",
+      "voiceScript": "但MCP也不是一无是处。企业级场景，权限控制、审计日志、统一登录、多租户隔离，这些MCP原生就支持。CLI和Skills要么自己搭，要么干脆没有。\n\n所以如果你公司要做合规审计，MCP是必选项。贵是贵，但这关过不去，再便宜也没用。",
+      "frame": {
+        "title": "什么时候该用 MCP？",
+        "subtitle": "企业级需求对照",
+        "benchmarkTag": "ENTERPRISE MATRIX",
+        "benchmarkColumns": [
+          {"key": "need", "label": "企业需求", "w": "1.05fr"},
+          {"key": "mcp", "label": "MCP", "w": "0.82fr"},
+          {"key": "cli", "label": "CLI", "w": "0.82fr"},
+          {"key": "skills", "label": "Skills", "w": "0.78fr"}
+        ],
+        "benchmarkRows": [
+          {"need": "权限控制", "mcp": "原生支持", "cli": "需自建", "skills": "无"},
+          {"need": "审计日志", "mcp": "原生支持", "cli": "需自建", "skills": "无"},
+          {"need": "统一登录", "mcp": "支持", "cli": "需自建", "skills": "无"},
+          {"need": "多租户隔离", "mcp": "支持", "cli": "需自建", "skills": "无"},
+          {"need": "合规认证", "mcp": "完善", "cli": "自管", "skills": "受限"}
+        ],
+        "insight": "做合规审计？MCP 是必选项"
+      }
+    },
+    {
+      "slug": "debate",
+      "type": "cards",
+      "voiceScript": "好，三方阵营正面刚一下。\n\nCLI派说MCP是智商税，55块干3块2的事，图啥？MCP派说CLI是玩具，企业级需求你们根本不懂。Skills派说你们慢慢吵，简单任务我5分钟搞定。\n\n我的判断是——80%的人不需要MCP。大多数开发者要的就是简单、便宜、稳定，CLI完全够用。只有那20%做企业级、要合规的，才值得为MCP买单。",
+      "frame": {
+        "style": "stack",
+        "title": "三方阵营正面刚",
+        "subtitle": "社区火药味实录",
+        "cards": [
+          {"title": "CLI 派", "desc": "MCP 就是智商税！55 块干 3 块 2 的事，图啥？", "color": "#22d3ee"},
+          {"title": "MCP 派", "desc": "CLI 就是玩具！企业级需求你们根本不懂", "color": "#fbbf24"},
+          {"title": "Skills 派", "desc": "你们慢慢吵，简单任务我 5 分钟搞定", "color": "#a78bfa"}
+        ],
+        "insight": "我的判断：80% 的人不需要 MCP"
+      }
+    },
+    {
+      "slug": "guide_cta",
+      "type": "benchmark",
+      "voiceScript": "好，总结一下我的选择指南。\n\n简单任务选CLI，便宜又快。企业合规选MCP，贵但省心。快速上手选Skills，懒人专属。\n\n你现在用的是什么？有没有被MCP的账单吓到过？评论区站队，我想听听你们的真实踩坑经历。",
+      "frame": {
+        "title": "我的选择指南",
+        "subtitle": "按场景选方案，别硬凑",
+        "benchmarkTag": "CONCLUSION",
+        "benchmarkRows": [
+          {"scene": "简单任务", "verdict": "CLI", "note": "便宜又快"},
+          {"scene": "企业合规", "verdict": "MCP", "note": "贵但省心"},
+          {"scene": "快速上手", "verdict": "Skills", "note": "懒人专属"}
+        ],
+        "insight": "你现在用的是什么？有没有被 MCP 账单吓到过？评论区站队"
+      }
+    }
+  ]
+}

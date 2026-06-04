@@ -1,0 +1,452 @@
+{
+  "meta": {
+    "topic": "AI开源项目分享 · agency-agents：一群懂本土平台的AI顾问",
+    "videoType": "vlog",
+    "theme": "dark",
+    "bgStyle": "cinematic-safe",
+    "aspectRatio": "16:9",
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": true,
+    "hideCaptions": false
+  },
+  "videoType": "vlog",
+  "output": "remotion-demo/public/studio-preview/agency-agents-v1.json",
+  "bundle": "agency-agents-v1",
+  "idPrefix": "agency",
+  "fps": 30,
+  "copyToLatest": true,
+  "segSec": [5, 7, 23, 25, 40, 30, 30, 35, 35, 30, 30, 30, 25, 30, 30, 30, 25],
+  "slides": [
+    {
+      "slug": "hook",
+      "type": "hook",
+      "durationSec": 5,
+      "voiceScript": "最近在开源社区上发现一个项目，超过10万Star，里面居然藏着10多个专门懂各大主流内容平台的AI顾问。不是那种泛泛的通用AI，是每个平台一个专属顾问，风格策略都不一样。",
+      "frame": {
+        "style": "spotlight",
+        "kicker": "AI 开源项目分享 · 开源社区超 10 万 Star",
+        "title": "agency-agents 项目深度解读",
+        "subtitle": "The Agency · 藏着 10+ 个懂本土平台的 AI 顾问",
+        "hookLine": "生活方式社区 · 短视频平台 · 中视频社区 —— 每个平台一个专属顾问",
+        "list": [
+          "不是泛泛的通用 AI",
+          "风格策略都不一样"
+        ]
+      }
+    },
+    {
+      "slug": "outline",
+      "type": "bullets",
+      "durationSec": 7,
+      "voiceScript": "这期说三件事——这个项目是什么、有什么亮点、怎么用以及避坑。信息量不小，建议先收藏。",
+      "frame": {
+        "style": "timeline",
+        "title": "今天说三件事",
+        "subtitle": "agency-agents 深度解读 · 本期内容结构",
+        "items": [
+          { "title": "第一件事", "desc": "这个项目是什么" },
+          { "title": "第二件事", "desc": "有什么亮点" },
+          { "title": "第三件事", "desc": "怎么用 + 避坑" }
+        ],
+        "insight": "🔖 信息量不小，建议先收藏"
+      }
+    },
+    {
+      "slug": "intro",
+      "type": "cards",
+      "durationSec": 23,
+      "voiceScript": "项目叫The Agency，开源社区上超过10万Star，开源协议。简单说就是一堆专业化的AI Agent，每个Agent擅长一个方向。不是那种什么都能聊的通用AI，而是像公司里的专业同事——写代码的写代码，做设计的做设计，搞营销的搞营销。目前150多个Agent，覆盖17个领域，而且数量还在持续增长。",
+      "frame": {
+        "title": "The Agency",
+        "subtitle": "agency-agents · 专业化 AI Agent 集合 · 开源协议",
+        "cards": [
+          {
+            "title": "10 万+",
+            "label": "开源社区 Star",
+            "desc": "截至 2026 年 5 月",
+            "color": "#38bdf8"
+          },
+          {
+            "title": "150+",
+            "label": "Agent 数量",
+            "desc": "持续增长中",
+            "color": "#34d399"
+          },
+          {
+            "title": "17",
+            "label": "覆盖领域",
+            "desc": "个 Division",
+            "color": "#a78bfa"
+          },
+          {
+            "title": "开源",
+            "label": "开源协议",
+            "desc": "可自由使用",
+            "color": "#fbbf24"
+          }
+        ],
+        "insight": "像公司里的专业同事：写代码 / 做设计 / 搞营销 —— 各干一行"
+      }
+    },
+    {
+      "slug": "concept",
+      "type": "comparison",
+      "durationSec": 25,
+      "voiceScript": "这个项目的核心思路是专业化分工。你用通用AI聊天，它什么都能聊，但每个方向都不够深。The Agency的做法是——每个Agent只负责一个方向，但在这个方向上足够专业。就像公司里，一个什么都会的实习生，和一个干了5年的老手，你选谁？当然是老手。",
+      "frame": {
+        "style": "split",
+        "title": "通用 AI vs 专业化 Agent",
+        "subtitle": "核心思路：专业化分工",
+        "left": {
+          "label": "通用 AI",
+          "title": "什么都能聊",
+          "color": "#94a3b8",
+          "points": [
+            "覆盖面广",
+            "每个方向都不够深",
+            "像什么都会的实习生"
+          ]
+        },
+        "right": {
+          "label": "专业 Agent",
+          "title": "只懂一个方向",
+          "color": "#38bdf8",
+          "points": [
+            "垂直深耕",
+            "在这个方向上足够深",
+            "像干了 5 年的老手"
+          ]
+        },
+        "insight": "你选谁？当然是老手。"
+      }
+    },
+    {
+      "slug": "local_agents",
+      "type": "bullets",
+      "durationSec": 40,
+      "voiceScript": "最让我惊喜的是本土平台这块。它有10多个专门针对国内主流内容平台的Agent——种草文案、短视频内容策略、中视频创作运营、社交平台公众号内容规划、问答社区内容、搜索引擎优化、社交资讯热点、老铁社区文化，还有国内电商运营、直播带货、粉丝社群运营、本土市场策略。甚至Engineering Division里还有主流平台小程序开发和办公协作平台集成的Agent。每个平台的Agent风格都不一样，比如种草平台的Agent懂种草逻辑，老铁社区的Agent懂社区文化，不是简单翻译一下就完事的。",
+      "frame": {
+        "style": "agent-map",
+        "title": "本土平台专属 Agent",
+        "subtitle": "10+ 个 · 每个平台玩法不同",
+        "items": [
+          { "title": "📱 生活方式社区", "desc": "种草平台专家" },
+          { "title": "🎵 短视频平台", "desc": "短视频策略专家" },
+          { "title": "📺 中视频社区", "desc": "中视频内容策略师" },
+          { "title": "💬 社交平台公众号", "desc": "公众号运营" },
+          { "title": "🔍 问答社区", "desc": "问答社区策略师" },
+          { "title": "🔎 搜索引擎", "desc": "搜索引擎优化专家" },
+          { "title": "📢 社交资讯平台", "desc": "社交资讯策略师" },
+          { "title": "🎬 短视频社区", "desc": "短视频社区策略师" },
+          { "title": "🛒 国内电商", "desc": "国内电商运营专家" },
+          { "title": "🎥 直播带货", "desc": "直播带货教练" },
+          { "title": "🔒 粉丝社群运营", "desc": "粉丝社群运营专家" },
+          { "title": "🌐 本土市场策略", "desc": "本土市场策略师" }
+        ],
+        "insight": "Engineering Division 还有主流平台小程序开发、办公协作平台集成 · 不是简单翻译"
+      }
+    },
+    {
+      "slug": "example",
+      "type": "comparison",
+      "durationSec": 30,
+      "voiceScript": "给你们举个具体例子。同一个产品，你问种草平台Agent和短视频平台Agent，给的方案完全不一样。种草平台Agent会跟你说种草逻辑、生活化表达、怎么蹭趋势；短视频平台Agent会跟你说内容推荐机制怎么玩、内容节奏怎么卡、投放策略怎么定。这就是专业化的好处——它真的懂每个平台的玩法，不是给你一个万能模板。",
+      "frame": {
+        "style": "split",
+        "title": "举例：种草平台 vs 短视频平台",
+        "subtitle": "同一个产品 · 两套完全不同的方案",
+        "left": {
+          "label": "种草平台 Agent",
+          "title": "种草向",
+          "color": "#f472b6",
+          "points": [
+            "种草逻辑",
+            "生活化表达",
+            "趋势驱动"
+          ]
+        },
+        "right": {
+          "label": "短视频平台 Agent",
+          "title": "流量向",
+          "color": "#38bdf8",
+          "points": [
+            "内容推荐机制",
+            "内容节奏",
+            "投放策略"
+          ]
+        },
+        "insight": "真的懂每个平台玩法 —— 不是万能模板"
+      }
+    },
+    {
+      "slug": "honest",
+      "type": "cards",
+      "durationSec": 30,
+      "voiceScript": "但这里我必须说清楚——这些Agent是顾问，不是自动化工具。它们能帮你写文案、定策略、给建议，但不能帮你登录账号、自动发布内容、调用平台接口。说白了就是，它帮你出主意，活还是你自己干。别被\"AI一键运营全平台\"这种说法忽悠了，目前没有任何开源项目能做到全自动运营。",
+      "frame": {
+        "style": "verdict",
+        "title": "⚠️ 必须说清楚",
+        "subtitle": "这些 Agent 是顾问，不是自动化工具",
+        "cards": [
+          {
+            "title": "✅ 能做",
+            "label": "顾问能力",
+            "desc": "写文案 · 定策略 · 给建议",
+            "color": "#34d399"
+          },
+          {
+            "title": "❌ 不能做",
+            "label": "边界",
+            "desc": "登录账号 · 自动发布 · 调用平台接口",
+            "color": "#f87171"
+          }
+        ],
+        "insight": "帮你出主意，活还是你自己干 · 别被「AI 一键运营全平台」忽悠"
+      }
+    },
+    {
+      "slug": "highlights",
+      "type": "bullets",
+      "durationSec": 35,
+      "voiceScript": "除了本土平台的Agent，还有几个挺有意思的。Reality Checker，帮你验证AI输出是不是真的可以上线，用证据把关质量，不是让你稀里糊涂就上生产。Game Development Division，游戏开发全栈，主流引擎都有对应的Agent，整个Division有20多个。Security Engineer，专门做安全代码审查。还有个Whimsy Injector，专门给产品加彩蛋和趣味交互，这个挺好玩。",
+      "frame": {
+        "style": "grid",
+        "title": "还有几个有意思的 Agent",
+        "subtitle": "Beyond 本土平台 · 4 个代表性 Agent",
+        "items": [
+          {
+            "title": "🔍 Reality Checker",
+            "desc": "验证 AI 输出生产就绪度 · 用证据把关质量"
+          },
+          {
+            "title": "🎮 Game Development",
+            "desc": "游戏全栈 — 主流引擎 · Division 20+ Agent"
+          },
+          {
+            "title": "🛡️ Security Engineer",
+            "desc": "安全 — 专门做安全代码审查"
+          },
+          {
+            "title": "✨ Whimsy Injector",
+            "desc": "趣味 — 给产品加彩蛋和趣味交互"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "install",
+      "type": "bullets",
+      "durationSec": 35,
+      "voiceScript": "怎么用？很简单。第一步，克隆仓库。第二步，运行安装脚本，指定你用的AI编程工具。如果你用的工具格式不兼容，需要先运行格式转换脚本，再安装。目前支持10多个主流AI编程工具，市面上常见的AI编程助手和编辑器基本都在列。",
+      "frame": {
+        "style": "checklist",
+        "title": "安装方式",
+        "subtitle": "4 步上手 · 支持 10+ AI 编程工具",
+        "items": [
+          { "title": "1. 克隆仓库", "desc": "git clone <agency-agents-repo>" },
+          {
+            "title": "2. 运行安装脚本",
+            "desc": "./scripts/install.sh --tool 你的AI工具名",
+            "code": true,
+            "codeLabel": "install.sh"
+          },
+          {
+            "title": "3. 部分工具需先转换",
+            "desc": "./scripts/convert.sh\n# 先转换格式，再安装",
+            "code": true,
+            "codeLabel": "convert.sh"
+          },
+          {
+            "title": "4. 支持的工具",
+            "desc": "主流 AI 编程助手 / 编辑器等 10 多个"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "pitfall1",
+      "type": "comparison",
+      "durationSec": 30,
+      "voiceScript": "第一个坑，期望值管理。很多人一听\"AI Agent\"就觉得能全自动干活，结果装上发现还得自己操作，就觉得没用。问题不在工具，在你的期望。这些Agent的本质是精心设计的提示词模板，它们让你在对应领域获得更专业、更对口的AI输出，而不是替你干活。期望对了，用起来才香。",
+      "frame": {
+        "style": "split",
+        "title": "避坑一：期望值管理",
+        "subtitle": "期望错了 = 用了觉得没用",
+        "left": {
+          "label": "❌ 错误期望",
+          "title": "AI 帮我自动运营全平台",
+          "color": "#f87171",
+          "points": [
+            "装上发现还得自己操作",
+            "觉得没用",
+            "问题不在工具，在期望"
+          ]
+        },
+        "right": {
+          "label": "✅ 正确期望",
+          "title": "AI 帮我出策略和文案",
+          "color": "#34d399",
+          "points": [
+            "我来执行",
+            "精心设计的提示词模板",
+            "更专业、更对口的输出"
+          ]
+        },
+        "insight": "期望对了，用起来才香"
+      }
+    },
+    {
+      "slug": "pitfall2",
+      "type": "failure-modes",
+      "durationSec": 30,
+      "voiceScript": "第二个坑，150多个Agent不可能每个都精。热门的Division比如Engineering和Marketing，Agent质量明显高，因为用的人多、迭代多。但一些冷门Division的Agent可能就是个基础提示词，深度不够。所以建议先试热门的，觉得好用了再按需探索其他的。别一上来就全装，用不过来。",
+      "frame": {
+        "title": "避坑二：Agent 质量参差不齐",
+        "subtitle": "150+ 个 Agent，不可能每个都精",
+        "value": "150+",
+        "label": "Agent",
+        "failureModes": [
+          {
+            "rank": 1,
+            "title": "热门 Division",
+            "desc": "Engineering / Marketing · 用的人多、迭代多、质量高",
+            "frequency": "high"
+          },
+          {
+            "rank": 2,
+            "title": "冷门 Division",
+            "desc": "可能只是基础提示词，深度不够",
+            "frequency": "medium"
+          },
+          {
+            "rank": 3,
+            "title": "建议",
+            "desc": "先试热门的，再按需探索 · 别一上来全装",
+            "frequency": "low"
+          }
+        ]
+      }
+    },
+    {
+      "slug": "pitfall3",
+      "type": "bullets",
+      "durationSec": 30,
+      "voiceScript": "第三个坑，The Agency不是独立工具。你必须配合AI编程助手或AI编辑器才能用。单独下载Agent文件，就是一堆文本文档，没有AI引擎跑不起来。所以如果你还没用过AI编程工具，先去搞定工具本身，再来装Agent。",
+      "frame": {
+        "style": "pain-pair",
+        "title": "避坑三：它不是独立工具",
+        "subtitle": "必须配合 AI 编程助手 / 编辑器使用",
+        "items": [
+          {
+            "title": "单独下载 Agent 文件",
+            "desc": "= 一堆文本文档"
+          },
+          {
+            "title": "没有 AI 引擎",
+            "desc": "= 跑不起来"
+          }
+        ],
+        "insight": "先搞定 AI 编程工具本身，再来装 Agent"
+      }
+    },
+    {
+      "slug": "tip1",
+      "type": "bullets",
+      "durationSec": 25,
+      "voiceScript": "提效技巧来了。第一个，先选对Division。17个领域不要乱翻，先想清楚你要干什么——写代码就去Engineering，搞流量就去Marketing，做产品规划就去Product。选对了Division，里面的Agent才对你有用，不然就是大海捞针。",
+      "frame": {
+        "style": "grid",
+        "title": "提效技巧一：先选对 Division",
+        "subtitle": "17 个 Division · 先明确你的需求",
+        "items": [
+          { "title": "写代码", "desc": "→ Engineering Division" },
+          { "title": "搞流量", "desc": "→ Marketing Division" },
+          { "title": "做产品", "desc": "→ Product Division" }
+        ],
+        "insight": "选对了 Division，Agent 才对路 —— 不然大海捞针"
+      }
+    },
+    {
+      "slug": "tip2",
+      "type": "cards",
+      "durationSec": 30,
+      "voiceScript": "第二个技巧，组合使用。比如你一个人做自媒体，Marketing Agent帮你出内容策略，Design Agent帮你做配图建议，Paid Media Agent帮你管投放策略。一个Division搞不定的事，跨Division组合就能覆盖。这也是The Agency比单个提示词模板强的地方——它给你的是一个团队，不是一个人。",
+      "frame": {
+        "style": "flowchart",
+        "title": "提效技巧二：组合使用 Agent",
+        "subtitle": "一个人做自媒体 · 跨 Division 组队",
+        "cards": [
+          { "title": "Marketing", "desc": "出内容策略" },
+          { "title": "Design", "desc": "配图建议" },
+          { "title": "Paid Media", "desc": "投放策略" }
+        ],
+        "insight": "给你的是一个团队，不是一个人"
+      }
+    },
+    {
+      "slug": "tip3",
+      "type": "bullets",
+      "durationSec": 30,
+      "voiceScript": "第三个技巧，也是我觉得最有价值的——参考官方Agent改你自己的。官方这150多个Agent不是终点，是起点。你看懂它的提示词是怎么写的，结构是什么，然后改成适合你自己业务的版本。比如种草平台Agent你可以改成更垂直的\"母婴种草Agent\"或者\"美食种草Agent\"，更懂你的行业、更符合你的风格。这才是正确的打开方式。",
+      "frame": {
+        "style": "takeaways",
+        "title": "提效技巧三：参考 Agent 改自己的",
+        "subtitle": "官方 Agent 不是终点，是起点",
+        "items": [
+          { "title": "看懂提示词结构", "desc": "官方模板怎么写的" },
+          { "title": "改成你的业务版", "desc": "母婴种草 · 美食种草 …" },
+          { "title": "更懂你的行业", "desc": "更符合你的风格" }
+        ],
+        "insight": "这才是正确的打开方式"
+      }
+    },
+    {
+      "slug": "summary",
+      "type": "bullets",
+      "durationSec": 30,
+      "voiceScript": "好，总结一下今天的核心——第一，The Agency是150多个专业化AI Agent的集合，覆盖17个领域，不是通用AI，是专业顾问。第二，本土市场有10多个专属Agent，但它们是顾问不是自动化工具，别被忽悠了。第三，三个避坑：管好期望值、先试热门Agent、必须配合AI工具使用。第四，三个技巧：选对Division、跨Division组合使用、参考官方Agent改你自己的。觉得有用就收藏，下次翻出来对照着用。",
+      "frame": {
+        "style": "checklist",
+        "title": "本期核心 · 四条记住",
+        "subtitle": "The Agency 深度解读收官",
+        "items": [
+          {
+            "title": "专业化 Agent 集合",
+            "desc": "150+ · 17 个领域 · 专业顾问，不是通用 AI"
+          },
+          {
+            "title": "本土 10+ 专属",
+            "desc": "种草 / 短视频 / 中视频 … · 顾问不是自动化"
+          },
+          {
+            "title": "三个避坑",
+            "desc": "期望值 · 质量参差 · 必须配合 AI 工具"
+          },
+          {
+            "title": "三个技巧",
+            "desc": "选对 Division · 跨域组合 · 参考官方改自己的"
+          }
+        ],
+        "insight": "🔖 觉得有用就收藏 · 下次翻开对照着用"
+      }
+    },
+    {
+      "slug": "cta",
+      "type": "hook",
+      "durationSec": 25,
+      "voiceScript": "最后问你们一句——你最想试哪个方向的Agent？种草文案还是短视频策略？评论区说说。想自己看的，开源社区搜agency-agents就行。觉得有用的点赞收藏，我们下期见。",
+      "frame": {
+        "style": "spotlight",
+        "kicker": "最后问一句",
+        "title": "你最想试哪个方向的 Agent？",
+        "subtitle": "评论区说说 · 开源社区搜 agency-agents",
+        "list": [
+          "📱 种草文案 · 懂种草逻辑",
+          "🎵 短视频策略 · 懂流量打法",
+          "👍 点赞收藏 · 我们下期见"
+        ]
+      }
+    }
+  ]
+}

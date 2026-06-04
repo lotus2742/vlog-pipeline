@@ -1,0 +1,267 @@
+{
+  "meta": {
+    "topic": "MCP系列 · 第5期：安全漏洞——MCP最大的信任危机",
+    "videoType": "vlog",
+    "theme": "ocean",
+    "bgStyle": "cinematic",
+    "seriesPart": 5,
+    "seriesTotal": 6,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": true
+  },
+  "videoType": "vlog",
+  "output": "remotion-demo/public/studio-preview/latest.json",
+  "bundle": "mcp-ep5-security-v2",
+  "idPrefix": "mcp5",
+  "fps": 30,
+  "copyToLatest": true,
+  "segSec": [5, 18, 20, 12, 22, 18, 18, 15, 12],
+  "slides": [
+    {
+      "slug": "hook",
+      "type": "hook",
+      "durationSec": 5,
+      "voiceScript": "1.5亿下载，7000多个公开暴露的Server，14个CVE——一个漏洞就能远程接管你的电脑。你装的那个MCP Server，真的安全吗？",
+      "frame": {
+        "style": "spotlight",
+        "kicker": "MCP 系列 · 第 5 期",
+        "title": "一个漏洞 · 远程接管你的电脑",
+        "hookLine": "你装的那个 MCP Server，真的安全吗？",
+        "list": [
+          "1.5亿+ 下载",
+          "7,000+ 公开暴露的 Server",
+          "14 个 CVE"
+        ]
+      }
+    },
+    {
+      "slug": "event",
+      "type": "timeline",
+      "voiceScript": "上期企业刚觉得MCP靠谱了，啪，安全漏洞就来了。2026年4月，OX Security爆出来说MCP的STDIO传输机制有系统性设计缺陷——攻击者能远程代码执行，就是RCE，直接控制你的机器。\n\n影响范围离谱得很——1.5亿下载量，7000多个公开暴露的Server，14个CVE，Windsurf、LiteLLM、Agent Zero全中招。\n\n说真的，我看到这个新闻的时候，第一反应就是赶紧翻自己电脑上的MCP配置，生怕里面躺着一个后门。",
+      "frame": {
+        "title": "2026 年 4 月 · OX Security 披露",
+        "subtitle": "企业刚觉得 MCP 靠谱 → 安全漏洞来了",
+        "milestones": [
+          {
+            "label": "机制",
+            "title": "STDIO 传输机制",
+            "desc": "系统性设计缺陷 → 远程代码执行（RCE）→ 完全控制你的机器"
+          },
+          {
+            "label": "影响",
+            "title": "影响范围离谱得很",
+            "desc": "下载 1.5亿+ · 暴露 Server 7,000+ · CVE 14 个"
+          },
+          {
+            "label": "中招",
+            "title": "Windsurf / LiteLLM / Agent Zero",
+            "desc": "主流 AI 工具链全中招"
+          }
+        ],
+        "insight": "第一反应：赶紧翻自己电脑上的 MCP 配置，生怕躺着一个后门"
+      }
+    },
+    {
+      "slug": "attack_chain",
+      "type": "timeline",
+      "voiceScript": "攻击链就4步，不复杂但很要命。\n\n第一步，Prompt注入，让你AI IDE渲染恶意内容。第二步，配置注入，悄悄写入恶意的MCP Server配置。第三步，STDIO执行任意系统命令。第四步，主机接管，你电脑就是人家的了。\n\n打个比方啊——有人给你寄了封信，信里藏了把钥匙，钥匙开了你的门，然后你家就是他的了。听着离谱吧？但STDIO机制下真就能这么干。",
+      "frame": {
+        "title": "4 步接管你的电脑",
+        "subtitle": "不复杂，但很要命",
+        "milestones": [
+          {
+            "label": "Step 1",
+            "title": "Prompt 注入",
+            "desc": "AI IDE 渲染恶意内容"
+          },
+          {
+            "label": "Step 2",
+            "title": "配置注入",
+            "desc": "写入恶意 MCP Server 配置"
+          },
+          {
+            "label": "Step 3",
+            "title": "STDIO 执行",
+            "desc": "执行任意系统命令"
+          },
+          {
+            "label": "Step 4",
+            "title": "主机接管",
+            "desc": "完全控制目标机器"
+          }
+        ],
+        "insight": "生活版：寄信 → 藏钥匙 → 开门 → 你家就是他的了 🔑→🏠"
+      }
+    },
+    {
+      "slug": "platforms",
+      "type": "cards",
+      "voiceScript": "看谁中招了啊。Windsurf、LiteLLM、Agent Zero、LangFlow高危，直接能被RCE。Claude Desktop、Cursor是中危，需要特定条件触发。\n\n我之前用Cursor看到这个清单的时候直接慌了——虽然说是\"需特定条件\"，但谁知道你是不是刚好满足呢？",
+      "frame": {
+        "style": "stack",
+        "title": "谁中招了？",
+        "subtitle": "高危直接 RCE · 中危需特定条件",
+        "cards": [
+          {
+            "title": "高危",
+            "label": "直接 RCE",
+            "desc": "Windsurf · LiteLLM · Agent Zero · LangFlow",
+            "color": "#f87171"
+          },
+          {
+            "title": "中危",
+            "label": "需特定条件",
+            "desc": "Claude Desktop · Cursor",
+            "color": "#fbbf24"
+          }
+        ],
+        "insight": "你在用哪个？——「需特定条件」谁知道你是不是刚好满足"
+      }
+    },
+    {
+      "slug": "debate",
+      "type": "comparison",
+      "voiceScript": "接下来这段，是2026年安全圈最精彩的一场对抗。\n\nAnthropic的回应，我看完直接愣住了——\"这是预期行为，输入校验是开发者的责任。\"翻译成人话呢？MCP设计没问题啊，是你们用的人没做安全校验。\n\nOX Security马上怼回来：你要求20万个Server的每个开发者都正确实现安全校验？不可能的嘛，协议层的安全设计不能依赖应用层的自律。\n\n说实话，\"预期行为\"这四个字让我挺无语的。你造了个门，锁是选配的，被偷了怪你没买锁？这逻辑你品品。",
+      "frame": {
+        "style": "split",
+        "title": "2026 安全圈最精彩的一场对抗",
+        "subtitle": "「预期行为」 vs 协议层安全边界",
+        "left": {
+          "label": "Anthropic",
+          "title": "「预期行为」",
+          "color": "#94a3b8",
+          "points": [
+            "输入校验是开发者的责任",
+            "设计没问题",
+            "你们没做安全校验"
+          ]
+        },
+        "right": {
+          "label": "OX Security",
+          "title": "协议层不能靠自律",
+          "color": "#fb923c",
+          "points": [
+            "20 万 Server 每个开发者都做对？",
+            "不可能",
+            "安全设计不能依赖应用层"
+          ]
+        },
+        "insight": "你造了个门，锁是选配的，被偷了怪你没买锁？这逻辑你品品"
+      }
+    },
+    {
+      "slug": "root_cause",
+      "type": "failure-modes",
+      "voiceScript": "那到底为啥STDIO这么危险呢？四个问题：信任边界模糊，配置文件能被注入；权限过大，STDIO进程就是本机完整权限；没有沙箱隔离；恶意命令执行了都追不到。\n\n背后其实是个设计哲学的矛盾——设计者说安全是你的责任，安全专家说协议层就该内嵌安全边界，企业那边更直接：我们哪有精力审计每一个Server？\n\n三方说的都有道理，但矛盾不解决，漏洞就不会停。",
+      "frame": {
+        "title": "STDIO 为什么这么危险？",
+        "subtitle": "四个结构性问题 + 三方矛盾",
+        "value": "STDIO",
+        "label": "根因",
+        "failureModes": [
+          {
+            "rank": 1,
+            "title": "信任边界模糊",
+            "desc": "配置文件能被注入控制",
+            "frequency": "high"
+          },
+          {
+            "rank": 2,
+            "title": "权限过大",
+            "desc": "STDIO 进程 = 本机完整权限",
+            "frequency": "high"
+          },
+          {
+            "rank": 3,
+            "title": "没有沙箱",
+            "desc": "缺进程级隔离",
+            "frequency": "high"
+          },
+          {
+            "rank": 4,
+            "title": "审计缺失",
+            "desc": "恶意命令追不到",
+            "frequency": "medium"
+          }
+        ],
+        "insight": "设计者 vs 安全专家 vs 企业：矛盾不解决，漏洞就不会停"
+      }
+    },
+    {
+      "slug": "fix",
+      "type": "timeline",
+      "voiceScript": "不过话说回来啊，危机有时候也是转机。这次漏洞直接推动了安全标准化的进程。\n\n已经落地的：Streamable HTTP替代了SSE，OAuth 2.1加PKCE正式版也发了，MCP Registry也已经上线。2026年路线图里还规划了Registry信任增强、安全审计、Server目录验证、SLA承诺。方向是对的，我自己的体感是最近新出的Server明显更重视安全配置了，这个势头挺好。",
+      "frame": {
+        "title": "危机也是转机",
+        "subtitle": "安全标准化正在加速",
+        "milestones": [
+          {
+            "label": "已落地",
+            "title": "Streamable HTTP",
+            "desc": "替代 SSE · 传输层更安全"
+          },
+          {
+            "label": "已落地",
+            "title": "OAuth 2.1 + PKCE",
+            "desc": "正式版发布 · 认证标准化"
+          },
+          {
+            "label": "已落地",
+            "title": "MCP Registry",
+            "desc": "已上线 · Server 可发现可治理"
+          },
+          {
+            "label": "2026 规划",
+            "title": "Registry 信任增强",
+            "desc": "签名验证 · 安全审计 · 目录验证 · SLA"
+          }
+        ],
+        "insight": "方向对了，就等执行力——新 Server 明显更重视安全配置"
+      }
+    },
+    {
+      "slug": "conclusion",
+      "type": "cards",
+      "voiceScript": "所以啊，MCP这次信任危机，漏洞是真的，Anthropic和OX的对抗是真的，但修复方向也是真的。安全不是\"加个锁\"就行的事儿，协议层、应用层、治理层，三层都得到位。先别慌，但得重视。",
+      "frame": {
+        "style": "verdict",
+        "title": "MCP 最大的信任危机",
+        "subtitle": "漏洞是真的 · 对抗是真的 · 修复也是真的",
+        "cards": [
+          {
+            "title": "三层安全",
+            "label": "都得到位",
+            "desc": "协议层 / 应用层 / 治理层",
+            "color": "#22d3ee"
+          },
+          {
+            "title": "态度",
+            "label": "先别慌",
+            "desc": "但得重视 · 安全不是「加个锁」就行",
+            "color": "#34d399"
+          }
+        ],
+        "insight": "不是吓唬你——是把信任危机看清楚，再跟进行动"
+      }
+    },
+    {
+      "slug": "next_ep",
+      "type": "hook",
+      "durationSec": 12,
+      "voiceScript": "安全漏洞聊到这，下一期是整个系列的最后一期——MCP未来趋势与路线图，MCP往哪走、Agent世界怎么连、你该怎么押注。收藏不迷路，下期见。",
+      "frame": {
+        "style": "split",
+        "title": "第 6 期（最终期）",
+        "subtitle": "MCP 未来趋势与路线图",
+        "hookLine": "MCP 往哪走 · Agent 怎么连 · 你该怎么押注",
+        "list": [
+          "MCP 会往哪走？",
+          "Agent 世界怎么连？",
+          "你该怎么押注？",
+          "收藏系列 不迷路"
+        ]
+      }
+    }
+  ]
+}

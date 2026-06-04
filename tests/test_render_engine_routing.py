@@ -80,6 +80,23 @@ class RemotionPropsTests(unittest.TestCase):
                 props = remotion_renderer.build_remotion_props(data, str(p), fps=30)
         self.assertEqual(props["slides"][0]["durationInFrames"], 150)
 
+    def test_build_remotion_hotlist_defaults_16_9(self):
+        data = {
+            "meta": {"topic": "周榜", "videoType": "hotlist"},
+            "frames": [
+                {"id": "a", "type": "hotlist-cover", "title": "T", "script": "x" * 40},
+                {"id": "b", "type": "hotlist-project", "title": "P", "script": "y" * 40, "kpis": []},
+                {"id": "c", "type": "hotlist-table", "title": "表", "script": "z" * 40},
+            ],
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "frames.json"
+            p.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+            props = remotion_renderer.build_remotion_props(data, str(p), fps=30)
+        self.assertEqual(props.get("videoType"), "hotlist")
+        self.assertEqual(props.get("aspectRatio"), "16:9")
+        self.assertEqual(props["slides"][1]["type"], "hotlist-project")
+
 
 if __name__ == "__main__":
     unittest.main()

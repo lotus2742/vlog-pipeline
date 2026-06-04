@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "topic": "MCP+A2A从0搭Agent系统 · 第1期：为什么需要Agent系统？",
+    "videoType": "vlog",
+    "theme": "dark",
+    "bgStyle": "minimal",
+    "aspectRatio": "9:16",
+    "seriesPart": 1,
+    "seriesTotal": 8,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+8%",
+    "engagementCta": false,
+    "hideCaptions": false
+  },
+  "videoType": "vlog",
+  "output": "remotion-demo/public/studio-preview/latest.json",
+  "bundle": "agent-ep1-douyin",
+  "idPrefix": "agent1",
+  "fps": 30,
+  "copyToLatest": true,
+  "segSec": [3, 3, 3, 9, 4, 10, 15, 15, 16, 7, 20, 13],
+  "slides": [
+    {
+      "slug": "hook",
+      "type": "douyin-text",
+      "durationSec": 3,
+      "voiceScript": "GPT-4，高级废话生成器。我让它查个股价，它让我自己上网搜。",
+      "frame": {
+        "style": "typewriter-slam",
+        "douyinColor": "red",
+        "title": "GPT-4 = 高级废话生成器？",
+        "subtitle": "我搭了3个AI替我打工"
+      }
+    },
+    {
+      "slug": "pain",
+      "type": "douyin-text",
+      "durationSec": 3,
+      "voiceScript": "查实时数据，它说做不到。做复杂任务，做到一半全忘了。单个大模型，说白了就是个聊天机器人。",
+      "frame": {
+        "style": "stagger-lines",
+        "instant": true,
+        "list": [
+          "查实时数据 → \"我无法访问\"",
+          "做复杂任务 → 做到一半全忘了",
+          "多步骤协作 → 根本玩不转"
+        ]
+      }
+    },
+    {
+      "slug": "turn",
+      "type": "douyin-text",
+      "durationSec": 3,
+      "voiceScript": "但如果——你有一支AI团队呢？",
+      "frame": {
+        "style": "pop-lines",
+        "list": ["但如果...", "你有一支AI团队呢？"]
+      }
+    },
+    {
+      "slug": "demo",
+      "type": "douyin-text",
+      "durationSec": 9,
+      "voiceScript": "我只说一句话，三个Agent自动分工。搜索的搜索，分析的分析，写报告的写报告。怎么做到的？两个协议，一分钟讲清楚。",
+      "frame": {
+        "style": "checklist-demo",
+        "suspense": true,
+        "title": "我：帮我调研AI行业",
+        "checklistItems": [
+          { "label": "🤖 搜索Agent", "status": "正在查资料...", "done": true },
+          { "label": "🤖 分析Agent", "status": "提炼洞察...", "done": true },
+          { "label": "🤖 执行Agent", "status": "生成报告...", "done": true }
+        ],
+        "waitingText": "⏳ 正在生成结果..."
+      }
+    },
+    {
+      "slug": "wow",
+      "type": "douyin-text",
+      "durationSec": 4,
+      "voiceScript": "三个AI，零工资，二十四小时干活。",
+      "frame": {
+        "style": "flash-big",
+        "title": "3个AI，0工资，24小时干活"
+      }
+    },
+    {
+      "slug": "concept",
+      "type": "douyin-text",
+      "durationSec": 10,
+      "voiceScript": "简单理一下——单模型只能聊天，你给它加上工具调用，它就是Agent了。你把多个Agent组在一起协作，那就是Agent系统。从聊天机器人到Agent到Agent系统，就这么三步。",
+      "frame": {
+        "style": "progression",
+        "progressionSteps": [
+          { "prefix": "第一步", "line": "单模型 = 聊天机器人" },
+          { "prefix": "第二步", "line": "+ 工具调用 = Agent" },
+          { "prefix": "第三步", "line": "多Agent协作 = Agent系统" }
+        ]
+      }
+    },
+    {
+      "slug": "mcp",
+      "type": "douyin-text",
+      "durationSec": 15,
+      "voiceScript": "那Agent怎么调工具？靠的是MCP协议——Anthropic提出来的标准。它定义了Agent怎么发现工具、怎么调用工具、怎么拿到结果。一句话记住：MCP是Agent的手，让Agent能做事。",
+      "frame": {
+        "style": "protocol",
+        "title": "MCP协议",
+        "protocolMeta": "Anthropic提出",
+        "protocolIcon": "hand",
+        "equation": "MCP协议 = Agent的👋 → 能调用工具，能做事"
+      }
+    },
+    {
+      "slug": "a2a",
+      "type": "douyin-text",
+      "durationSec": 15,
+      "voiceScript": "那Agent之间怎么协作？靠的是A2A协议——Google提出来的标准。它定义了Agent怎么委托任务、同步状态、传递消息。一句话记住：A2A是Agent的嘴，让Agent能沟通。",
+      "frame": {
+        "style": "protocol",
+        "title": "A2A协议",
+        "protocolMeta": "Google提出",
+        "protocolIcon": "mouth",
+        "equation": "A2A协议 = Agent的👄 → Agent之间能沟通、能协作"
+      }
+    },
+    {
+      "slug": "both",
+      "type": "douyin-text",
+      "durationSec": 16,
+      "voiceScript": "MCP管工具，A2A管协作。MCP是手，A2A是嘴，两个合在一起，Agent既能干活又能沟通，这才是一个完整的Agent系统。回到刚才那个例子——报告已经生成好了，全程零人工。这就是Agent系统的力量。",
+      "frame": {
+        "style": "dual-compare",
+        "compareRows": [
+          { "left": "MCP = Agent的手 → 能做事" },
+          { "left": "A2A = Agent的嘴 → 能沟通" },
+          { "left": "合在一起 = 完整的Agent系统" }
+        ],
+        "reveal": {
+          "footer": "📄 报告已保存到桌面",
+          "finaleText": "全程 0 人工"
+        }
+      }
+    },
+    {
+      "slug": "series",
+      "type": "douyin-text",
+      "durationSec": 10,
+      "voiceScript": "这个系列一共八期，我们从零开始，从手写MCP Server到多Agent协作，到记忆、监控、部署，全部讲透。",
+      "frame": {
+        "style": "roadmap-flash",
+        "roadmapCompact": true,
+        "list": [
+          "这个系列 · 一共8期",
+          "从0开始 · MCP+A2A · 搭完整Agent系统"
+        ]
+      }
+    },
+    {
+      "slug": "compare",
+      "type": "douyin-text",
+      "durationSec": 20,
+      "voiceScript": "不用Agent，你得打开浏览器、搜数据、复制粘贴、手动算——五分钟起步。用了Agent，一句话，三秒出结果。底层就几行代码，想学的下期我带你手写第一个MCP Server。",
+      "frame": {
+        "style": "effect-compare",
+        "compareLeft": {
+          "title": "❌ 不用Agent",
+          "steps": [
+            "打开浏览器 → 搜索股价 → 复制数据",
+            "→ 打开计算器 → 手动计算 → 整理格式"
+          ],
+          "timing": "⏱ 耗时：5分钟+"
+        },
+        "compareRight": {
+          "title": "✅ 用Agent",
+          "steps": ["一句话：\"帮我查股价并计算涨幅\""],
+          "timing": "⏱ 3秒出结果 ✓",
+          "result": "✓ 股价: 150.2元，涨幅: +3.5%"
+        }
+      }
+    },
+    {
+      "slug": "cta",
+      "type": "douyin-text",
+      "durationSec": 13,
+      "voiceScript": "这个系列八期，从这一行代码开始，带你搭一套完整的多Agent系统。现在关注，就是赚到。下期手写第一个MCP Server，让AI真正能操作你的文件。关注我，别掉队。",
+      "frame": {
+        "style": "cta-split",
+        "ctaCompareSnapshot": true,
+        "list": [
+          "只讲8期",
+          "从0到1，搭完整Agent系统",
+          "现在关注，就是赚到"
+        ]
+      }
+    }
+  ]
+}

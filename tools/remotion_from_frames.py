@@ -23,7 +23,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from tools.remotion_renderer import build_remotion_props
+from tools.remotion_renderer import (
+    build_remotion_props,
+    compute_slide_duration_frames,
+    ffprobe_duration_seconds,
+    is_hotlist_frames,
+)
 
 
 CN_STOPWORDS = {
@@ -344,7 +349,13 @@ def main() -> int:
     parser.add_argument(
         "--composition-id",
         default="VlogFrames",
-        help="Remotion Composition id",
+        help="Remotion Composition id（竖屏 9:16 可选用 VlogFrames9x16）",
+    )
+    parser.add_argument(
+        "--aspect-ratio",
+        choices=("16:9", "9:16"),
+        default="16:9",
+        help="画布比例；9:16 时写入 props.aspectRatio（1080×1920）",
     )
     args = parser.parse_args()
 
@@ -380,6 +391,10 @@ def main() -> int:
 
     data = json.loads(job_json.read_text(encoding="utf-8"))
     props = build_remotion_props(data, str(job_json), fps=30)
+    if args.aspect_ratio == "9:16":
+        props["aspectRatio"] = "9:16"
+    else:
+        props.pop("aspectRatio", None)
     for slide in props.get("slides", []):
         frame_obj = slide.get("frame", {}) if isinstance(slide.get("frame"), dict) else {}
         override = frame_obj.get("captionKeywordsOverride")
@@ -413,39 +428,79 @@ def main() -> int:
                 if src_srt.is_file():
                     cues = _parse_srt(src_srt)
                     slide["captions"] = cues
+                    frame_obj = slide.get("frame", {}) if isinstance(slide.get("frame"), dict) else {}
+                    audio_sec = ffprobe_duration_seconds(str(src_mp3))
+                    if audio_sec and audio_sec > 0:
+                        match_audio = bool(frame_obj.get("matchAudioDuration"))
+                        pad_frames = int(
+                            frame_obj.get(
+                                "durationPadFrames",
+                                0 if match_audio else 6,
+                            )
+                        )
+                        slide["durationInFrames"] = compute_slide_duration_frames(
+                            audio_sec,
+                            cues,
+                            pad_frames=pad_frames,
+                            min_sec=0.0 if match_audio else float(
+                                (data.get("meta") or {}).get("min_seg_sec", 2.8)
+                            ),
+                        )
                     # 手动覆盖优先级最高：若设置了 captionKeywordsOverride，不再自动改写。
                     if isinstance(slide.get("captionKeywords"), list) and slide["captionKeywords"]:
                         continue
-                    frame_obj = slide.get("frame", {}) if isinstance(slide.get("frame"), dict) else {}
                     script_text = str(frame_obj.get("script", "")).strip()
-                    kws = _extract_caption_keywords_from_script(script_text, limit=6)
+                    kws = _extract_caption_keywords_from_cues(cues, limit=6)
                     if not kws:
-                        kws = _extract_caption_keywords_from_cues(cues, limit=6)
+                        kws = _extract_caption_keywords_from_script(script_text, limit=6)
                     if kws:
                         slide["captionKeywords"] = kws
+                elif src_mp3.is_file():
+                    frame_obj = slide.get("frame", {}) if isinstance(slide.get("frame"), dict) else {}
+                    if frame_obj.get("matchAudioDuration"):
+                        audio_sec = ffprobe_duration_seconds(str(src_mp3))
+                        if audio_sec and audio_sec > 0:
+                            pad_frames = int(frame_obj.get("durationPadFrames", 0))
+                            slide["durationInFrames"] = compute_slide_duration_frames(
+                                audio_sec,
+                                None,
+                                pad_frames=pad_frames,
+                                min_sec=0.0,
+                            )
 
     props_path.write_text(json.dumps(props, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"[remotion_from_frames] props -> {props_path}")
 
     if args.studio:
-        studio_dest = remotion_dir / "src" / "studio-active-props.json"
-        shutil.copy(props_path, studio_dest)
-        print(f"[remotion_from_frames] 已同步 Studio 预览数据 -> {studio_dest}")
-        _append_studio_composition(
-            remotion_dir=remotion_dir,
-            comp_id=studio_comp_id,
-            label=studio_comp_label,
-            props=props,
-        )
-        print(
-            "[remotion_from_frames] 已新增 Studio 预览条目 -> "
-            f"id={studio_comp_id}"
-        )
-        print(
-            "[remotion_from_frames] 下一步: cd remotion-demo && npm run dev ，左侧可选择 "
-            f"**{studio_comp_id}**（或 VlogFramesStudio），"
-            "若 Studio 已在运行请重启以加载新 JSON。"
-        )
+        preview_dir = PROJECT_ROOT / "tmp" / "studio_preview"
+        preview_dir.mkdir(parents=True, exist_ok=True)
+        preview_props = preview_dir / f"{stem}_studio_props.json"
+        shutil.copy(props_path, preview_props)
+        print(f"[remotion_from_frames] Studio 预览 props -> {preview_props}")
+        public_preview_dir = remotion_dir / "public" / "studio-preview"
+        public_preview_dir.mkdir(parents=True, exist_ok=True)
+        public_preview_latest = public_preview_dir / "latest.json"
+        shutil.copy(props_path, public_preview_latest)
+        print(f"[remotion_from_frames] 已自动同步 VlogFramesStudio -> {public_preview_latest}")
+        public_preview_named = public_preview_dir / f"{stem}.json"
+        if public_preview_named != public_preview_latest:
+            shutil.copy(props_path, public_preview_named)
+            print(f"[remotion_from_frames] 已同步专用预览 -> {public_preview_named}")
+        if is_hotlist_frames(data):
+            studio_comp_hint = "HotlistFramesStudio"
+            print(
+                "[remotion_from_frames] 检测到榜单视频 (videoType=hotlist)，"
+                f"在 Studio 中选择 {studio_comp_hint}（默认 16:9 白底卡片版式）。"
+            )
+        else:
+            studio_comp_hint = (
+                "VlogFramesStudio9x16"
+                if args.aspect_ratio == "9:16"
+                else "VlogFramesStudio"
+            )
+            print(
+                f"[remotion_from_frames] 在 Studio 中选择 {studio_comp_hint} 即可看到最新内容（比例 {args.aspect_ratio}）。"
+            )
 
     if args.props_only or args.studio:
         if args.props_only and not args.studio:
@@ -464,6 +519,8 @@ def main() -> int:
             str(PROJECT_ROOT / "remotion-demo"),
             "--composition-id",
             args.composition_id,
+            "--aspect-ratio",
+            args.aspect_ratio,
         ],
         cwd=str(PROJECT_ROOT),
     ).returncode

@@ -1,0 +1,1004 @@
+{
+  "meta": {
+    "topic": "GitHub AI 项目周 Star 增速 Top 10 · 第 3 期",
+    "videoType": "hotlist",
+    "theme": "light",
+    "bgStyle": "classic",
+    "aspectRatio": "16:9",
+    "seriesPart": 3,
+    "voice": "zh-CN-YunjianNeural",
+    "rate": "+5%",
+    "engagementCta": false,
+    "hideCaptions": false
+  },
+  "videoType": "hotlist",
+  "slides": [
+    {
+      "id": "ghhot3_lens01_cover",
+      "type": "hotlist-cover",
+      "durationInFrames": 424,
+      "frame": {
+        "title": "GitHub AI 项目周 Star 增速 Top 10",
+        "subtitle": "第 3 期",
+        "label": "统计周期：2026年5月23日 – 5月30日",
+        "insight": "核心主题：AI 编码 Agent / Skills 生态持续火爆 + 代码分析工具崛起",
+        "footnote": "Top 10 入围门槛：周新增 460+ Stars · 累计新增约 8,116",
+        "hook_line": "数据来源：star-history.com Weekly + GitHub API 实时查询（2026-06-01）",
+        "voiceScript": "第3期 GitHub AI 周榜来了。统计周期是5月23日到30日。本周主题是 AI 编码 Agent 与 Skills 生态持续火爆，代码分析工具 Understand-Anything 登顶。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens01_cover.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.641,
+          "text": "第3期 GitHub AI 周榜来了。"
+        },
+        {
+          "start": 2.641,
+          "end": 5.181,
+          "text": "统计周期是5月23日到30日。"
+        },
+        {
+          "start": 5.181,
+          "end": 7.925,
+          "text": "本周主题是 AI 编码 Agent 与"
+        },
+        {
+          "start": 7.925,
+          "end": 10.058,
+          "text": "Skills 生态持续火爆，"
+        },
+        {
+          "start": 10.058,
+          "end": 11.278,
+          "text": "代码分析工具"
+        },
+        {
+          "start": 11.278,
+          "end": 13.919,
+          "text": "Understand-Anything 登顶。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens02_rank01",
+      "type": "hotlist-project",
+      "durationInFrames": 446,
+      "frame": {
+        "subtitle": "1",
+        "title": "Lum1104/Understand-Anything",
+        "label": "Lum1104",
+        "insight": "AI Codebase 分析与知识图谱工具。多智能体管道分析代码库，构建文件、函数、类、依赖关系图谱，交互式可视化仪表板，差分影响分析。",
+        "list": [
+          "代码分析",
+          "知识图谱",
+          "多智能体",
+          "Claude Code"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "47,400"
+          },
+          {
+            "title": "类型",
+            "value": "Codebase 分析"
+          },
+          {
+            "title": "本周新增",
+            "value": "1,974"
+          }
+        ],
+        "weeklyGrowth": 1974,
+        "weeklyGrowthMax": 1974,
+        "isGrowthKing": true,
+        "isNew": true,
+        "voiceScript": "冠军 Lum1104 的 Understand-Anything，本周新入榜登顶，加一千九百七十四星。多智能体管道分析代码库，构建知识图谱，支持 Claude Code、Cursor、Copilot 等多平台。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens02_rank01.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.428,
+          "text": "冠军 Lum1104 的"
+        },
+        {
+          "start": 1.428,
+          "end": 3.427,
+          "text": "Understand-Anything，"
+        },
+        {
+          "start": 3.427,
+          "end": 4.951,
+          "text": "本周新入榜登顶，"
+        },
+        {
+          "start": 4.951,
+          "end": 6.855,
+          "text": "加一千九百七十四星。"
+        },
+        {
+          "start": 6.855,
+          "end": 9.141,
+          "text": "多智能体管道分析代码库，"
+        },
+        {
+          "start": 9.141,
+          "end": 10.474,
+          "text": "构建知识图谱，"
+        },
+        {
+          "start": 10.474,
+          "end": 12.95,
+          "text": "支持 Claude Code、Cursor、"
+        },
+        {
+          "start": 12.95,
+          "end": 14.663,
+          "text": "Copilot 等多平台。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens03_rank02",
+      "type": "hotlist-project",
+      "durationInFrames": 387,
+      "frame": {
+        "subtitle": "2",
+        "title": "multica-ai/andrej-karpathy-skills",
+        "label": "multica-ai（社区开发者）",
+        "insight": "AI/LLM Skills 集合。单个 CLAUDE.md 即可改善 Claude Code 行为，核心四原则：编码前先思考、简洁优先、精准修改、验证目标结果。",
+        "list": [
+          "AI编程规范",
+          "Karpathy",
+          "最佳实践",
+          "Claude Code"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "163,500"
+          },
+          {
+            "title": "类型",
+            "value": "AI/LLM Skills"
+          },
+          {
+            "title": "本周新增",
+            "value": "1,326"
+          }
+        ],
+        "weeklyGrowth": 1326,
+        "weeklyGrowthMax": 1974,
+        "voiceScript": "亚军 multica-ai 的 andrej-karpathy-skills，本周加一千三百二十六星。灵感来自 Karpathy 对 LLM 编程陷阱的洞察，一个 CLAUDE 文件就能改善 Claude Code 行为。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens03_rank02.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.533,
+          "text": "亚军 multica-ai 的"
+        },
+        {
+          "start": 1.533,
+          "end": 3.578,
+          "text": "andrej-karpathy-skills，"
+        },
+        {
+          "start": 3.578,
+          "end": 5.623,
+          "text": "本周加一千三百二十六星。"
+        },
+        {
+          "start": 5.623,
+          "end": 7.924,
+          "text": "灵感来自 Karpathy 对 LLM 编"
+        },
+        {
+          "start": 7.924,
+          "end": 9.117,
+          "text": "程陷阱的洞察，"
+        },
+        {
+          "start": 9.117,
+          "end": 11.162,
+          "text": "一个 CLAUDE 文件就能改善"
+        },
+        {
+          "start": 11.162,
+          "end": 12.695,
+          "text": "Claude Code 行为。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens04_rank03",
+      "type": "hotlist-project",
+      "durationInFrames": 439,
+      "frame": {
+        "subtitle": "3",
+        "title": "harry0703/MoneyPrinterTurbo",
+        "label": "harry0703",
+        "insight": "AI 视频生成工具（本周期唯一非编码类 AI 项目）。只需提供视频主题或关键词，全自动生成视频文案、素材、字幕、背景音乐，支持多种 LLM 与 9:16 / 16:9 尺寸。",
+        "list": [
+          "AI视频生成",
+          "全自动",
+          "多LLM",
+          "竖屏横屏"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "74,600"
+          },
+          {
+            "title": "类型",
+            "value": "AI 视频生成"
+          },
+          {
+            "title": "本周新增",
+            "value": "898"
+          }
+        ],
+        "weeklyGrowth": 898,
+        "weeklyGrowthMax": 1974,
+        "isNew": true,
+        "voiceScript": "季军 harry0703 的 MoneyPrinterTurbo，本周新入榜，加八百九十八星。AI 视频生成工具，只需提供主题或关键词，全自动生成文案、素材、字幕和背景音乐。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens04_rank03.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.7389999999999999,
+          "text": "季军 harry0703 的"
+        },
+        {
+          "start": 1.7389999999999999,
+          "end": 3.682,
+          "text": "MoneyPrinterTurbo，"
+        },
+        {
+          "start": 3.682,
+          "end": 6.547,
+          "text": "本周新入榜，加八百九十八星。"
+        },
+        {
+          "start": 6.547,
+          "end": 8.286,
+          "text": "AI 视频生成工具，"
+        },
+        {
+          "start": 8.286,
+          "end": 10.536,
+          "text": "只需提供主题或关键词，"
+        },
+        {
+          "start": 10.536,
+          "end": 12.787,
+          "text": "全自动生成文案、素材、"
+        },
+        {
+          "start": 12.787,
+          "end": 14.423,
+          "text": "字幕和背景音乐。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens05_rank04",
+      "type": "hotlist-project",
+      "durationInFrames": 454,
+      "frame": {
+        "subtitle": "4",
+        "title": "NousResearch/hermes-agent",
+        "label": "Nous Research",
+        "insight": "自进化 AI Agent。内置学习闭环（记忆、技能自动生成、自训练），支持 OpenRouter、NVIDIA NIM、Kimi、DeepSeek 等，跨平台消息网关 Telegram / Discord / Slack。",
+        "list": [
+          "自进化Agent",
+          "GEPA",
+          "多模型",
+          "消息网关"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "174,800"
+          },
+          {
+            "title": "许可证",
+            "value": "MIT"
+          },
+          {
+            "title": "本周新增",
+            "value": "794"
+          }
+        ],
+        "weeklyGrowth": 794,
+        "weeklyGrowthMax": 1974,
+        "voiceScript": "第四名 NousResearch 的 hermes-agent，本周加七百九十四星。自进化 AI Agent，内置学习闭环，支持多种模型和跨平台消息网关，GEPA 自改进机制获 ICLR 2026 Oral。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens05_rank04.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.185,
+          "text": "第四名 NousResearch 的"
+        },
+        {
+          "start": 2.185,
+          "end": 3.576,
+          "text": "hermes-agent，"
+        },
+        {
+          "start": 3.576,
+          "end": 5.564,
+          "text": "本周加七百九十四星。"
+        },
+        {
+          "start": 5.564,
+          "end": 7.253,
+          "text": "自进化 AI Agent，"
+        },
+        {
+          "start": 7.253,
+          "end": 8.644,
+          "text": "内置学习闭环，"
+        },
+        {
+          "start": 8.644,
+          "end": 11.625,
+          "text": "支持多种模型和跨平台消息网关，"
+        },
+        {
+          "start": 11.625,
+          "end": 14.307,
+          "text": "GEPA 自改进机制获 ICLR 2026"
+        },
+        {
+          "start": 14.307,
+          "end": 14.903,
+          "text": "Oral。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens06_rank05",
+      "type": "hotlist-project",
+      "durationInFrames": 371,
+      "frame": {
+        "subtitle": "5",
+        "title": "mattpocock/skills",
+        "label": "Matt Pocock（TypeScript 专家）",
+        "insight": "AI Coding Skills 集合。/grill-me 需求对齐、/triage 问题分类、/tdd 测试驱动开发、/diagnose 调试技能，支持多种 AI 编码平台。",
+        "list": [
+          "Claude Skills",
+          "TDD",
+          "代码审查",
+          "AI编程"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "113,200"
+          },
+          {
+            "title": "类型",
+            "value": "Coding Skills"
+          },
+          {
+            "title": "本周新增",
+            "value": "760"
+          }
+        ],
+        "weeklyGrowth": 760,
+        "weeklyGrowthMax": 1974,
+        "voiceScript": "第五名 Matt Pocock 的 skills，本周加七百六十星。TypeScript 专家公开的 AI Coding Skills 集合，覆盖需求对齐、问题分类、TDD 和调试等真实工作流。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens06_rank05.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.602,
+          "text": "第五名 Matt Pocock 的 skills，"
+        },
+        {
+          "start": 2.602,
+          "end": 4.163,
+          "text": "本周加七百六十星。"
+        },
+        {
+          "start": 4.163,
+          "end": 6.245,
+          "text": "TypeScript 专家公开的 AI"
+        },
+        {
+          "start": 6.245,
+          "end": 7.98,
+          "text": "Coding Skills 集合，"
+        },
+        {
+          "start": 7.98,
+          "end": 10.062,
+          "text": "覆盖需求对齐、问题分类、"
+        },
+        {
+          "start": 10.062,
+          "end": 12.144,
+          "text": "TDD 和调试等真实工作流。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens07_rank06",
+      "type": "hotlist-project",
+      "durationInFrames": 438,
+      "frame": {
+        "subtitle": "6",
+        "title": "affaan-m/ECC",
+        "label": "Affaan Mustafa",
+        "insight": "Agent 性能优化系统（原 everything-claude-code 已重定向）。48 个内置 Agent、184 项 Skills、Hooks 和规则系统、安全扫描、研究优先开发方法论。",
+        "list": [
+          "Agent优化",
+          "Skills",
+          "安全扫描",
+          "Claude Code"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "200,700"
+          },
+          {
+            "title": "Skills",
+            "value": "184 项"
+          },
+          {
+            "title": "本周新增",
+            "value": "716"
+          }
+        ],
+        "weeklyGrowth": 716,
+        "weeklyGrowthMax": 1974,
+        "isNew": true,
+        "voiceScript": "第六名 Affaan Mustafa 的 ECC，本周新入榜，加七百一十六星。Everything Claude Code 性能优化系统，四十八个内置 Agent、一百八十四项 Skills，支持 Claude Code、Cursor、Codex。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens07_rank06.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.556,
+          "text": "第六名 Affaan Mustafa 的 ECC，"
+        },
+        {
+          "start": 2.556,
+          "end": 4.942,
+          "text": "本周新入榜，加七百一十六星。"
+        },
+        {
+          "start": 4.942,
+          "end": 7.242,
+          "text": "Everything Claude Code 性能"
+        },
+        {
+          "start": 7.242,
+          "end": 8.094,
+          "text": "优化系统，"
+        },
+        {
+          "start": 8.094,
+          "end": 9.798,
+          "text": "四十八个内置 Agent、"
+        },
+        {
+          "start": 9.798,
+          "end": 11.588,
+          "text": "一百八十四项 Skills，"
+        },
+        {
+          "start": 11.588,
+          "end": 13.803,
+          "text": "支持 Claude Code、Cursor、"
+        },
+        {
+          "start": 13.803,
+          "end": 14.4,
+          "text": "Codex。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens08_rank07",
+      "type": "hotlist-project",
+      "durationInFrames": 390,
+      "frame": {
+        "subtitle": "7",
+        "title": "Leonxlnx/taste-skill",
+        "label": "Leonxlnx",
+        "insight": "AI Skills — 提升 AI 输出审美与品味的技能集。在 Skills 生态持续火爆的背景下，审美与品味成为差异化方向。",
+        "list": [
+          "AI Skills",
+          "审美品味",
+          "输出质量"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "30,000"
+          },
+          {
+            "title": "类型",
+            "value": "AI Skills"
+          },
+          {
+            "title": "本周新增",
+            "value": "685"
+          }
+        ],
+        "weeklyGrowth": 685,
+        "weeklyGrowthMax": 1974,
+        "isNew": true,
+        "voiceScript": "第七名 Leonxlnx 的 taste-skill，本周新入榜，加六百八十五星。提升 AI 输出审美与品味的 Skills 技能集，AI 编码工具 Skills 生态持续火爆。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens08_rank07.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.7570000000000001,
+          "text": "第七名 Leonxlnx 的"
+        },
+        {
+          "start": 1.7570000000000001,
+          "end": 3.027,
+          "text": "taste-skill，"
+        },
+        {
+          "start": 3.027,
+          "end": 5.761,
+          "text": "本周新入榜，加六百八十五星。"
+        },
+        {
+          "start": 5.761,
+          "end": 8.104,
+          "text": "提升 AI 输出审美与品味的"
+        },
+        {
+          "start": 8.104,
+          "end": 9.568999999999999,
+          "text": "Skills 技能集，"
+        },
+        {
+          "start": 9.568999999999999,
+          "end": 12.206,
+          "text": "AI 编码工具 Skills 生态持续"
+        },
+        {
+          "start": 12.206,
+          "end": 12.791,
+          "text": "火爆。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens09_rank08",
+      "type": "hotlist-project",
+      "durationInFrames": 404,
+      "frame": {
+        "subtitle": "8",
+        "title": "obra/superpowers",
+        "label": "Jesse Vincent（obra）",
+        "insight": "Claude Code 的 TDD 开发框架。苏格拉底式头脑风暴阶段、规规矩矩的开发方法论、正式的设计评审流程，2026-03-27 单日 +2,993 Stars。",
+        "list": [
+          "TDD框架",
+          "方法论",
+          "Claude Code",
+          "设计评审"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "213,800"
+          },
+          {
+            "title": "类型",
+            "value": "TDD 框架"
+          },
+          {
+            "title": "本周新增",
+            "value": "674"
+          }
+        ],
+        "weeklyGrowth": 674,
+        "weeklyGrowthMax": 1974,
+        "voiceScript": "第八名 obra 的 superpowers，本周加六百七十四星。Claude Code 的 TDD 开发框架，苏格拉底式头脑风暴、正式设计评审，三月二十七日单日曾获得近三千星。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens09_rank08.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.594,
+          "text": "第八名 obra 的 superpowers，"
+        },
+        {
+          "start": 2.594,
+          "end": 4.446,
+          "text": "本周加六百七十四星。"
+        },
+        {
+          "start": 4.446,
+          "end": 7.133,
+          "text": "Claude Code 的 TDD 开发框架，"
+        },
+        {
+          "start": 7.133,
+          "end": 8.986,
+          "text": "苏格拉底式头脑风暴、"
+        },
+        {
+          "start": 8.986,
+          "end": 10.283,
+          "text": "正式设计评审，"
+        },
+        {
+          "start": 10.283,
+          "end": 13.247,
+          "text": "三月二十七日单日曾获得近三千星。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens10_rank09",
+      "type": "hotlist-project",
+      "durationInFrames": 359,
+      "frame": {
+        "subtitle": "9",
+        "title": "anthropics/claude-plugins-official",
+        "label": "Anthropic（官方）",
+        "insight": "Claude Code 官方插件目录。12 种语言 LSP 支持、多智能体 PR 审查工具包、Git 工作流自动化、代码质量分析，15 个外部合作伙伴（GitHub、Firebase、Linear 等）。",
+        "list": [
+          "Claude插件",
+          "Anthropic官方",
+          "LSP",
+          "生态建设"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "29,000"
+          },
+          {
+            "title": "合作伙伴",
+            "value": "15 家"
+          },
+          {
+            "title": "本周新增",
+            "value": "523"
+          }
+        ],
+        "weeklyGrowth": 523,
+        "weeklyGrowthMax": 1974,
+        "voiceScript": "第九名 Anthropic 官方的 claude-plugins-official，本周加五百二十三星。Claude Code 官方插件目录，十二种语言 LSP 支持，十五个外部合作伙伴。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens10_rank09.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.999,
+          "text": "第九名 Anthropic 官方的"
+        },
+        {
+          "start": 1.999,
+          "end": 4.172,
+          "text": "claude-plugins-official，"
+        },
+        {
+          "start": 4.172,
+          "end": 5.911,
+          "text": "本周加五百二十三星。"
+        },
+        {
+          "start": 5.911,
+          "end": 8.171,
+          "text": "Claude Code 官方插件目录，"
+        },
+        {
+          "start": 8.171,
+          "end": 9.997,
+          "text": "十二种语言 LSP 支持，"
+        },
+        {
+          "start": 9.997,
+          "end": 11.736,
+          "text": "十五个外部合作伙伴。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens11_rank10",
+      "type": "hotlist-project",
+      "durationInFrames": 428,
+      "frame": {
+        "subtitle": "10",
+        "title": "colbymchenry/codegraph",
+        "label": "colbymchenry",
+        "insight": "AI 代码分析与知识图谱工具。预索引代码知识图谱，支持 Claude Code、Codex、Gemini、Cursor 等，100% 本地运行。上下文工程成为 AI 编码的核心差异化因素。",
+        "list": [
+          "代码分析",
+          "知识图谱",
+          "本地运行",
+          "上下文工程"
+        ],
+        "kpis": [
+          {
+            "title": "总 Star",
+            "value": "35,500"
+          },
+          {
+            "title": "类型",
+            "value": "代码分析"
+          },
+          {
+            "title": "本周新增",
+            "value": "463"
+          }
+        ],
+        "weeklyGrowth": 463,
+        "weeklyGrowthMax": 1974,
+        "isNew": true,
+        "voiceScript": "第十名 colbymchenry 的 codegraph，本周新入榜，加四百六十三星。AI 代码分析与知识图谱工具，预索引代码知识图谱，百分之百本地运行，支持 Claude Code、Cursor 等。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens11_rank10.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.996,
+          "text": "第十名 colbymchenry 的"
+        },
+        {
+          "start": 1.996,
+          "end": 2.9939999999999998,
+          "text": "codegraph，"
+        },
+        {
+          "start": 2.9939999999999998,
+          "end": 5.534,
+          "text": "本周新入榜，加四百六十三星。"
+        },
+        {
+          "start": 5.534,
+          "end": 7.984,
+          "text": "AI 代码分析与知识图谱工具，"
+        },
+        {
+          "start": 7.984,
+          "end": 9.799,
+          "text": "预索引代码知识图谱，"
+        },
+        {
+          "start": 9.799,
+          "end": 11.432,
+          "text": "百分之百本地运行，"
+        },
+        {
+          "start": 11.432,
+          "end": 13.065,
+          "text": "支持 Claude Code、"
+        },
+        {
+          "start": 13.065,
+          "end": 14.064,
+          "text": "Cursor 等。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens12_trends",
+      "type": "hotlist-outro",
+      "durationInFrames": 529,
+      "frame": {
+        "title": "本周趋势分析",
+        "subtitle": "关键词：Agent / Skills 生态 + 代码分析工具崛起",
+        "cards": [
+          {
+            "title": "Agent / Skills 生态持续火爆",
+            "desc": "Top 10 中 9 个项目与 AI 编码 Agent、Skills 或代码分析直接相关，Skills/Plugins 框架成为优化 AI 编码体验的主要方式。"
+          },
+          {
+            "title": "自进化 Agent 受到关注",
+            "desc": "hermes-agent 凭借 GEPA 自改进机制获 ICLR 2026 Oral，ECC 的 Agent 性能优化系统备受欢迎。"
+          },
+          {
+            "title": "官方生态加速建设",
+            "desc": "Anthropic claude-plugins-official 持续上榜，Claude Code 生态走向成熟；多平台支持（Claude Code、Cursor、Codex）成标配。"
+          }
+        ],
+        "insight": "与第2期对比：Understand-Anything、MoneyPrinterTurbo、ECC、taste-skill、codegraph 共 5 项新入榜；andrej-karpathy-skills 从第1降至第2；openhuman、cc-switch、agentmemory、DeepSeek-TUI、agency-agents 跌出 Top 10。",
+        "voiceScript": "本周 Top 10 中有九个与 AI 编码 Agent、Skills 或代码分析直接相关。自进化 Agent 和官方生态建设是三条主线：Skills 持续火爆、hermes-agent 自进化受关注、Anthropic 官方插件目录加速生态成熟。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens12_trends.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.651,
+          "text": "本周 Top 10 中有九个与 AI 编"
+        },
+        {
+          "start": 2.651,
+          "end": 3.598,
+          "text": "码 Agent、"
+        },
+        {
+          "start": 3.598,
+          "end": 6.155,
+          "text": "Skills 或代码分析直接相关。"
+        },
+        {
+          "start": 6.155,
+          "end": 8.711,
+          "text": "自进化 Agent 和官方生态建设"
+        },
+        {
+          "start": 8.711,
+          "end": 9.848,
+          "text": "是三条主线："
+        },
+        {
+          "start": 9.848,
+          "end": 11.458,
+          "text": "Skills 持续火爆、"
+        },
+        {
+          "start": 11.458,
+          "end": 14.014,
+          "text": "hermes-agent 自进化受关注、"
+        },
+        {
+          "start": 14.014,
+          "end": 16.666,
+          "text": "Anthropic 官方插件目录加速生"
+        },
+        {
+          "start": 16.666,
+          "end": 17.423,
+          "text": "态成熟。"
+        }
+      ]
+    },
+    {
+      "id": "ghhot3_lens13_table",
+      "type": "hotlist-table",
+      "durationInFrames": 307,
+      "frame": {
+        "title": "GitHub AI 周 Star 增速 Top 10",
+        "subtitle": "第 3 期 · 2026-05-23 至 2026-05-30",
+        "footnote": "周增量来自 star-history.com；总 Star / 描述来自 GitHub API 实时查询（2026-06-01）",
+        "hotlistRows": [
+          {
+            "rank": "1",
+            "name": "Understand-Anything",
+            "weekly": "+1,974",
+            "total": "47.4k",
+            "lang": "Codebase",
+            "weeklyGrowth": 1974,
+            "weeklyGrowthMax": 1974,
+            "isNew": true
+          },
+          {
+            "rank": "2",
+            "name": "andrej-karpathy-skills",
+            "weekly": "+1,326",
+            "total": "163.5k",
+            "lang": "Skills",
+            "weeklyGrowth": 1326,
+            "weeklyGrowthMax": 1974
+          },
+          {
+            "rank": "3",
+            "name": "MoneyPrinterTurbo",
+            "weekly": "+898",
+            "total": "74.6k",
+            "lang": "Video AI",
+            "weeklyGrowth": 898,
+            "weeklyGrowthMax": 1974,
+            "isNew": true
+          },
+          {
+            "rank": "4",
+            "name": "hermes-agent",
+            "weekly": "+794",
+            "total": "174.8k",
+            "lang": "Agent",
+            "weeklyGrowth": 794,
+            "weeklyGrowthMax": 1974
+          },
+          {
+            "rank": "5",
+            "name": "skills",
+            "weekly": "+760",
+            "total": "113.2k",
+            "lang": "Skills",
+            "weeklyGrowth": 760,
+            "weeklyGrowthMax": 1974
+          },
+          {
+            "rank": "6",
+            "name": "ECC",
+            "weekly": "+716",
+            "total": "200.7k",
+            "lang": "Agent",
+            "weeklyGrowth": 716,
+            "weeklyGrowthMax": 1974,
+            "isNew": true
+          },
+          {
+            "rank": "7",
+            "name": "taste-skill",
+            "weekly": "+685",
+            "total": "30.0k",
+            "lang": "Skills",
+            "weeklyGrowth": 685,
+            "weeklyGrowthMax": 1974,
+            "isNew": true
+          },
+          {
+            "rank": "8",
+            "name": "superpowers",
+            "weekly": "+674",
+            "total": "213.8k",
+            "lang": "TDD",
+            "weeklyGrowth": 674,
+            "weeklyGrowthMax": 1974
+          },
+          {
+            "rank": "9",
+            "name": "claude-plugins-official",
+            "weekly": "+523",
+            "total": "29.0k",
+            "lang": "Plugins",
+            "weeklyGrowth": 523,
+            "weeklyGrowthMax": 1974
+          },
+          {
+            "rank": "10",
+            "name": "codegraph",
+            "weekly": "+463",
+            "total": "35.5k",
+            "lang": "Analysis",
+            "weeklyGrowth": 463,
+            "weeklyGrowthMax": 1974,
+            "isNew": true
+          }
+        ],
+        "voiceScript": "完整 Top 10 一览在屏幕上。数据来源 star-history 周榜加 GitHub API 校验，报告生成时间 2026 年 6 月 1 日，我们下期见。"
+      },
+      "audioSrc": "studio-audio/github-ai-hotlist-ep3/ghhot3_lens13_table.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.282,
+          "text": "完整 Top 10 一览在屏幕上。"
+        },
+        {
+          "start": 2.282,
+          "end": 4.74,
+          "text": "数据来源 star-history 周榜加"
+        },
+        {
+          "start": 4.74,
+          "end": 6.233,
+          "text": "GitHub API 校验，"
+        },
+        {
+          "start": 6.233,
+          "end": 8.954,
+          "text": "报告生成时间 2026 年 6 月 1日，"
+        },
+        {
+          "start": 8.954,
+          "end": 10.007,
+          "text": "我们下期见。"
+        }
+      ]
+    }
+  ],
+  "aspectRatio": "16:9"
+}
