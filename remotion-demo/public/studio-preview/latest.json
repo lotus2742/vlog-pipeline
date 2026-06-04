@@ -1,11 +1,11 @@
 {
   "meta": {
-    "topic": "多Agent协作 · 第1讲：单Agent三个天花板",
+    "topic": "多Agent协作 · 第2期：三大架构怎么选",
     "videoType": "vlog",
     "theme": "purple",
     "bgStyle": "cinematic-safe",
     "aspectRatio": "16:9",
-    "seriesPart": 1,
+    "seriesPart": 2,
     "seriesTotal": 6,
     "voice": "zh-CN-YunjianNeural",
     "rate": "+5%",
@@ -15,474 +15,85 @@
   "videoType": "vlog",
   "slides": [
     {
-      "id": "ma1_lens01_hook",
+      "id": "ma2_lens01_hook",
       "type": "hook",
-      "durationInFrames": 395,
+      "durationInFrames": 602,
       "frame": {
         "style": "spotlight",
-        "kicker": "多Agent协作 · 第1讲",
-        "title": "让 Agent 干复杂活，总差点意思？",
-        "hookLine": "不是模型菜，是架构不对",
+        "kicker": "多Agent协作 · 第 2 期",
+        "title": "多 Agent 怎么搭？三大架构一次讲清",
+        "hookLine": "不是 Agent 越多越好，是架构得对",
         "list": [
-          "今天：单 Agent 三个天花板",
-          "第三个最隐蔽"
+          "主从式 · 对等式 · 层级式",
+          "不同场景选不同"
         ],
-        "voiceScript": "让 Agent 干复杂活，是不是总差点意思？不是模型菜，是你让它一个人干了一个团队的活。今天说单 Agent 三个天花板，第三个很多人没意识到。"
+        "voiceScript": "上期说了单 Agent 三个天花板——拆不动、角色冲突、串行慢。那多 Agent 就能万事大吉吗？也不是。今天讲三大架构模式：主从式、对等式、层级式。听名字可能懵，但对应到你日常搭系统，其实就三种组织方式。"
       },
-      "audioSrc": "studio-audio/multi-agent-ep1-v4/ma1_lens01_hook.mp3",
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens01_hook.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 1.8900000000000001,
-          "text": "让 Agent 干复杂活，"
+          "end": 2.791,
+          "text": "上期说了单 Agent 三个天花板"
         },
         {
-          "start": 1.8900000000000001,
-          "end": 3.681,
-          "text": "是不是总差点意思？"
+          "start": 2.791,
+          "end": 4.031,
+          "text": "——拆不动、"
         },
         {
-          "start": 3.681,
-          "end": 4.875,
-          "text": "不是模型菜，"
+          "start": 4.031,
+          "end": 5.892,
+          "text": "角色冲突、串行慢。"
         },
         {
-          "start": 4.875,
-          "end": 8.06,
-          "text": "是你让它一个人干了一个团队的活。"
+          "start": 5.892,
+          "end": 8.683,
+          "text": "那多 Agent 就能万事大吉吗？"
         },
         {
-          "start": 8.06,
-          "end": 10.746,
-          "text": "今天说单 Agent 三个天花板，"
+          "start": 8.683,
+          "end": 9.51,
+          "text": "也不是。"
         },
         {
-          "start": 10.746,
-          "end": 12.936,
-          "text": "第三个很多人没意识到。"
+          "start": 9.51,
+          "end": 12.404,
+          "text": "今天讲三大架构模式：主从式、"
+        },
+        {
+          "start": 12.404,
+          "end": 14.058,
+          "text": "对等式、层级式。"
+        },
+        {
+          "start": 14.058,
+          "end": 15.506,
+          "text": "听名字可能懵，"
+        },
+        {
+          "start": 15.506,
+          "end": 17.78,
+          "text": "但对应到你日常搭系统，"
+        },
+        {
+          "start": 17.78,
+          "end": 19.847,
+          "text": "其实就三种组织方式。"
         }
       ]
     },
     {
-      "id": "ma1_lens02_pain1",
-      "type": "cards",
-      "durationInFrames": 593,
-      "frame": {
-        "style": "flowchart",
-        "title": "【痛点 1/3】能力瓶颈",
-        "subtitle": "调研报告一条线：搜索 → 整理 → 写稿 → 排版",
-        "sectionProgress": {
-          "label": "痛点",
-          "current": 1,
-          "total": 3
-        },
-        "cards": [
-          {
-            "title": "Step 1",
-            "label": "搜索",
-            "desc": "找资料"
-          },
-          {
-            "title": "Step 2",
-            "label": "整理",
-            "desc": "归纳要点"
-          },
-          {
-            "title": "Step 3",
-            "label": "写稿",
-            "desc": "成文输出"
-          },
-          {
-            "title": "Step 4",
-            "label": "排版",
-            "desc": "视觉呈现"
-          }
-        ],
-        "insight": "啥都干 → 啥都差点意思 · 单Agent = 一人全包 · 多Agent = 专人专岗",
-        "voiceScript": "第一个，复杂任务拆不动。让 Agent 写调研报告，搜索、整理、写稿、排版一条线干下来——搜的凑合、写的凑合、排版也凑合，啥都干了，啥都差点意思。就像一个 Agent 前后端加运维全包，忙是忙了，哪头都顾不上。"
-      },
-      "audioSrc": "studio-audio/multi-agent-ep1-v4/ma1_lens02_pain1.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.392,
-          "text": "第一个，复杂任务拆不动。"
-        },
-        {
-          "start": 2.392,
-          "end": 5.083,
-          "text": "让 Agent 写调研报告，搜索、"
-        },
-        {
-          "start": 5.083,
-          "end": 6.279,
-          "text": "整理、写稿、"
-        },
-        {
-          "start": 6.279,
-          "end": 9.269,
-          "text": "排版一条线干下来——搜的凑合、"
-        },
-        {
-          "start": 9.269,
-          "end": 11.462,
-          "text": "写的凑合、排版也凑合，"
-        },
-        {
-          "start": 11.462,
-          "end": 13.854,
-          "text": "啥都干了，啥都差点意思。"
-        },
-        {
-          "start": 13.854,
-          "end": 16.545,
-          "text": "就像一个 Agent 前后端加运维"
-        },
-        {
-          "start": 16.545,
-          "end": 17.143,
-          "text": "全包，"
-        },
-        {
-          "start": 17.143,
-          "end": 19.536,
-          "text": "忙是忙了，哪头都顾不上。"
-        }
-      ]
-    },
-    {
-      "id": "ma1_lens03_analogy",
-      "type": "comparison",
-      "durationInFrames": 492,
-      "frame": {
-        "title": "全栈 solo vs 团队分工",
-        "compareRows": [
-          {
-            "left": "全栈 solo",
-            "center": "→",
-            "right": "啥都干 → 啥都 80 分"
-          },
-          {
-            "left": "团队分工",
-            "center": "→",
-            "right": "前端 95 · 后端 95 · 运维 95"
-          },
-          {
-            "left": "单 Agent",
-            "center": "=",
-            "right": "solo"
-          },
-          {
-            "left": "多 Agent",
-            "center": "=",
-            "right": "专业团队"
-          }
-        ],
-        "insight": "不是说 solo 不行，是一个人精力有限，专业的事交给专业的人",
-        "voiceScript": "做过全栈的都懂——一个人啥都干，啥都 80 分；团队分工，各自 95 分。单 Agent 就是 solo，多 Agent 就是专业团队。不是说 solo 不行，是一个人精力有限，专业的事交给专业的人。"
-      },
-      "audioSrc": "studio-audio/multi-agent-ep1-v4/ma1_lens03_analogy.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 3.104,
-          "text": "做过全栈的都懂——一个人啥都干，"
-        },
-        {
-          "start": 3.104,
-          "end": 4.268,
-          "text": "啥都 80 分；"
-        },
-        {
-          "start": 4.268,
-          "end": 6.402,
-          "text": "团队分工，各自 95 分。"
-        },
-        {
-          "start": 6.402,
-          "end": 8.342,
-          "text": "单 Agent 就是 solo，"
-        },
-        {
-          "start": 8.342,
-          "end": 10.573,
-          "text": "多 Agent 就是专业团队。"
-        },
-        {
-          "start": 10.573,
-          "end": 12.319,
-          "text": "不是说 solo 不行，"
-        },
-        {
-          "start": 12.319,
-          "end": 14.065,
-          "text": "是一个人精力有限，"
-        },
-        {
-          "start": 14.065,
-          "end": 16.199,
-          "text": "专业的事交给专业的人。"
-        }
-      ]
-    },
-    {
-      "id": "ma1_lens04_pain2",
-      "type": "comparison",
-      "durationInFrames": 539,
-      "frame": {
-        "style": "tension",
-        "title": "【痛点 2/3】方向矛盾",
-        "subtitle": "同一 Agent：又搜索又审核",
-        "sectionProgress": {
-          "label": "痛点",
-          "current": 2,
-          "total": 3
-        },
-        "left": {
-          "label": "🔍 搜索",
-          "title": "多找点",
-          "color": "#22d3ee",
-          "points": [
-            "结果 A",
-            "结果 B",
-            "结果 C",
-            "结果 D",
-            "结果 E",
-            "结果 F"
-          ]
-        },
-        "right": {
-          "label": "✂️ 审核",
-          "title": "严格筛",
-          "color": "#fb7185",
-          "points": [
-            "精选 ✓"
-          ]
-        },
-        "insight": "左手放大 右手缩小 · 运动员又当裁判 → 两头不讨好",
-        "voiceScript": "第二个更隐蔽——角色冲突。同一个 Agent 又搜索又审核：搜索要多找，审核要严格筛。你写一个 Prompt，又让它多找又让它严筛，它到底听谁的？一个 Agent 又当运动员又当裁判，两头不讨好。"
-      },
-      "audioSrc": "studio-audio/multi-agent-ep1-v4/ma1_lens04_pain2.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.635,
-          "text": "第二个更隐蔽——角色冲突。"
-        },
-        {
-          "start": 2.635,
-          "end": 5.371,
-          "text": "同一个 Agent 又搜索又审核："
-        },
-        {
-          "start": 5.371,
-          "end": 8.006,
-          "text": "搜索要多找，审核要严格筛。"
-        },
-        {
-          "start": 8.006,
-          "end": 9.729,
-          "text": "你写一个 Prompt，"
-        },
-        {
-          "start": 9.729,
-          "end": 11.959,
-          "text": "又让它多找又让它严筛，"
-        },
-        {
-          "start": 11.959,
-          "end": 13.378,
-          "text": "它到底听谁的？"
-        },
-        {
-          "start": 13.378,
-          "end": 16.519,
-          "text": "一个 Agent 又当运动员又当裁判，"
-        },
-        {
-          "start": 16.519,
-          "end": 17.736,
-          "text": "两头不讨好。"
-        }
-      ]
-    },
-    {
-      "id": "ma1_lens05_pain3",
-      "type": "comparison",
-      "durationInFrames": 606,
-      "frame": {
-        "style": "pipeline",
-        "title": "【痛点 3/3】效率瓶颈",
-        "subtitle": "5 个行业各搜一轮",
-        "sectionProgress": {
-          "label": "痛点",
-          "current": 3,
-          "total": 3
-        },
-        "left": {
-          "label": "单 Agent",
-          "title": "串行 A→B→C→D→E",
-          "color": "#94a3b8",
-          "points": [
-            "⏱ 50 秒"
-          ]
-        },
-        "right": {
-          "label": "多 Agent",
-          "title": "5 路并行 + 汇总",
-          "color": "#34d399",
-          "points": [
-            "⏱ 15 秒"
-          ]
-        },
-        "insight": "⏱ 并行省等待时间 ≠ 一定省 Token",
-        "voiceScript": "第三个，串行太慢。还是那份报告，5 个行业各搜一轮——单 Agent 一个一个来，50 秒；多 Agent 五路同时搜，15 秒搞定。批量任务里，一下午缩到 40 分钟不稀奇。注意，并行主要省的是等待时间，不等于一定省 Token。"
-      },
-      "audioSrc": "studio-audio/multi-agent-ep1-v4/ma1_lens05_pain3.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 1.806,
-          "text": "第三个，串行太慢。"
-        },
-        {
-          "start": 1.806,
-          "end": 3.21,
-          "text": "还是那份报告，"
-        },
-        {
-          "start": 3.21,
-          "end": 6.02,
-          "text": "5 个行业各搜一轮——单 Agent"
-        },
-        {
-          "start": 6.02,
-          "end": 7.224,
-          "text": "一个一个来，"
-        },
-        {
-          "start": 7.224,
-          "end": 7.926,
-          "text": "50 秒；"
-        },
-        {
-          "start": 7.926,
-          "end": 10.034,
-          "text": "多 Agent 五路同时搜，"
-        },
-        {
-          "start": 10.034,
-          "end": 11.137,
-          "text": "15 秒搞定。"
-        },
-        {
-          "start": 11.137,
-          "end": 12.342,
-          "text": "批量任务里，"
-        },
-        {
-          "start": 12.342,
-          "end": 15.552,
-          "text": "一下午缩到 40 分钟不稀奇。注意，"
-        },
-        {
-          "start": 15.552,
-          "end": 17.961,
-          "text": "并行主要省的是等待时间，"
-        },
-        {
-          "start": 17.961,
-          "end": 19.968,
-          "text": "不等于一定省 Token。"
-        }
-      ]
-    },
-    {
-      "id": "ma1_lens06_data",
-      "type": "kpi",
-      "durationInFrames": 538,
-      "frame": {
-        "style": "strip",
-        "title": "有研究测过（临床批量任务）",
-        "subtitle": "来源：npj Health Systems, 2026",
-        "kpis": [
-          {
-            "title": "单 Agent",
-            "value": "73→17",
-            "unit": "%",
-            "label": "高负载 📉",
-            "highlight": true
-          },
-          {
-            "title": "多 Agent + 调度",
-            "value": "65~90+",
-            "unit": "%",
-            "label": "压负载也能稳住 📈"
-          }
-        ],
-        "insight": "也有坑：意图漂移 😵 · 解法：分工 + 调度盯全局",
-        "voiceScript": "看一组研究数据——高负载下，单 Agent 准确率可以从 73% 掉到 17%；多 Agent 加调度，负载低时 90% 以上，压上来也能稳住。但 Agent 多了容易聊着聊着跑偏，所以得分工，还得有个调度盯全局。"
-      },
-      "audioSrc": "studio-audio/multi-agent-ep1-v4/ma1_lens06_data.mp3",
-      "captions": [
-        {
-          "start": 0.0,
-          "end": 2.755,
-          "text": "看一组研究数据——高负载下，"
-        },
-        {
-          "start": 2.755,
-          "end": 5.411,
-          "text": "单 Agent 准确占比可以从 73%"
-        },
-        {
-          "start": 5.411,
-          "end": 6.395,
-          "text": "掉到 17%；"
-        },
-        {
-          "start": 6.395,
-          "end": 8.068,
-          "text": "多 Agent 加调度，"
-        },
-        {
-          "start": 8.068,
-          "end": 9.938,
-          "text": "负载低时 90% 以上，"
-        },
-        {
-          "start": 9.938,
-          "end": 11.512,
-          "text": "压上来也能稳住。"
-        },
-        {
-          "start": 11.512,
-          "end": 14.563,
-          "text": "但 Agent 多了容易聊着聊着跑偏，"
-        },
-        {
-          "start": 14.563,
-          "end": 15.743,
-          "text": "所以得分工，"
-        },
-        {
-          "start": 15.743,
-          "end": 17.711,
-          "text": "还得有个调度盯全局。"
-        }
-      ]
-    },
-    {
-      "id": "ma1_lens07_summary",
+      "id": "ma2_lens02_recap",
       "type": "bullets",
-      "durationInFrames": 405,
+      "durationInFrames": 683,
       "frame": {
         "style": "checklist",
-        "title": "单 Agent 三大天花板",
+        "title": "上期回顾 · 单 Agent 三大天花板",
         "items": [
           {
             "title": "① 拆不动",
-            "desc": "复杂任务拆不动"
+            "desc": "复杂任务一条线扛到底"
           },
           {
             "title": "② 角色冲突",
@@ -493,91 +104,820 @@
             "desc": "批量任务效率瓶颈"
           }
         ],
-        "insight": "一个 Agent 再强 = 聪明人 · 多 Agent 协作 = 组织力",
-        "voiceScript": "总结：拆不动、角色冲突、串行慢——三大天花板。一个 Agent 再强只是聪明人，多 Agent 协作才是组织力。聪明人能干活，组织能干大事。"
+        "insight": "天花板破了 → 下一关是「架构怎么搭」",
+        "voiceScript": "快速回顾一下。第一个，复杂任务拆不动，一个 Agent 又搜又写又排版，啥都干啥都差点意思。第二个，角色冲突，又当运动员又当裁判。第三个，串行太慢，批量任务一个一个来。这三个坑踩完，自然要问：多 Agent 到底怎么组织才靠谱？"
       },
-      "audioSrc": "studio-audio/multi-agent-ep1-v4/ma1_lens07_summary.mp3",
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens02_recap.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 2.528,
-          "text": "总结：拆不动、角色冲突、"
+          "end": 1.475,
+          "text": "快速回顾一下。"
         },
         {
-          "start": 2.528,
-          "end": 4.845,
-          "text": "串行慢——三大天花板。"
+          "start": 1.475,
+          "end": 4.005,
+          "text": "第一个，复杂任务拆不动，"
         },
         {
-          "start": 4.845,
-          "end": 7.689,
-          "text": "一个 Agent 再强只是聪明人，"
+          "start": 4.005,
+          "end": 6.852,
+          "text": "一个 Agent 又搜又写又排版，"
         },
         {
-          "start": 7.689,
-          "end": 10.322,
-          "text": "多 Agent 协作才是组织力。"
+          "start": 6.852,
+          "end": 8.96,
+          "text": "啥都干啥都差点意思。"
         },
         {
-          "start": 10.322,
-          "end": 13.272,
-          "text": "聪明人能干活，组织能干大事。"
+          "start": 8.96,
+          "end": 10.858,
+          "text": "第二个，角色冲突，"
+        },
+        {
+          "start": 10.858,
+          "end": 12.966,
+          "text": "又当运动员又当裁判。"
+        },
+        {
+          "start": 12.966,
+          "end": 14.864,
+          "text": "第三个，串行太慢，"
+        },
+        {
+          "start": 14.864,
+          "end": 16.972,
+          "text": "批量任务一个一个来。"
+        },
+        {
+          "start": 16.972,
+          "end": 19.502,
+          "text": "这三个坑踩完，自然要问："
+        },
+        {
+          "start": 19.502,
+          "end": 22.559,
+          "text": "多 Agent 到底怎么组织才靠谱？"
         }
       ]
     },
     {
-      "id": "ma1_lens08_cta",
-      "type": "hook",
-      "durationInFrames": 407,
+      "id": "ma2_lens03_overview",
+      "type": "comparison",
+      "durationInFrames": 863,
       "frame": {
-        "style": "split",
-        "kicker": "合集：多Agent协作",
-        "title": "三个坑你踩过哪个？",
-        "subtitle": "评论区打 1 / 2 / 3",
-        "hookLine": "下期：三大架构模式 · 主从式 · 对等式 · 层级式",
-        "list": [
-          "① 拆不动",
-          "② 角色冲突",
-          "③ 串行慢",
-          "关注我，下一讲见 👋"
+        "style": "triple",
+        "title": "三大架构模式 · 一张图认全",
+        "subtitle": "先建立地图，再逐个拆",
+        "pillars": [
+          {
+            "title": "主从式",
+            "foot": "Supervisor",
+            "lines": [
+              "中心调度拆任务",
+              "Worker 各司其职",
+              "流程固定 · 好管控"
+            ]
+          },
+          {
+            "title": "对等式",
+            "foot": "Peer / Swarm",
+            "lines": [
+              "无中心老板",
+              "协商 · 辩论 · 投票",
+              "创意发散 · 协调成本高"
+            ]
+          },
+          {
+            "title": "层级式",
+            "foot": "Hierarchical",
+            "lines": [
+              "规划 → 分派 → 执行",
+              "可递归拆子树",
+              "超大项目 · 状态要设计好"
+            ]
+          }
         ],
-        "voiceScript": "三个坑你踩过哪个？评论区打 1、2 还是 3。下期讲多 Agent 怎么搭——主从式、对等式、层级式，不同场景选不同的。关注我，下一讲见。"
+        "insight": "没有「万能架构」· 只有「场景匹配」",
+        "voiceScript": "先把地图画出来。主从式，有一个中心调度，任务拆完分给干活的 Agent，像项目经理带团队。对等式，大家地位平等，靠消息协商、辩论或投票推进，没有固定老板。层级式，上面规划、下面执行，中间还能再套一层主管，适合特别大的任务树。三种没有绝对好坏，关键看你的流程是固定还是发散、要不要强管控。"
       },
-      "audioSrc": "studio-audio/multi-agent-ep1-v4/ma1_lens08_cta.mp3",
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens03_overview.mp3",
       "captions": [
         {
           "start": 0.0,
-          "end": 1.921,
-          "text": "三个坑你踩过哪个？"
+          "end": 1.631,
+          "text": "先把地图画出来。"
         },
         {
-          "start": 1.921,
-          "end": 4.27,
-          "text": "评论区打 1、2 还是 3。"
+          "start": 1.631,
+          "end": 4.08,
+          "text": "主从式，有一个中心调度，"
         },
         {
-          "start": 4.27,
-          "end": 7.152,
-          "text": "下期讲多 Agent 怎么搭——主"
+          "start": 4.08,
+          "end": 6.732,
+          "text": "任务拆完分给干活的 Agent，"
         },
         {
-          "start": 7.152,
-          "end": 7.792,
-          "text": "从式、"
+          "start": 6.732,
+          "end": 8.567,
+          "text": "像项目经理带团队。"
         },
         {
-          "start": 7.792,
-          "end": 9.5,
-          "text": "对等式、层级式，"
+          "start": 8.567,
+          "end": 10.811,
+          "text": "对等式，大家地位平等，"
         },
         {
-          "start": 9.5,
-          "end": 11.422,
-          "text": "不同场景选不同的。"
+          "start": 10.811,
+          "end": 13.667,
+          "text": "靠消息协商、辩论或投票推进，"
         },
         {
-          "start": 11.422,
-          "end": 13.343,
+          "start": 13.667,
+          "end": 15.096,
+          "text": "没有固定老板。"
+        },
+        {
+          "start": 15.096,
+          "end": 17.951,
+          "text": "层级式，上面规划、下面执行，"
+        },
+        {
+          "start": 17.951,
+          "end": 20.195,
+          "text": "中间还能再套一层主管，"
+        },
+        {
+          "start": 20.195,
+          "end": 22.235,
+          "text": "适合特别大的任务树。"
+        },
+        {
+          "start": 22.235,
+          "end": 24.071,
+          "text": "三种没有绝对好坏，"
+        },
+        {
+          "start": 24.071,
+          "end": 27.131,
+          "text": "关键看你的流程是固定还是发散、"
+        },
+        {
+          "start": 27.131,
+          "end": 28.559,
+          "text": "要不要强管控。"
+        }
+      ]
+    },
+    {
+      "id": "ma2_lens04_supervisor",
+      "type": "comparison",
+      "durationInFrames": 978,
+      "frame": {
+        "style": "hub",
+        "title": "【模式 1/3】主从式 · Supervisor",
+        "subtitle": "一个大脑拆任务 · 多个手脚干活",
+        "sectionProgress": {
+          "label": "模式",
+          "current": 1,
+          "total": 3
+        },
+        "topology": {
+          "center": {
+            "label": "调度 Agent",
+            "title": "拆任务 · 汇总",
+            "color": "#a78bfa"
+          },
+          "nodes": [
+            {
+              "label": "搜索",
+              "title": "找资料",
+              "color": "#22d3ee"
+            },
+            {
+              "label": "整理",
+              "title": "归纳要点",
+              "color": "#34d399"
+            },
+            {
+              "label": "写稿",
+              "title": "成文输出",
+              "color": "#fbbf24"
+            },
+            {
+              "label": "审核",
+              "title": "质量把关",
+              "color": "#fb7185"
+            }
+          ]
+        },
+        "insight": "流程清晰时要它 · 调度挂了全队停摆",
+        "voiceScript": "主从式最适合流程相对固定的活。比如写调研报告：调度 Agent 先拆成搜索、整理、写稿、审核四步，分给四个专业 Agent，最后汇总。好处是责任清楚、好排查——哪一步错了就定位哪个 Worker。坑也有：调度 Agent 是单点，它理解偏了，后面全白干；而且每一步都要等调度下发，延迟比并行高一些。做客服工单、标准 SOP 流水线，主从式通常最省心。"
+      },
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens04_supervisor.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 3.054,
+          "text": "主从式最适合流程相对固定的活。"
+        },
+        {
+          "start": 3.054,
+          "end": 4.683,
+          "text": "比如写调研报告："
+        },
+        {
+          "start": 4.683,
+          "end": 7.024,
+          "text": "调度 Agent 先拆成搜索、"
+        },
+        {
+          "start": 7.024,
+          "end": 9.264,
+          "text": "整理、写稿、审核四步，"
+        },
+        {
+          "start": 9.264,
+          "end": 11.301,
+          "text": "分给四个专业 Agent，"
+        },
+        {
+          "start": 11.301,
+          "end": 12.319,
+          "text": "最后汇总。"
+        },
+        {
+          "start": 12.319,
+          "end": 13.948,
+          "text": "好处是责任清楚、"
+        },
+        {
+          "start": 13.948,
+          "end": 16.798000000000002,
+          "text": "好排查——哪一步错了就定位哪"
+        },
+        {
+          "start": 16.798000000000002,
+          "end": 17.918,
+          "text": "个 Worker。"
+        },
+        {
+          "start": 17.918,
+          "end": 20.667,
+          "text": "坑也有：调度 Agent 是单点，"
+        },
+        {
+          "start": 20.667,
+          "end": 23.111,
+          "text": "它理解偏了，后面全白干；"
+        },
+        {
+          "start": 23.111,
+          "end": 25.758,
+          "text": "而且每一步都要等调度下发，"
+        },
+        {
+          "start": 25.758,
+          "end": 27.59,
+          "text": "延迟比并行高一些。"
+        },
+        {
+          "start": 27.59,
+          "end": 28.812,
+          "text": "做客服工单、"
+        },
+        {
+          "start": 28.812,
+          "end": 30.543,
+          "text": "标准 SOP 流水线，"
+        },
+        {
+          "start": 30.543,
+          "end": 32.375,
+          "text": "主从式通常最省心。"
+        }
+      ]
+    },
+    {
+      "id": "ma2_lens05_peer",
+      "type": "comparison",
+      "durationInFrames": 978,
+      "frame": {
+        "style": "mesh",
+        "title": "【模式 2/3】对等式 · Peer-to-Peer",
+        "subtitle": "无中心 · 协商 / 辩论 / 共享看板",
+        "sectionProgress": {
+          "label": "模式",
+          "current": 2,
+          "total": 3
+        },
+        "topology": {
+          "nodes": [
+            {
+              "label": "保守派",
+              "title": "稳一点",
+              "color": "#22d3ee"
+            },
+            {
+              "label": "激进派",
+              "title": "冲一把",
+              "color": "#fb7185"
+            },
+            {
+              "label": "成本控",
+              "title": "省 Token",
+              "color": "#fbbf24"
+            },
+            {
+              "label": "共识",
+              "title": "投票合并",
+              "color": "#34d399"
+            }
+          ]
+        },
+        "insight": "创意发散时要它 · 协调成本也最高",
+        "voiceScript": "对等式更像头脑风暴会议室。写方案可以让「保守派」「激进派」「成本控」三个 Agent 轮流发言，互相反驳，最后投票或共识合并。没有中心节点，鲁棒性强——坏一个不至于全队瘫痪。但协调成本高，容易聊着聊着跑偏，也就是常说的意图漂移。适合创意生成、策略辩论、需要多角度碰撞的场景。要是你的任务步骤写死在文档里，硬上对等式反而添乱。"
+      },
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens05_peer.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.6550000000000002,
+          "text": "对等式更像头脑风暴会议室。"
+        },
+        {
+          "start": 2.6550000000000002,
+          "end": 5.515,
+          "text": "写方案可以让「保守派」「激进"
+        },
+        {
+          "start": 5.515,
+          "end": 8.272,
+          "text": "派」「成本控」三个 Agent 轮"
+        },
+        {
+          "start": 8.272,
+          "end": 9.089,
+          "text": "流发言，"
+        },
+        {
+          "start": 9.089,
+          "end": 10.111,
+          "text": "互相反驳，"
+        },
+        {
+          "start": 10.111,
+          "end": 12.153,
+          "text": "最后投票或共识合并。"
+        },
+        {
+          "start": 12.153,
+          "end": 13.583,
+          "text": "没有中心节点，"
+        },
+        {
+          "start": 13.583,
+          "end": 16.443,
+          "text": "鲁棒性强——坏一个不至于全队"
+        },
+        {
+          "start": 16.443,
+          "end": 17.056,
+          "text": "瘫痪。"
+        },
+        {
+          "start": 17.056,
+          "end": 18.485,
+          "text": "但协调成本高，"
+        },
+        {
+          "start": 18.485,
+          "end": 20.324,
+          "text": "容易聊着聊着跑偏，"
+        },
+        {
+          "start": 20.324,
+          "end": 22.571,
+          "text": "也就是常说的意图漂移。"
+        },
+        {
+          "start": 22.571,
+          "end": 25.022,
+          "text": "适合创意生成、策略辩论、"
+        },
+        {
+          "start": 25.022,
+          "end": 27.269,
+          "text": "需要多角度碰撞的场景。"
+        },
+        {
+          "start": 27.269,
+          "end": 30.333,
+          "text": "要是你的任务步骤写死在文档里，"
+        },
+        {
+          "start": 30.333,
+          "end": 32.375,
+          "text": "硬上对等式反而添乱。"
+        }
+      ]
+    },
+    {
+      "id": "ma2_lens06_hierarchical",
+      "type": "comparison",
+      "durationInFrames": 962,
+      "frame": {
+        "style": "tree",
+        "title": "【模式 3/3】层级式 · Hierarchical",
+        "subtitle": "规划 → 分派 → 执行 · 可递归拆子树",
+        "sectionProgress": {
+          "label": "模式",
+          "current": 3,
+          "total": 3
+        },
+        "topology": {
+          "levels": [
+            {
+              "label": "L1 · 全局",
+              "title": "规划 Agent",
+              "items": [
+                "拆成市场 · 技术 · 运营"
+              ]
+            },
+            {
+              "label": "L2 · 条线",
+              "title": "子主管 Agent",
+              "items": [
+                "市场主管",
+                "技术主管",
+                "运营主管"
+              ]
+            },
+            {
+              "label": "L3 · 执行",
+              "title": "Worker Agent",
+              "items": [
+                "各自完成子任务并上报"
+              ]
+            }
+          ]
+        },
+        "insight": "大项目拆子项目 · 每层只盯自己那一级",
+        "voiceScript": "层级式解决的是「任务太大，一层调度看不完」的问题。顶层 Agent 只做全局规划：先拆成市场、技术、运营三条线；每条线再有自己的子主管，继续往下分到具体执行 Agent。LangGraph 的 Send API、CrewAI 的 Manager Agent，本质都是这种思路。好处是能扛复杂项目，坏处是层级一多，状态和接口要设计仔细，不然信息在层与层之间丢字段。企业级多 Agent 平台，很多默认就是层级式。"
+      },
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens06_hierarchical.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.365,
+          "text": "层级式解决的是「任务太大，"
+        },
+        {
+          "start": 2.365,
+          "end": 4.549,
+          "text": "一层调度看不完」的问题。"
+        },
+        {
+          "start": 4.549,
+          "end": 6.824,
+          "text": "顶层 Agent 只做全局规划："
+        },
+        {
+          "start": 6.824,
+          "end": 8.462,
+          "text": "先拆成市场、技术、"
+        },
+        {
+          "start": 8.462,
+          "end": 9.554,
+          "text": "运营三条线；"
+        },
+        {
+          "start": 9.554,
+          "end": 11.738,
+          "text": "每条线再有自己的子主管，"
+        },
+        {
+          "start": 11.738,
+          "end": 14.286,
+          "text": "继续往下分到具体执行 Agent。"
+        },
+        {
+          "start": 14.286,
+          "end": 16.378,
+          "text": "LangGraph 的 Send API、"
+        },
+        {
+          "start": 16.378,
+          "end": 18.653,
+          "text": "CrewAI 的 Manager Agent，"
+        },
+        {
+          "start": 18.653,
+          "end": 20.291,
+          "text": "本质都是这种思路。"
+        },
+        {
+          "start": 20.291,
+          "end": 22.111,
+          "text": "好处是能扛复杂项目，"
+        },
+        {
+          "start": 22.111,
+          "end": 23.567,
+          "text": "坏处是层级一多，"
+        },
+        {
+          "start": 23.567,
+          "end": 25.569,
+          "text": "状态和接口要设计仔细，"
+        },
+        {
+          "start": 25.569,
+          "end": 28.117,
+          "text": "不然信息在层与层之间丢字段。"
+        },
+        {
+          "start": 28.117,
+          "end": 30.028,
+          "text": "企业级多 Agent 平台，"
+        },
+        {
+          "start": 30.028,
+          "end": 31.847,
+          "text": "很多默认就是层级式。"
+        }
+      ]
+    },
+    {
+      "id": "ma2_lens07_picker",
+      "type": "benchmark",
+      "durationInFrames": 910,
+      "frame": {
+        "title": "怎么选？· 场景对照表",
+        "subtitle": "先 2 个 Agent 跑通 · 再加人和加层",
+        "benchmarkTag": "ARCHITECTURE PICKER",
+        "benchmarkColumns": [
+          {
+            "key": "scene",
+            "label": "场景",
+            "w": "1.1fr"
+          },
+          {
+            "key": "verdict",
+            "label": "推荐架构",
+            "w": "0.9fr"
+          },
+          {
+            "key": "note",
+            "label": "一句话",
+            "w": "1.4fr"
+          }
+        ],
+        "benchmarkRows": [
+          {
+            "scene": "固定 SOP / 客服工单",
+            "verdict": "主从式",
+            "note": "流程清晰 · 责任好追溯",
+            "highlight": true
+          },
+          {
+            "scene": "创意辩论 / 方案碰撞",
+            "verdict": "对等式",
+            "note": "多角度 · 注意意图漂移"
+          },
+          {
+            "scene": "超大项目 / 多子项目",
+            "verdict": "层级式",
+            "note": "递归拆分 · 状态接口要设计好"
+          },
+          {
+            "scene": "刚上手多 Agent",
+            "verdict": "主从式（2 Agent）",
+            "note": "先跑通闭环再扩展"
+          }
+        ],
+        "insight": "没有万能架构 · 先简单后复杂",
+        "voiceScript": "给你一张选型表。流程固定、要强管控、要审计追溯——主从式。需要多角度碰撞、并行探索、去中心化——对等式。任务能拆成大树、子项目各自独立——层级式。工程上我建议：先从两个 Agent 的主从式跑通闭环，验证输入输出 Schema 和共享状态；稳定了再加 Worker 或加层级。别一上来就十几个 Agent 开会，调试成本会把你劝退。"
+      },
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens07_picker.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.595,
+          "text": "给你一张选型表。"
+        },
+        {
+          "start": 1.595,
+          "end": 3.59,
+          "text": "流程固定、要强管控、"
+        },
+        {
+          "start": 3.59,
+          "end": 5.784,
+          "text": "要审计追溯——主从式。"
+        },
+        {
+          "start": 5.784,
+          "end": 8.377,
+          "text": "需要多角度碰撞、并行探索、"
+        },
+        {
+          "start": 8.377,
+          "end": 10.372,
+          "text": "去中心化——对等式。"
+        },
+        {
+          "start": 10.372,
+          "end": 11.968,
+          "text": "任务能拆成大树、"
+        },
+        {
+          "start": 11.968,
+          "end": 14.561,
+          "text": "子项目各自独立——层级式。"
+        },
+        {
+          "start": 14.561,
+          "end": 15.957,
+          "text": "工程上我建议："
+        },
+        {
+          "start": 15.957,
+          "end": 18.65,
+          "text": "先从两个 Agent 的主从式跑通"
+        },
+        {
+          "start": 18.65,
+          "end": 19.248,
+          "text": "闭环，"
+        },
+        {
+          "start": 19.248,
+          "end": 22.44,
+          "text": "验证输入输出 Schema 和共享状态；"
+        },
+        {
+          "start": 22.44,
+          "end": 25.232,
+          "text": "稳定了再加 Worker 或加层级。"
+        },
+        {
+          "start": 25.232,
+          "end": 28.125,
+          "text": "别一上来就十几个 Agent 开会，"
+        },
+        {
+          "start": 28.125,
+          "end": 30.12,
+          "text": "调试成本会把你劝退。"
+        }
+      ]
+    },
+    {
+      "id": "ma2_lens08_summary",
+      "type": "cards",
+      "durationInFrames": 634,
+      "frame": {
+        "style": "verdict",
+        "title": "本期小结",
+        "subtitle": "架构即组织",
+        "cards": [
+          {
+            "title": "主从式",
+            "label": "项目经理制",
+            "desc": "调度拆任务 · Worker 执行",
+            "color": "#a78bfa"
+          },
+          {
+            "title": "对等式",
+            "label": "会议室制",
+            "desc": "协商辩论 · 无中心",
+            "color": "#22d3ee"
+          },
+          {
+            "title": "层级式",
+            "label": "事业部制",
+            "desc": "规划 → 分派 → 执行",
+            "color": "#34d399"
+          }
+        ],
+        "insight": "架构选错了 · 比模型差更致命",
+        "voiceScript": "总结一下。主从式像项目经理带团队，对等式像会议室辩论，层级式像公司事业部。多 Agent 的上限不取决于你堆了多少个 Agent，而取决于架构是不是匹配场景。模型再强，组织乱了也干不成大事——这话上期说过，这期换成架构版。"
+      },
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens08_summary.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 1.0,
+          "text": "总结一下。"
+        },
+        {
+          "start": 1.0,
+          "end": 3.4,
+          "text": "主从式像项目经理带团队，"
+        },
+        {
+          "start": 3.4,
+          "end": 5.401,
+          "text": "对等式像会议室辩论，"
+        },
+        {
+          "start": 5.401,
+          "end": 7.401,
+          "text": "层级式像公司事业部。"
+        },
+        {
+          "start": 7.401,
+          "end": 10.101,
+          "text": "多 Agent 的上限不取决于你堆"
+        },
+        {
+          "start": 10.101,
+          "end": 11.702,
+          "text": "了多少个 Agent，"
+        },
+        {
+          "start": 11.702,
+          "end": 14.502,
+          "text": "而取决于架构是不是匹配场景。"
+        },
+        {
+          "start": 14.502,
+          "end": 15.502,
+          "text": "模型再强，"
+        },
+        {
+          "start": 15.502,
+          "end": 18.303,
+          "text": "组织乱了也干不成大事——这话"
+        },
+        {
+          "start": 18.303,
+          "end": 19.303,
+          "text": "上期说过，"
+        },
+        {
+          "start": 19.303,
+          "end": 20.903,
+          "text": "这期换成架构版。"
+        }
+      ]
+    },
+    {
+      "id": "ma2_lens09_cta",
+      "type": "hook",
+      "durationInFrames": 457,
+      "frame": {
+        "style": "split",
+        "kicker": "合集：多Agent协作",
+        "title": "你更常用哪种架构？",
+        "subtitle": "评论区：主从 / 对等 / 层级",
+        "hookLine": "下期：Agent 通信 · 状态共享 · 消息总线",
+        "list": [
+          "① 主从式",
+          "② 对等式",
+          "③ 层级式",
+          "关注我，下一讲见 👋"
+        ],
+        "voiceScript": "你实际项目里更常用哪种？评论区打「主从」「对等」还是「层级」。下期讲 Agent 之间怎么通信、状态怎么共享、消息总线和共享记忆怎么设计。关注我，下一讲见。"
+      },
+      "audioSrc": "studio-audio/multi-agent-ep2-v2/ma2_lens09_cta.mp3",
+      "captions": [
+        {
+          "start": 0.0,
+          "end": 2.419,
+          "text": "你实际项目里更常用哪种？"
+        },
+        {
+          "start": 2.419,
+          "end": 5.243,
+          "text": "评论区打「主从」「对等」还是"
+        },
+        {
+          "start": 5.243,
+          "end": 6.251,
+          "text": "「层级」。"
+        },
+        {
+          "start": 6.251,
+          "end": 8.974,
+          "text": "下期讲 Agent 之间怎么通信、"
+        },
+        {
+          "start": 8.974,
+          "end": 10.385,
+          "text": "状态怎么共享、"
+        },
+        {
+          "start": 10.385,
+          "end": 13.209,
+          "text": "消息总线和共享记忆怎么设计。"
+        },
+        {
+          "start": 13.209,
+          "end": 15.023,
           "text": "关注我，下一讲见。"
         }
       ]
