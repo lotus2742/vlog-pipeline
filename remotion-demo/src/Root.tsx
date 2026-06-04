@@ -99,6 +99,7 @@ const loadGitHubAiHotlistEp3 = createStudioPreviewLoader(
   "studio-preview/github-ai-hotlist-ep3.json",
 );
 const loadAgencyAgentsV1 = createStudioPreviewLoader("studio-preview/agency-agents-v1.json");
+const loadMultiAgentEp2V2 = createStudioPreviewLoader("studio-preview/multi-agent-ep2-v2.json");
 
 const calculateVlogFramesMetadata: CalculateMetadataFunction<VlogFramesProps> = async ({
   props,
@@ -180,6 +181,7 @@ const calculateAiHotlistEp20 = makeCalculateStudioMetadata(loadAiHotlistEp20);
 const calculateGitHubAiHotlistEp2 = makeCalculateStudioMetadata(loadGitHubAiHotlistEp2);
 const calculateGitHubAiHotlistEp3 = makeCalculateStudioMetadata(loadGitHubAiHotlistEp3);
 const calculateAgencyAgentsV1 = makeCalculateStudioMetadata(loadAgencyAgentsV1);
+const calculateMultiAgentEp2V2 = makeCalculateStudioMetadata(loadMultiAgentEp2V2);
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -372,6 +374,16 @@ export const RemotionRoot: React.FC = () => {
         height={720}
         defaultProps={defaultStudioProps}
         calculateMetadata={calculateAgencyAgentsV1}
+      />
+      <Composition
+        id="MultiAgentEp2V2"
+        component={VlogOrHotlistComposition}
+        durationInFrames={300}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={defaultStudioProps}
+        calculateMetadata={calculateMultiAgentEp2V2}
       />
       <Composition
         id="HotlistFrames"
