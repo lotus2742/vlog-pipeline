@@ -17,7 +17,7 @@
   "bundle": "multi-agent-ep1-v4",
   "idPrefix": "ma1",
   "fps": 30,
-  "copyToLatest": true,
+  "copyToLatest": false,
   "segSec": [10, 22, 16, 18, 18, 16, 14, 12],
   "slides": [
     {

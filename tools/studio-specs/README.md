@@ -96,4 +96,4 @@ python3 vlog_audio.py remotion-demo/public/studio-preview/latest.json --studio-b
 - `multi-agent-ep1-v4.json` — 多Agent协作第1讲 · 单Agent三个天花板（8 镜，16:9，输出 `multi-agent-ep1-v4.json`，Studio 选 `VlogFramesStudio`）
 - `multi-agent-ep2-v2.json` — 多Agent协作第2期 · 三大架构怎么选（9 镜，16:9，输出 `multi-agent-ep2-v2.json`，Studio 选 `MultiAgentEp2V2` 或 `VlogFramesStudio`）
 
-`studio-preview/` 目录保留运行时 `latest.json`；榜单等专题可单独输出 JSON（如 `github-ai-hotlist-ep2.json`），在 Studio 选对应 Composition 预览。
+`studio-preview/` 目录保留运行时 `latest.json`（**`VlogFramesStudio` 固定读此文件**）；当前多 Agent 系列默认指向第 2 期，构建时请用 `multi-agent-ep2-v2.json`（`copyToLatest: true`），勿用第 1 期 spec 覆盖 `latest.json`。榜单等专题可单独输出 JSON，在 Studio 选对应 Composition 预览。
