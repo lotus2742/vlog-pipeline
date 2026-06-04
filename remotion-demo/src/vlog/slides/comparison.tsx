@@ -1,6 +1,7 @@
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
-import type { ThemeText, TriplePillar, VlogFrame } from "../types";
+import type { ThemeText, TopologySpec, TriplePillar, VlogFrame } from "../types";
 import { staggerOpacity, useEnter } from "../utils";
+import { HubTopologySlide, MeshTopologySlide, TreeTopologySlide } from "./topology-slides";
 
 /** 角色冲突：左栏候选条渐增、右栏漏斗收窄，以数量对比呈现矛盾 */
 const TensionComparisonSlide: React.FC<{ frame: VlogFrame; colors: ThemeText; opacity: number; localFrame: number }> = ({
@@ -477,6 +478,16 @@ export const ComparisonSlide: React.FC<{ frame: VlogFrame; colors: ThemeText }> 
   }
   if (layoutStyle === "pipeline") {
     return <PipelineComparisonSlide frame={frame} colors={colors} opacity={opacity} localFrame={localFrame} />;
+  }
+  const topology = (frame.topology || {}) as TopologySpec;
+  if (layoutStyle === "hub" && (topology.center || (topology.nodes && topology.nodes.length))) {
+    return <HubTopologySlide frame={frame} colors={colors} opacity={opacity} localFrame={localFrame} topology={topology} />;
+  }
+  if (layoutStyle === "mesh" && topology.nodes && topology.nodes.length >= 3) {
+    return <MeshTopologySlide frame={frame} colors={colors} opacity={opacity} localFrame={localFrame} topology={topology} />;
+  }
+  if (layoutStyle === "tree" && topology.levels && topology.levels.length >= 2) {
+    return <TreeTopologySlide frame={frame} colors={colors} opacity={opacity} localFrame={localFrame} topology={topology} />;
   }
   const pillars = Array.isArray(frame.pillars) ? frame.pillars : [];
   if (layoutStyle === "triple" && pillars.length === 3) {

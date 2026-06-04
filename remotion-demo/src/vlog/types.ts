@@ -44,6 +44,25 @@ export type BulletFrameItem = {
   codeLabel?: string;
 };
 
+/** 拓扑图节点（comparison + style=hub|mesh|tree） */
+export type TopologyNode = {
+  label?: string;
+  title?: string;
+  color?: string;
+};
+
+export type TopologyLevel = {
+  label?: string;
+  title?: string;
+  items?: string[];
+};
+
+export type TopologySpec = {
+  center?: TopologyNode;
+  nodes?: TopologyNode[];
+  levels?: TopologyLevel[];
+};
+
 /** 三栏横评卡（与 comparison + style=triple 配合） */
 export type TriplePillar = {
   title: string;
@@ -127,6 +146,8 @@ export type VlogFrame = {
   compareRows?: Array<{ left?: string; right?: string; center?: string }>;
   /** 三栏并列（如三款工具定价+定位）；与 type=comparison、style=triple 同用 */
   pillars?: TriplePillar[];
+  /** 架构拓扑（comparison + style=hub|mesh|tree） */
+  topology?: TopologySpec;
   insight?: string;
   /** 竖屏 3 秒金句（20–36 字），优先于 insight 展示 */
   hookLine?: string;

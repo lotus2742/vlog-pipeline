@@ -94,5 +94,6 @@ python3 vlog_audio.py remotion-demo/public/studio-preview/latest.json --studio-b
 - `github-ai-hotlist-ep3.json` — GitHub AI 周 Star 增速 Top 10 第 3 期（榜单 hotlist，13 镜，输出 `github-ai-hotlist-ep3.json`，Studio 选 `GitHubAiHotlistEp3`）
 - `agency-agents-v1.json` — agency-agents 项目分享（17 镜，dark 主题 16:9，输出 `agency-agents-v1.json`，Studio 选 `AgencyAgentsV1` 或 `VlogFramesStudio`）
 - `multi-agent-ep1-v4.json` — 多Agent协作第1讲 · 单Agent三个天花板（8 镜，16:9，输出 `multi-agent-ep1-v4.json`，Studio 选 `VlogFramesStudio`）
+- `multi-agent-ep2-v2.json` — 多Agent协作第2期 · 三大架构怎么选（9 镜，16:9，输出 `multi-agent-ep2-v2.json`，Studio 选 `MultiAgentEp2V2` 或 `VlogFramesStudio`）
 
 `studio-preview/` 目录保留运行时 `latest.json`；榜单等专题可单独输出 JSON（如 `github-ai-hotlist-ep2.json`），在 Studio 选对应 Composition 预览。
